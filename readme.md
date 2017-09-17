@@ -1,17 +1,17 @@
-## Introduction to the z88dk Libraries
-
-This file describes the time functions implemented in some z88dk compatible libraries.
+## Introduction to selected z88dk Libraries
+This file describes some some z88dk compatible libraries.
 
 
 ### z88dk-time
-
 The implementation of `time.h` aspires to conform with ISO/IEC 9899 (C90). However, due to limitations of the target processor and the nature of its development environment, a practical implementation must of necessity deviate from the standard.
 
+### z88dk-FatFS
+TBC
 
-
+### z88dk-FreeRTOS
+TBC
 
 ## Preparation
-
 The libraries can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine, from the relevant library sub-directory. e.g. for the time library.
 
 ```bash
@@ -45,5 +45,4 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 ```
 
 ## Usage
-
 Once installed, the libraries can be linked against on the compile line by adding `-llib/target/library` and the include file can be found with `#include <lib/target/library.h>`.
