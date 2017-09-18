@@ -70,6 +70,50 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 Once installed, the time library can be linked against on the compile line by adding `-llib/target/time` and the include file can be found with `#include <lib/target/time.h>`.
 
+A simple usage example, for the `+yaz180` target.
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <arch/yaz180.h>
+#include <arch/yaz180/system_time.h>
+
+#include <lib/yaz180/time.h>
+
+// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --c-code-in-asm --opt-code-size -clib=sdcc_iy -llib/yaz180/time --max-allocs-per-node200000 @atest.lst -o time_app -create-app
+
+
+uint16_t i;
+
+struct tm CurrTimeDate; 			// set up an array for the RTC info.
+time_t theTime;
+char timeStore[26];
+
+void main(void)
+{
+    system_tick_init((void *)0x2044);
+
+    set_zone((int32_t)10 * ONE_HOUR);       // Australian Eastern Standard Time
+    set_system_time(1505695200 - UNIX_OFFSET);
+
+    while(1)
+    {
+        time(&theTime);
+
+        gmtime_r(&theTime, &CurrTimeDate);
+        isotime_r(&CurrTimeDate, timeStore);
+        printf("ISO Time: %s", timeStore);
+
+        localtime_r(&theTime, &CurrTimeDate);
+        asctime_r(&CurrTimeDate, timeStore);
+        printf("    AEST Time: %s\r\n", timeStore);
+
+//      printf("SYSTEM Time: %s\r\n", ctime( (time_t *)&theTime));  // all in one line
+    }
+}
+```
+
 ## Internals
 
 `time_t __system_time` represents seconds elapsed from Midnight, Jan 1 2000 UTC (the Y2K 'epoch').
