@@ -31,15 +31,16 @@ z88dk-lib +yaz180 time
 ```
 
 Some further examples of `z88dk-lib` usage.
-list help
+
++ libraries list help
 ```bash
 z88dk-lib
 ```
-list 3rd party libraries already installed for the zx target
++ list 3rd party libraries already installed for the zx target
 ```bash
 z88dk-lib +zx
 ```
-remove the `libname1` `libname2` ... libraries from the zx target, -f for no nagging about deleting files.
++ remove the `libname1` `libname2` ... libraries from the zx target, -f for no nagging about deleting files.
 ```bash
 z88dk-lib +zx -r -f libname1 libname2 ...
 ```
