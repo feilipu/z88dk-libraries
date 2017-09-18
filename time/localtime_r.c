@@ -55,6 +55,6 @@ localtime_r(const time_t * timer, struct tm * timeptr)
     if (dst > 0)
         lt += dst;
 
-    gmtime_r(&lt, timeptr);
+    gmtime_r((const time_t *)&lt, timeptr);
     timeptr->tm_isdst = dst;
 }
