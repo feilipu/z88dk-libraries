@@ -5,8 +5,8 @@ This file describes some some z88dk compatible libraries.
 ### z88dk-time
 The implementation of `time.h` aspires to conform with ISO/IEC 9899 (C90). However, due to limitations of the target processor and the nature of its development environment, a practical implementation must of necessity deviate from the standard.
 
-### z88dk-FatFS
-TBC
+### z88dk-FatFs
+FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
 ### z88dk-FreeRTOS
 TBC
