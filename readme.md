@@ -1,7 +1,6 @@
 ## Introduction to selected z88dk Libraries
 This file describes some some z88dk compatible libraries.
 
-
 ### z88dk-time
 The implementation of `time.h` aspires to conform with ISO/IEC 9899 (C90). However, due to limitations of the target processor and the nature of its development environment, a practical implementation must of necessity deviate from the standard.
 
@@ -16,14 +15,14 @@ The libraries can be compiled using the following command lines in Linux, with t
 
 ```bash
 cd time
-zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node400000 @time.lst -o time
-mv time.lib target/lib/newlib/sdcc_ix
-zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node400000 @time.lst -o time
-mv time.lib target/lib/newlib/sdcc_iy
+zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node200000 @library.lst -o library
+mv library.lib target/lib/newlib/sdcc_ix
+zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node200000 @library.lst -o library
+mv library.lib target/lib/newlib/sdcc_iy
 ```
-The resulting `time.lib` file should be moved to `~/time/target/lib/newlib/sdcc_ix` or `~/time/target/lib/newlib/sdcc_iy` respectively, as noted above.
+The resulting `library.lib` file should be moved to `~/library/target/lib/newlib/sdcc_ix` or `~/library/target/lib/newlib/sdcc_iy` respectively, as noted above.
 
-Then, the `z88dk-lib` function is used to install for the desired target. e.g. for the yaz180 machine.
+Then, the `z88dk-lib` function is used to install for the desired target. e.g. for the time library on the yaz180 machine.
 
 ```bash
 cd ..

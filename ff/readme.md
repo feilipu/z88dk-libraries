@@ -24,11 +24,11 @@ FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The F
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node400000 @ff.lst -o time`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node200000 @ff.lst -o ff`
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node400000 @ff.lst -o time`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node200000 @ff.lst -o ff`
 
-The resulting `time.lib` file should be moved to `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
 The `z88dk-lib` function is used to install for the desired target. e.g.
 
@@ -53,7 +53,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Usage
 
-Once installed, the time library can be linked against on the compile line by adding `-llib/target/time` and the include file can be found with `#include <lib/target/time.h>`.
+Once installed, the FatFs library can be linked against on the compile line by adding `-llib/target/ff` and the include file can be found with `#include <lib/target/ff.h>`.
 
 A simple usage example, for the `+yaz180` target.
 
