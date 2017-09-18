@@ -19,7 +19,7 @@ cd time
 zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node400000 @time.lst -o time
 mv time.lib target/lib/newlib/sdcc_ix
 zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node400000 @time.lst -o time
-mv time.lib target/lib/newlib/sdcc_ix
+mv time.lib target/lib/newlib/sdcc_iy
 ```
 The resulting `time.lib` file should be moved to `~/time/target/lib/newlib/sdcc_ix` or `~/time/target/lib/newlib/sdcc_iy` respectively, as noted above.
 
