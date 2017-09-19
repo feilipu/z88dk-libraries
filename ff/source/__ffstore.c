@@ -48,7 +48,6 @@ FILESEM Files[FF_FS_LOCK];  /* Open object lock semaphores */
 #endif
 
 
-
 /*-----------------------------------------------------------------------*/
 /* LFN/Directory working buffer                                          */
 /*-----------------------------------------------------------------------*/
@@ -64,7 +63,7 @@ BYTE DirBuf[MAXDIRB(FF_MAX_LFN)];   /* Directory entry block scratchpad buffer *
 WCHAR LfnBuf[FF_MAX_LFN + 1];       /* LFN working buffer */
 #endif
 
-#endif
+#endif  /* FF_USE_LFN */
 
 
 

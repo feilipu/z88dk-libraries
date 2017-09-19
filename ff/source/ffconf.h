@@ -167,7 +167,7 @@
 /  number and only an FAT volume found on the physical drive will be mounted.
 /  When this function is enabled (1), each logical drive number can be bound to
 /  arbitrary physical drive and partition listed in the VolToPart[]. Also f_fdisk()
-/  funciton will be available. */
+/  function will be available. */
 
 
 #define FF_MIN_SS           512
@@ -217,9 +217,9 @@
 
 
 #define FF_FS_NORTC         0
-#define FF_NORTC_MON        18
-#define FF_NORTC_MDAY       9
-#define FF_NORTC_YEAR       2017
+#define FF_NORTC_MON        28
+#define FF_NORTC_MDAY       6
+#define FF_NORTC_YEAR       2031
 /* The option FF_FS_NORTC switches timestamp function. If the system does not have
 /  any RTC function or valid timestamp is not needed, set FF_FS_NORTC = 1 to disable
 /  the timestamp function. All objects modified by FatFs will have a fixed timestamp

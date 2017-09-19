@@ -18,36 +18,46 @@
 /
 /----------------------------------------------------------------------------*/
 
-#include "ff.h"         /* FatFs Public API */
-#include "ffprivate.h"  /* FatFs Private Functions */
-#include "ffunicode.h"  /* FatFS Unicode */
+#ifndef FF_STORE_H_DEFINED
+#define FF_STORE_H_DEFINED
 
-#include "__ffstore.h"          /* extern for system storage */
-#include "__ffunicodestore.h"   /* extern for LFN system storage */
-
-
-/*-----------------------------------------------------------------------*/
-/* Change Current Directory or Current Drive, Get Current Directory      */
-/*-----------------------------------------------------------------------*/
-#if FF_FS_RPATH >= 1
-#if FF_VOLUMES >= 2
-
-FRESULT f_chdrive (
-    const TCHAR* path        /* Drive number */
-)
-{
-    int vol;
-
-
-    /* Get logical drive number */
-    vol = get_ldnumber(&path);
-    if (vol < 0) return FR_INVALID_DRIVE;
-
-    CurrVol = (BYTE)vol;    /* Set it as current volume */
-
-    return FR_OK;
-}
-
+#ifdef __cplusplus
+extern "C" {
 #endif
-#endif /* FF_FS_RPATH >= 1 */
+
+/*-----------------------------------------------------------------------*/
+/* File/Volume controls                                                  */
+/*-----------------------------------------------------------------------*/
+
+#if FF_VOLUMES < 1 || FF_VOLUMES > 10
+#error Wrong FF_VOLUMES setting
+#endif
+extern FATFS *FatFs[];      /* Pointer to the filesystem objects (logical drives) */
+extern WORD Fsid;		    /* File system mount ID */
+
+#if FF_FS_RPATH != 0 && FF_VOLUMES >= 2
+extern BYTE CurrVol;	    /* Current drive */
+#endif
+
+#if FF_FS_LOCK != 0
+extern FILESEM Files[];     /* Open object lock semaphores */
+#endif
+
+/*-----------------------------------------------------------------------*/
+/* LFN/Directory working buffer                                          */
+/*-----------------------------------------------------------------------*/
+
+#if FF_USE_LFN == 1         /* LFN enabled with static working buffer */
+#if FF_FS_EXFAT
+extern BYTE DirBuf[];       /* Directory entry block scratchpad buffer */
+#endif
+extern WCHAR LfnBuf[];      /* LFN working buffer */
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  /* FF_STORE_H_DEFINED */
 

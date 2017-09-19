@@ -22,24 +22,8 @@
 #include "ffprivate.h"  /* FatFs Private Functions */
 #include "ffunicode.h"  /* FatFS Unicode */
 
-
-/*-----------------------------------------------------------------------*/
-/* File/Volume controls                                                  */
-/*-----------------------------------------------------------------------*/
-
-#if FF_VOLUMES < 1 || FF_VOLUMES > 10
-#error Wrong FF_VOLUMES setting
-#endif
-extern FATFS *FatFs[];  /* Pointer to the filesystem objects (logical drives) */
-extern WORD Fsid;	    /* File system mount ID */
-
-#if FF_FS_RPATH != 0 && FF_VOLUMES >= 2
-extern BYTE CurrVol;    /* Current drive */
-#endif
-
-#if FF_FS_LOCK != 0
-extern FILESEM Files[]; /* Open object lock semaphores */
-#endif
+#include "__ffstore.h"          /* extern for system storage */
+#include "__ffunicodestore.h"   /* extern for LFN system storage */
 
 
 /*-----------------------------------------------------------------------*/
@@ -47,16 +31,7 @@ extern FILESEM Files[]; /* Open object lock semaphores */
 /*-----------------------------------------------------------------------*/
 
 #if FF_USE_LFN != 0             /* LFN configurations */
-
 extern const BYTE LfnOfs[];     /* FAT: Offset of LFN characters in the directory entry */
-
-#if FF_USE_LFN == 1             /* LFN enabled with static working buffer */
-#if FF_FS_EXFAT
-extern BYTE DirBuf[];           /* Directory entry block scratchpad buffer */
-#endif
-extern WCHAR LfnBuf[];          /* LFN working buffer */
-#endif
-
 #endif
 
 /*------------------------------------------------------------------------*/

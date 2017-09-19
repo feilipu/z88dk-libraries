@@ -17,6 +17,14 @@
 / by use of this software.
 /-------------------------------------------------------------------------*/
 
+#include "ff.h"         /* FatFs Public API */
+#include "ffunicode.h"  /* FatFS Unicode */
+
+#if FF_DEFINED != 87030     /* Revision ID */
+#error Wrong include file (ff.h).
+#endif
+
+
 /*------------------------------------------------------------------------*/
 /* This module will occupy a huge memory in the .const section when the    /
 /  FatFs is configured for LFN with DBCS. If the system has any Unicode    /
@@ -24,20 +32,21 @@
 /  that function to avoid silly memory consumption.                       */
 /*------------------------------------------------------------------------*/
 
-#include "ff.h"         /* FatFs Public API */
-#include "ffunicode.h"  /* FatFS Unicode */
-
-
-#if FF_USE_LFN
+/* Remark: Variables defined here without initial value shall be guaranteed
+/  zero/null at start-up. If not, the linker option or start-up routine is
+/  not compliance with C standard. */
 
 /*------------------------------------------------------------------------*/
 /* Code Conversion Tables                                                 */
 /*------------------------------------------------------------------------*/
 
+#if FF_USE_LFN
+
 
 #if FF_CODE_PAGE == 0           /* Run-time code page configuration */
 #define CODEPAGE CodePage
 WORD CodePage;                  /* Current code page */
+
 const BYTE *ExCvt, *DbcTbl;     /* Pointer to current SBCS up-case table and DBCS code range table below */
 const BYTE Ct437[] = TBL_CT437;
 const BYTE Ct720[] = TBL_CT720;

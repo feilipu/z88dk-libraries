@@ -22,83 +22,8 @@
 #include "ffprivate.h"  /* FatFs Private Functions */
 #include "ffunicode.h"  /* FatFS Unicode */
 
-
-/*-----------------------------------------------------------------------*/
-/* File/Volume controls                                                  */
-/*-----------------------------------------------------------------------*/
-
-#if FF_VOLUMES < 1 || FF_VOLUMES > 10
-#error Wrong FF_VOLUMES setting
-#endif
-extern FATFS *FatFs[];      /* Pointer to the filesystem objects (logical drives) */
-extern WORD Fsid;		    /* File system mount ID */
-
-#if FF_FS_RPATH != 0 && FF_VOLUMES >= 2
-extern BYTE CurrVol;	    /* Current drive */
-#endif
-
-#if FF_FS_LOCK != 0
-extern FILESEM Files[];     /* Open object lock semaphores */
-#endif
-
-
-/*-----------------------------------------------------------------------*/
-/* LFN/Directory working buffer                                          */
-/*-----------------------------------------------------------------------*/
-
-#if FF_USE_LFN == 1         /* LFN enabled with static working buffer */
-#if FF_FS_EXFAT
-extern BYTE DirBuf[];       /* Directory entry block scratchpad buffer */
-#endif
-extern WCHAR LfnBuf[];      /* LFN working buffer */
-#endif
-
-
-/*------------------------------------------------------------------------*/
-/* Code Conversion Tables                                                 */
-/*------------------------------------------------------------------------*/
-
-#if FF_USE_LFN != 0                         /* LFN configurations */
-
-#if FF_CODE_PAGE == 0       /* Run-time code page configuration */
-#define CODEPAGE CodePage
-extern WORD CodePage;       /* Current code page */
-extern const BYTE *ExCvt, *DbcTbl;    /* Pointer to current SBCS up-case table and DBCS code range table below */
-extern const BYTE Ct437[];
-extern const BYTE Ct720[];
-extern const BYTE Ct737[];
-extern const BYTE Ct771[];
-extern const BYTE Ct775[];
-extern const BYTE Ct850[];
-extern const BYTE Ct852[];
-extern const BYTE Ct855[];
-extern const BYTE Ct857[];
-extern const BYTE Ct860[];
-extern const BYTE Ct861[];
-extern const BYTE Ct862[];
-extern const BYTE Ct863[];
-extern const BYTE Ct864[];
-extern const BYTE Ct865[];
-extern const BYTE Ct866[];
-extern const BYTE Ct869[];
-extern const BYTE Dc932[];
-extern const BYTE Dc936[];
-extern const BYTE Dc949[];
-extern const BYTE Dc950[];
-
-extern const WORD cp_code[];
-extern const WCHAR *const cp_table[];
-
-#elif FF_CODE_PAGE < 900    /* static code page configuration (SBCS) */
-#define CODEPAGE FF_CODE_PAGE
-extern const BYTE ExCvt[];
-
-#else                       /* static code page configuration (DBCS) */
-#define CODEPAGE FF_CODE_PAGE
-extern const BYTE DbcTbl[];
-
-#endif
-#endif
+#include "__ffstore.h"          /* extern for system storage */
+#include "__ffunicodestore.h"   /* extern for LFN system storage */
 
 
 /*-----------------------------------------------------------------------*/

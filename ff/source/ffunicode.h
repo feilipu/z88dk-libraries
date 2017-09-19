@@ -26,11 +26,12 @@
 extern "C" {
 #endif
 
-#if FF_USE_LFN
 
 /*------------------------------------------------------------------------*/
 /* Code Conversion Tables                                                 */
 /*------------------------------------------------------------------------*/
+
+#if FF_USE_LFN
 
 /* Macros for table definitions */
 #define MERGE_2STR(a, b) a ## b

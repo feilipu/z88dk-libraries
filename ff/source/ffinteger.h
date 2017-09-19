@@ -5,15 +5,6 @@
 #ifndef FF_INTEGER
 #define FF_INTEGER
 
-#ifdef _WIN32	/* FatFs development platform */
-
-#include <windows.h>
-#include <tchar.h>
-typedef unsigned __int64 QWORD;
-
-
-#else			/* Embedded platform */
-
 #ifndef __DISKIO_H__
 
 /* These types MUST be 16-bit or 32-bit */
@@ -37,8 +28,6 @@ typedef unsigned long	DWORD;
 typedef unsigned long long QWORD;
 #endif
 
-#endif
+#endif  /* __DISKIO_H__ */
 
-#endif
-
-#endif
+#endif  /* FF_INTEGER */
