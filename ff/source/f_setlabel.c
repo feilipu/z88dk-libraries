@@ -62,7 +62,7 @@ FRESULT f_setlabel (
             }
             w = ff_oem2uni(w, CODEPAGE);
 #endif
-            if (w == 0 || chk_chr(badchr, w) || j == 22) {    /* Check validity check validity of the volume label */
+            if (w == 0 || CHKCHR(badchr, w) || j == 22) {    /* Check validity check validity of the volume label */
                 LEAVE_FF(fs, FR_INVALID_NAME);
             }
             st_word(dirvn + j, w); j += 2;
@@ -93,7 +93,7 @@ FRESULT f_setlabel (
 #endif
 #endif
 #endif
-                if (w == 0 || chk_chr(badchr, w) || j >= (UINT)((w >= 0x100) ? 10 : 11)) {    /* Reject invalid characters for volume label */
+                if (w == 0 || CHKCHR(badchr, w) || j >= (UINT)((w >= 0x100) ? 10 : 11)) {    /* Reject invalid characters for volume label */
                     LEAVE_FF(fs, FR_INVALID_NAME);
                 }
                 if (w >= 0x100) dirvn[j++] = (BYTE)(w >> 8);

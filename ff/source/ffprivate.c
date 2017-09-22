@@ -2169,7 +2169,7 @@ FRESULT create_name (    /* FR_OK: successful, FR_INVALID_NAME: could not create
         w = ff_oem2uni(w, CODEPAGE);    /* Convert ANSI/OEM to Unicode */
         if (!w) return FR_INVALID_NAME;    /* Reject invalid code */
 #endif
-        if (w < 0x80 && chk_chr("\"*:<>\?|\x7F", w)) return FR_INVALID_NAME;    /* Reject illegal characters for LFN */
+        if (w < 0x80 && CHKCHR("\"*:<>\?|\x7F", w)) return FR_INVALID_NAME;    /* Reject illegal characters for LFN */
         lfn[di++] = w;                    /* Store the Unicode character */
     }
     *path = &p[si];                        /* Return pointer to the next segment */
@@ -2242,7 +2242,7 @@ FRESULT create_name (    /* FR_OK: successful, FR_INVALID_NAME: could not create
             }
             dp->fn[i++] = (BYTE)(w >> 8);    /* Put 1st byte */
         } else {                        /* SBC */
-            if (!w || chk_chr("+,;=[]", w)) {    /* Replace illegal characters for SFN */
+            if (!w || CHKCHR("+,;=[]", w)) {    /* Replace illegal characters for SFN */
                 w = '_'; cf |= NS_LOSS | NS_LFN;/* Lossy conversion */
             } else {
                 if (IsUpper(w)) {        /* ASCII large capital */
@@ -2320,7 +2320,7 @@ FRESULT create_name (    /* FR_OK: successful, FR_INVALID_NAME: could not create
             sfn[i++] = c;
             sfn[i++] = d;
         } else {                        /* SBC */
-            if (chk_chr("\"*+,:;<=>\?[]|\x7F", c)) return FR_INVALID_NAME;    /* Reject illegal chrs for SFN */
+            if (CHKCHR("\"*+,:;<=>\?[]|\x7F", c)) return FR_INVALID_NAME;    /* Reject illegal chrs for SFN */
             if (IsLower(c)) c -= 0x20;    /* To upper */
             sfn[i++] = c;
         }
