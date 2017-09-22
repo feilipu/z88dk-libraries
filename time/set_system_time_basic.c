@@ -37,12 +37,12 @@
 
 #include "time.h"
 
-extern uint8_t _system_time_fraction;
-extern time_t _system_time;
+extern uint8_t _system_time_fraction_basic;
+extern time_t _system_time_basic;
 
 void
-set_system_time(time_t timestamp) __critical
+set_system_time_basic(time_t timestamp) __critical
 {
-    _system_time = timestamp;
-    _system_time_fraction = 0;
+    _system_time_basic = timestamp;
+    _system_time_fraction_basic = 0;
 }

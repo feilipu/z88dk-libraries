@@ -11,10 +11,10 @@ FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The F
 TBC
 
 ## Preparation
-The libraries can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine, from the relevant library sub-directory. e.g. for the time library.
+The libraries can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine, from the relevant library sub-directory. e.g. for any `library`.
 
 ```bash
-cd time
+cd ~/library
 zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node200000 @library.lst -o library
 mv library.lib target/lib/newlib/sdcc_ix
 zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node200000 @library.lst -o library

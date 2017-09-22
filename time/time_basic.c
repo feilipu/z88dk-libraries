@@ -1,5 +1,5 @@
 /*
- * (C)2012 Michael Duane Rice All rights reserved.
+ * (c)2012 Michael Duane Rice All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,20 +29,27 @@
 /* $Id$ */
 
 /*
- * Set the system time. The values passed are assumed to represent local
- * standard time, such as would be obtained from the typical Real Time Clock
- * integrated circuit. It is necessary for this to be atomic, as the value may be
- * incremented at interrupt time.
- */
+    Standard time() function. Copying from __system_time must be atomic, since it
+    may be incremented at interrupt time.
+*/
+
+#include <inttypes.h>
 
 #include "time.h"
 
-extern uint8_t _system_time_fraction;
-extern time_t _system_time;
+extern uint32_t _system_time_basic;
 
-void
-set_system_time(time_t timestamp) __critical
+time_t
+time_basic(time_t * timer)
 {
-    _system_time = timestamp;
-    _system_time_fraction = 0;
+    time_t ret;
+
+    __critical
+    {
+        ret = (time_t)_system_time_basic;
+    }
+
+    if (timer)
+        *timer = ret;
+    return ret;
 }

@@ -116,11 +116,20 @@ extern "C" {
     typedef     uint32_t time_t;
 
     /**
+    The time_basic function returns the systems current time stamp, when run with NASCOM Basic.
+    If timer is not a null pointer, the return value is also assigned to the object it points to.
+    */
+//  time_t      time_basic(time_t *timer);
+__OPROTO(,,time_t,,time_basic,time_t *timer)
+
+    /**
     The time function returns the systems current time stamp.
     If timer is not a null pointer, the return value is also assigned to the object it points to.
     */
 //  time_t      time(time_t *timer);
 __OPROTO(,,time_t,,time,time_t *timer)
+
+#define time(a) time_basic(a)
 
     /**
     The difftime function returns the difference between two binary time stamps,
@@ -320,8 +329,14 @@ __OPROTO(,,void,,set_zone,int32_t)
         \endcode
 
     */
+   
+//  void        set_system_time_basic(time_t timestamp);
+__OPROTO(,,void,,set_system_time_basic,time_t timestamp)
+
 //  void        set_system_time(time_t timestamp);
 __OPROTO(,,void,,set_system_time,time_t timestamp)
+
+#define set_system_time(a) set_system_time_basic(a)
 
     /**
         Maintain the system time by calling this function at a rate of 1 Hertz.
