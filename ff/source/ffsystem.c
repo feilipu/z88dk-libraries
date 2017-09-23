@@ -42,18 +42,6 @@ DWORD get_fattime (void)
     return ( (DWORD)system_fatfs( &y2ktime ) );
 }
 
-DWORD get_fattime_basic (void)
-{
-    struct tm y2ktime;
-
-    time_t timer;
-
-    time_basic(&timer);
-    localtime_r( &timer, &y2ktime );
-
-    return ( (DWORD)system_fatfs( &y2ktime ) );
-}
-
 #endif
 
 

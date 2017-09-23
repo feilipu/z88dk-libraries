@@ -375,8 +375,6 @@ int dbc_2nd (BYTE c);
 /* RTC function */
 #if !FF_FS_READONLY && !FF_FS_NORTC
 DWORD get_fattime (void);
-DWORD get_fattime_basic (void);
-#define get_fattime(a) get_fattime_basic(a)
 #endif
 
 /* Sync functions */

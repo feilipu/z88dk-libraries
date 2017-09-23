@@ -116,6 +116,16 @@ extern "C" {
     typedef     uint32_t time_t;
 
     /**
+    Locations of YAZ180 system tick for both ROM and NASCOM Basic versions
+    */
+
+    extern uint8_t      _system_time_fraction;
+    extern time_t       _system_time;
+
+    extern uint8_t      _system_time_fraction_basic;
+    extern time_t       _system_time_basic;
+
+    /**
     The time_basic function returns the systems current time stamp, when run with NASCOM Basic.
     If timer is not a null pointer, the return value is also assigned to the object it points to.
     */

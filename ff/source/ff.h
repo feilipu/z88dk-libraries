@@ -49,6 +49,21 @@ extern PARTITION VolToPart[];   /* Volume - Partition resolution table */
 #endif
 
 
+#include <string.h>
+
+#ifdef __STRING_H__     /* We have included the string functions from z88dk */
+                        /* This saves space and speeds up functions */
+#define MEMCPY(a,b,c)   memcpy(a,b,c)
+#define MEMSET(a,b,c)   memset(a,b,c)
+#define MEMCMP(a,b,c)   memcmp(a,b,c)
+#define CHKCHR(a,b)     strchr(a,b)
+#else
+#define MEMCPY(a,b,c)   mem_cpy(a,b,c)
+#define MEMSET(a,b,c)   mem_set(a,b,c)
+#define MEMCMP(a,b,c)   mem_cmp(a,b,c)
+#define CHKCHR(a,b)     chk_chr(a,b)
+#endif
+
 
 /* Type of path name strings on FatFs API */
 
