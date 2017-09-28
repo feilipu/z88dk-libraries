@@ -22,6 +22,8 @@ FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The F
 
 ## Preparation
 
+First configure the library to suit your requirements by adjusting the `source/ffconf.h` file to provide the functions you need.
+
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 `zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node200000 @ff.lst -o ff`

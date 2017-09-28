@@ -26,9 +26,6 @@
 extern "C" {
 #endif
 
-#include <arch/yaz180.h>        /* YAZ180 architecture specifics */
-#include <arch/yaz180/diskio.h> /* YAZ180 device I/O functions */
-
 #include "ffinteger.h"          /* Basic integer types */
 #include "ffconf.h"             /* FatFs configuration options */
 
@@ -48,21 +45,6 @@ typedef struct {
 extern PARTITION VolToPart[];   /* Volume - Partition resolution table */
 #endif
 
-
-#include <string.h>
-
-#ifdef __STRING_H__     /* We have included the string functions from z88dk */
-                        /* This saves space and speeds up functions */
-#define MEMCPY(a,b,c)   memcpy(a,b,c)
-#define MEMSET(a,b,c)   memset(a,b,c)
-#define MEMCMP(a,b,c)   memcmp(a,b,c)
-#define CHKCHR(a,b)     strchr(a,b)
-#else
-#define MEMCPY(a,b,c)   mem_cpy(a,b,c)
-#define MEMSET(a,b,c)   mem_set(a,b,c)
-#define MEMCMP(a,b,c)   mem_cmp(a,b,c)
-#define CHKCHR(a,b)     chk_chr(a,b)
-#endif
 
 
 /* Type of path name strings on FatFs API */
@@ -307,6 +289,37 @@ TCHAR* f_gets (TCHAR* buff, int len, FIL* fp);                      /* Get a str
 
 
 
+
+/*--------------------------------------------------------------*/
+/* Additional user defined functions                            */
+
+/* RTC function */
+#if !FF_FS_READONLY && !FF_FS_NORTC
+DWORD get_fattime (void);
+#endif
+
+/* LFN support functions */
+#if FF_USE_LFN						/* Code conversion (defined in unicode.c) */
+WCHAR ff_oem2uni (WCHAR oem, WORD cp);	/* OEM code to Unicode conversion */
+WCHAR ff_uni2oem (WCHAR uni, WORD cp);	/* Unicode to OEM code conversion */
+WCHAR ff_wtoupper (WCHAR uni);			/* Unicode upper-case conversion */
+#endif
+#if FF_USE_LFN == 3						/* Dynamic memory allocation */
+void* ff_memalloc (UINT msize);			/* Allocate memory block */
+void ff_memfree (void* mblock);			/* Free memory block */
+#endif
+
+/* Sync functions */
+#if FF_FS_REENTRANT
+int ff_cre_syncobj (BYTE vol, FF_SYNC_t* sobj);	/* Create a sync object */
+int ff_req_grant (FF_SYNC_t sobj);		/* Lock sync object */
+void ff_rel_grant (FF_SYNC_t sobj);		/* Unlock sync object */
+int ff_del_syncobj (FF_SYNC_t sobj);	/* Delete a sync object */
+#endif
+
+
+
+
 /*--------------------------------------------------------------*/
 /* Flags and offset address                                     */
 
@@ -342,7 +355,6 @@ TCHAR* f_gets (TCHAR* buff, int len, FIL* fp);                      /* Get a str
 #define AM_SYS      0x04    /* System */
 #define AM_DIR      0x10    /* Directory */
 #define AM_ARC      0x20    /* Archive */
-
 
 
 #ifdef __cplusplus

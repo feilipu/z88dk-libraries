@@ -1,30 +1,10 @@
-/*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem Module  R0.13p2                             /
-/-----------------------------------------------------------------------------/
-/
-/ Copyright (C) 2017, ChaN, all right reserved.
-/
-/ FatFs module is an open source software. Redistribution and use of FatFs in
-/ source and binary forms, with or without modification, are permitted provided
-/ that the following condition is met:
-/
-/ 1. Redistributions of source code must retain the above copyright notice,
-/    this condition and the following disclaimer.
-/
-/ This software is provided by the copyright holder and contributors "AS IS"
-/ and any warranties related to this software are DISCLAIMED.
-/ The copyright owner or contributors be NOT LIABLE for any damages caused
-/ by use of this software.
-/
-/----------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------*/
+/* Sample code for get_fattime() for FatFs                               */
+/* (C)Phillip Stevens, 2017                                              */
+/*-----------------------------------------------------------------------*/
+
 
 #include "ff.h"             /* FatFs Public API */
-
-/*-----------------------------------------------------------------------*/
-/* Sample code of OS dependent controls for FatFs                        */
-/* (C)ChaN, 2017                                                         */
-/*-----------------------------------------------------------------------*/
-
 
 #if !FF_FS_READONLY && !FF_FS_NORTC /* FF_FS_NORTC switches timestamp */
 
@@ -44,6 +24,11 @@ DWORD get_fattime (void)
 
 #endif
 
+
+/*-----------------------------------------------------------------------*/
+/* Sample code of OS dependent controls for FatFs                        */
+/* (C)ChaN, 2017                                                         */
+/*-----------------------------------------------------------------------*/
 
 
 #if FF_USE_LFN == 3	/* Dynamic memory allocation */
@@ -86,6 +71,9 @@ void ff_memfree (
 /  synchronization object for the volume, such as semaphore and mutex.
 /  When a 0 is returned, the f_mount() function fails with FR_INT_ERR.
 */
+
+//const osMutexDef_t Mutex[FF_VOLUMES];	/* CMSIS-RTOS */
+
 
 int ff_cre_syncobj (	/* 1:Function succeeded, 0:Could not create the sync object */
 	BYTE vol,			/* Corresponding volume (logical drive number) */
