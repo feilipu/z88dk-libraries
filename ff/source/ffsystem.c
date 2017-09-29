@@ -25,6 +25,9 @@ DWORD get_fattime (void)
 
 #else
 #error - No RTC time functions available for your target
+#error - Set FF_FS_NORTC = 1 in ffconf.h
+#endif
+
 #endif
 
 
