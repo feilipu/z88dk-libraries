@@ -216,9 +216,9 @@
 /  Note that enabling exFAT discards ANSI C (C89) compatibility. */
 
 
-#define FF_FS_NORTC         0
-#define FF_NORTC_MON        28
-#define FF_NORTC_MDAY       6
+#define FF_FS_NORTC         1
+#define FF_NORTC_MON        6
+#define FF_NORTC_MDAY       28
 #define FF_NORTC_YEAR       2031
 /* The option FF_FS_NORTC switches timestamp function. If the system does not have
 /  any RTC function or valid timestamp is not needed, set FF_FS_NORTC = 1 to disable
