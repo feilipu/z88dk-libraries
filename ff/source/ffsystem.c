@@ -8,6 +8,7 @@
 
 #if !FF_FS_READONLY && !FF_FS_NORTC /* FF_FS_NORTC switches timestamp */
 
+#if __YAZ180
 #include <lib/yaz180/time.h> /* Declarations of YAZ180 time functions */
 
 DWORD get_fattime (void)
@@ -22,6 +23,8 @@ DWORD get_fattime (void)
     return ( (DWORD)system_fatfs( &y2ktime ) );
 }
 
+#else
+#error - No RTC time functions available for your target
 #endif
 
 
