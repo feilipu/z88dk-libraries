@@ -655,7 +655,6 @@ void st_qword (BYTE* ptr, QWORD val)    /* Store an 8-byte word in little-endian
 }
 #endif
 #endif    /* !FF_FS_READONLY */
-
 #endif    /* !__Z88DK_LD_ST_MACROS */
 
 /*-----------------------------------------------------------------------*/
@@ -715,7 +714,6 @@ int chk_chr (const char* str, int chr)    /* NZ:contained, ZR:not contained */
 }
 
 #endif      /* !__STRING_H__ */
-
 
 /* Test if the character is DBC 1st byte */
 static

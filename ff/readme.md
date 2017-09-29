@@ -77,6 +77,8 @@ A simple usage example, for the `+yaz180` target.
 
 // zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/time -llib/yaz180/ff --max-allocs-per-node200000 ffmain.c -o ffmain -create-app
 
+// doke &h2704, &2900 (Look for __Start symbol in ffmain.map)
+
 static FATFS FatFs;		/* FatFs work area needed for each volume */
 static FIL Fil;			/* File object needed for each open file */
 
