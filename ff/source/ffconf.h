@@ -216,7 +216,15 @@
 /  Note that enabling exFAT discards ANSI C (C89) compatibility. */
 
 
+#if __RC2014
 #define FF_FS_NORTC         1
+#elif __YAZ180
+#define FF_FS_NORTC         0
+#else
+#define FF_FS_NORTC         1
+#warning - Check whether you have get_fattime() available.
+#endif
+
 #define FF_NORTC_MON        6
 #define FF_NORTC_MDAY       28
 #define FF_NORTC_YEAR       2031
