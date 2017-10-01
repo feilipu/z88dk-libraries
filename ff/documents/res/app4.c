@@ -50,7 +50,7 @@ int test_diskio (
 
     printf("test_diskio(%u, %u, 0x%08X, 0x%08X)\n", pdrv, ncyc, (UINT)buff, sz_buff);
 
-    if (sz_buff < _MAX_SS + 4) {
+    if (sz_buff < FF_MAX_SS + 4) {
         printf("Insufficient work area to run program.\n");
         return 1;
     }
