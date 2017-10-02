@@ -59,7 +59,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 Once installed, the FatFs library can be linked against on the compile line by adding `-llib/target/ff` and the include file can be found with `#include <lib/target/ff.h>`.
 
-A simple usage example, for the `+yaz180` target.
+A simple usage example, for the `+yaz180` or `+rc2014` target.
 
 ```c
 /*----------------------------------------------------------------------*/
@@ -75,16 +75,15 @@ A simple usage example, for the `+yaz180` target.
 #include <lib/rc2014/ff.h>     /* Declarations of FatFs API */
 
 #elif __YAZ180
-#include <lib/yaz180/time.h>   /* Declaration of system time */
 #include <lib/yaz180/ff.h>     /* Declarations of FatFs API */
 
 #endif
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/time -llib/yaz180/ff --max-allocs-per-node100000 ffmain.c -o ffmain -create-app
+// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node100000 ff_main.c -o ff_main -create-app
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node100000 ffmain.c -o ffmain -create-app
+// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node100000 ff_main.c -o ff_main -create-app
 
-// doke &h2704, &h2900 (for yaz180. Look for __Start symbol in ffmain.map)
+// doke &h2704, &h2900 (for yaz180. Look for __Start symbol in ff_main.map)
 // doke &h8224, &h9000 (for rc2014 subtype basic_dcio and NASCOM Basic)
 
 
@@ -94,10 +93,6 @@ static FIL Fil;			/* File object needed for each open file */
 int main (void)
 {
 	UINT bw;
-
-    system_tick_init((void *)0x2044);
-    set_zone((int32_t)10 * ONE_HOUR);   /* Australian Eastern Standard Time */
-    set_system_time(1505695200 - UNIX_OFFSET);
 
 	f_mount(&FatFs, "", 0);	            /* Give a work area to the default drive */
 
