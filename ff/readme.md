@@ -22,9 +22,11 @@ FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The F
 
 ## Preparation
 
-First configure the library to suit your requirements by adjusting the `source/ffconf.h` file to provide the functions you need.
+Please check that your diskio layer is working correctly, using the example program in `examples/diskio_check.c'.
 
-The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
+Then configure the library to suit your requirements by adjusting the `source/ffconf.h` file to provide the functions you need. You will then use this `ffconf.h` file to provide the options you included. This is a current limitation of z88dk, whereby it can only provide one third party library header file.
+
+The ff library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 `zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node200000 @ff.lst -o ff`
 
@@ -36,7 +38,7 @@ The `z88dk-lib` function is used to install for the desired target. e.g.
 
 ```bash
 cd ..
-z88dk-lib +yaz180 ff
+z88dk-lib +rc2014 -f ff
 ```
 
 Some further examples of `z88dk-lib` usage.
@@ -67,17 +69,24 @@ A simple usage example, for the `+yaz180` target.
 #include <stdio.h>
 #include <string.h>
 
-#include <arch/yaz180.h>
-#include <arch/yaz180/system_time.h>
+#include "ffconf.h"            /* The ffconf.h file from library compilation */
 
+#if __RC2014
+#include <lib/rc2014/ff.h>     /* Declarations of FatFs API */
+
+#elif __YAZ180
 #include <lib/yaz180/time.h>   /* Declaration of system time */
-
-#include "ffconf.h"
 #include <lib/yaz180/ff.h>     /* Declarations of FatFs API */
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/time -llib/yaz180/ff --max-allocs-per-node200000 ffmain.c -o ffmain -create-app
+#endif
 
-// doke &h2704, &2900 (Look for __Start symbol in ffmain.map)
+// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/time -llib/yaz180/ff --max-allocs-per-node100000 ffmain.c -o ffmain -create-app
+
+// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node100000 ffmain.c -o ffmain -create-app
+
+// doke &h2704, &h2900 (for yaz180. Look for __Start symbol in ffmain.map)
+// doke &h8224, &h9000 (for rc2014 subtype basic_dcio and NASCOM Basic)
+
 
 static FATFS FatFs;		/* FatFs work area needed for each volume */
 static FIL Fil;			/* File object needed for each open file */
@@ -106,9 +115,10 @@ int main (void)
 }
 
 ```
+## Documentation
 
-## Internals
-
+ChaN's documentation is copied verbatim here, for easy reference.
+Please use his [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html) as the point of reference.
 
 ## Licence
 
