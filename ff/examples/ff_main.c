@@ -20,7 +20,7 @@
 
 // zcc +rc2014 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff  --max-allocs-per-node100000 ff_main.c -o ff_main -create-app
 
-// doke &h2704, &h2900 (Look for __Start in ffmain.map)
+// doke &h2704, &h2900 (Look for __Start in ff_main.map)
 // doke &h8224, &h9000 (rc2014, subtype basic_dcio NASCOM Basic)
 
 static FATFS FatFs;        /* FatFs work area needed for each volume */
