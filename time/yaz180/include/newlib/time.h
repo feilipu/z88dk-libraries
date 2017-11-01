@@ -108,6 +108,7 @@ extern "C" {
 #include <inttypes.h>
 #include <stdlib.h>
 
+#include <arch.h>
 
     /**
         time_t represents seconds elapsed from Midnight, Jan 1 2000 UTC (the Y2K 'epoch').
@@ -139,7 +140,9 @@ __OPROTO(,,time_t,,time_basic,time_t *timer)
 //  time_t      time(time_t *timer);
 __OPROTO(,,time_t,,time,time_t *timer)
 
+#if (__CRTCFG != 0)
 #define time(a) time_basic(a)
+#endif
 
     /**
     The difftime function returns the difference between two binary time stamps,
@@ -346,7 +349,9 @@ __OPROTO(,,void,,set_system_time_basic,time_t timestamp)
 //  void        set_system_time(time_t timestamp);
 __OPROTO(,,void,,set_system_time,time_t timestamp)
 
+#if (__CRTCFG != 0)
 #define set_system_time(a) set_system_time_basic(a)
+#endif
 
     /**
         Maintain the system time by calling this function at a rate of 1 Hertz.
