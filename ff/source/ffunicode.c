@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------*/
-/* Unicode handling functions for FatFs R0.13a                            */
+/* Unicode handling functions for FatFs R0.13ap1                          */
 /*------------------------------------------------------------------------*/
 /* This module will occupy a huge memory in the .const section when the    /
 /  FatFs is configured for LFN with DBCS. If the system has any Unicode    /
