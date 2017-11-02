@@ -31,9 +31,9 @@ Then configure the library to suit your requirements by adjusting the `source/ff
 
 The ff library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node50000 @ff.lst -o ff`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node100000 @ff.lst -o ff`
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node50000 @ff.lst -o ff`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node100000 @ff.lst -o ff`
 
 The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
@@ -82,9 +82,9 @@ A simple usage example, for the `+yaz180` or `+rc2014` target.
 
 #endif
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node50000 ff_main.c -o ff_main -create-app
+// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node100000 ff_main.c -o ff_main -create-app
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node50000 ff_main.c -o ff_main -create-app
+// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node100000 ff_main.c -o ff_main -create-app
 
 // doke &h2704, &h2900 (for yaz180. Look for __Start symbol in ff_main.map)
 // doke &h8224, &h9000 (for rc2014 subtype basic_dcio and NASCOM Basic)

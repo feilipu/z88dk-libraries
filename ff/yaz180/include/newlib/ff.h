@@ -55,12 +55,12 @@ typedef unsigned long long QWORD;
 
 /* Definitions of volume management */
 
-#if FF_MULTI_PARTITION      /* Multiple partition configuration */
+#if FF_MULTI_PARTITION        /* Multiple partition configuration */
 typedef struct {
     BYTE pd;    /* Physical drive number */
     BYTE pt;    /* Partition: 0:Auto detect, 1-4:Forced partition) */
 } PARTITION;
-extern PARTITION VolToPart[];   /* Volume - Partition resolution table */
+extern PARTITION VolToPart[];    /* Volume - Partition resolution table */
 #endif
 
 
