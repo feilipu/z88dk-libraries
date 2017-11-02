@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem module  R0.13p2                             /
+/  FatFs - Generic FAT Filesystem module  R0.13ap1                            /
 /-----------------------------------------------------------------------------/
 /
 / Copyright (C) 2017, ChaN, all right reserved.
@@ -21,7 +21,7 @@
 include(__link__.m4)
 
 #ifndef FF_DEFINED
-#define FF_DEFINED    87030     /* Revision ID */
+#define FF_DEFINED    89352    /* Revision ID */
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,35 +64,40 @@ extern PARTITION VolToPart[];   /* Volume - Partition resolution table */
 #endif
 
 
+
 /* Type of path name strings on FatFs API */
 
-#if FF_LFN_UNICODE && FF_USE_LFN    /* Unicode (UTF-16) string */
 #ifndef _INC_TCHAR
+#define _INC_TCHAR
+
+#if FF_USE_LFN && FF_LFN_UNICODE == 1     /* Unicode in UTF-16 encoding */
 typedef WCHAR TCHAR;
 #define _T(x) L ## x
 #define _TEXT(x) L ## x
-#define _INC_TCHAR
-#endif
-#else                       /* ANSI/OEM string */
-#ifndef _INC_TCHAR
+#elif FF_USE_LFN && FF_LFN_UNICODE == 2    /* Unicode in UTF-8 encoding */
+typedef char TCHAR;
+#define _T(x) u8 ## x
+#define _TEXT(x) u8 ## x
+#elif FF_USE_LFN && (FF_LFN_UNICODE < 0 || FF_LFN_UNICODE > 2)
+#error Wrong FF_LFN_UNICODE setting
+#else                                    /* ANSI/OEM code in SBCS/DBCS */
 typedef char TCHAR;
 #define _T(x) x
 #define _TEXT(x) x
-#define _INC_TCHAR
 #endif
+
 #endif
+
 
 
 /* Type of file size variables */
 
 #if FF_FS_EXFAT
-#if !FF_USE_LFN
-#error LFN must be enabled when enable exFAT
-#endif
 typedef QWORD FSIZE_t;
 #else
 typedef DWORD FSIZE_t;
 #endif
+
 
 
 /* Filesystem object structure (FATFS) */
@@ -141,6 +146,7 @@ typedef struct {
 } FATFS;
 
 
+
 /* Object ID and allocation information (FFOBJID) */
 
 typedef struct {
@@ -161,6 +167,7 @@ typedef struct {
     UINT    lockid;         /* File lock ID origin from 1 (index of file semaphore table Files[]) */
 #endif
 } FFOBJID;
+
 
 
 /* File object structure (FIL) */
@@ -185,6 +192,7 @@ typedef struct {
 } FIL;
 
 
+
 /* Directory object structure (DIR) */
 
 typedef struct {
@@ -203,6 +211,7 @@ typedef struct {
 } DIR;
 
 
+
 /* File information structure (FILINFO) */
 
 typedef struct {
@@ -211,12 +220,13 @@ typedef struct {
     WORD    ftime;          /* Modified time */
     BYTE    fattrib;        /* File attribute */
 #if FF_USE_LFN
-    TCHAR   altname[13];    /* Altenative file name */
-    TCHAR   fname[FF_MAX_LFN + 1]; /* Primary file name */
+    TCHAR    altname[FF_SFN_BUF + 1];  /* Altenative file name */
+    TCHAR    fname[FF_LFN_BUF + 1];    /* Primary file name */
 #else
-    TCHAR   fname[13];      /* File name */
+    TCHAR    fname[12 + 1]; /* File name */
 #endif
 } FILINFO;
+
 
 
 /* File function return code (FRESULT) */
@@ -243,6 +253,7 @@ typedef enum {
     FR_TOO_MANY_OPEN_FILES, /* (18) Number of open files > FF_FS_LOCK */
     FR_INVALID_PARAMETER    /* (19) Given parameter is invalid */
 } FRESULT;
+
 
 
 /*--------------------------------------------------------------*/
@@ -335,6 +346,7 @@ __OPROTO(,,TCHAR,*,f_gets,TCHAR* buff,int len,FIL* fp)
 /*--------------------------------------------------------------*/
 /* Flags and offset address                                     */
 
+
 /* File access mode and open method flags (3rd argument of f_open) */
 #define    FA_READ              0x01
 #define    FA_WRITE             0x02
@@ -366,6 +378,7 @@ __OPROTO(,,TCHAR,*,f_gets,TCHAR* buff,int len,FIL* fp)
 #define AM_SYS      0x04    /* System */
 #define AM_DIR      0x10    /* Directory */
 #define AM_ARC      0x20    /* Archive */
+
 
 #ifdef __cplusplus
 }
