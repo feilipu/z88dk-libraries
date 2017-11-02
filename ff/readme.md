@@ -2,6 +2,9 @@
 
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
+Current source version status is: 13a, Patch 1, October 27, 2017.<br>
+Current compiled version is status 13p2 using sdcc version 3.6.9 #10020.
+
 #### Features
 <ul>
  <li>DOS/Windows compatible FAT/exFAT filesystem.</li>
@@ -28,9 +31,9 @@ Then configure the library to suit your requirements by adjusting the `source/ff
 
 The ff library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node200000 @ff.lst -o ff`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node50000 @ff.lst -o ff`
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node200000 @ff.lst -o ff`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node50000 @ff.lst -o ff`
 
 The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 

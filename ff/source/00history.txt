@@ -302,15 +302,18 @@ R0.13 (May 21, 2017)
 
 
 
-  Patch 1. Jul 4, 2017
+R0.13a (October 14, 2017)
+
+  Added support for UTF-8 encoding on the API. (FF_LFN_UNICODE = 2)
+  Added options for file name output buffer. (FF_LFN_BUF, FF_SFN_BUF).
+  Added dynamic memory allocation option for working buffer of f_mkfs() and f_fdisk().
+  Fixed f_fdisk() and f_mkfs() create the partition table with wrong CHS parameters. (appeared at R0.09)
+  Fixed f_unlink() can cause lost clusters at fragmented file on the exFAT volume. (appeared at R0.12c)
+  Fixed f_setlabel() rejects some valid characters for exFAT volume. (appeared at R0.12)
+
+
+  Patch 1. Oct 27, 2017
 --------------------------------------------------------------------------------------------------
-Some compilers report a warning in the f_setlabel function when FF_USE_LABEL = 1 and FF_FS_EXFAT = 0.
-To solve this problem, apply ff13_p1.diff to the ff.c.
-
-
-
-  Patch 2. Sep 2, 2017
---------------------------------------------------------------------------------------------------
-f_fdisk function and f_mkfs function create the partition table with wrong C-H-S parameters.
-To solve this problem, apply ff13_p2.diff to the ff13_p1.c.
+File open and directory listing of any file on the exFAT root directory beyond the cluster
+boundary can fail with FR_INT_ERR.
 

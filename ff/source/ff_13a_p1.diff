@@ -1,0 +1,29 @@
+--- ff.c	Sat Oct 14 14:47:28 2017
++++ ff_13a_p1.c	Fri Oct 27 21:50:51 2017
+@@ -1176,7 +1176,7 @@
+ 			break;
+ #if FF_FS_EXFAT
+ 		case FS_EXFAT :
+-			if (obj->objsize != 0) {
++			if (obj->objsize != 0 || obj->sclust == 0) {	/* Object except root dir must have valid data */
+ 				DWORD cofs = clst - obj->sclust;	/* Offset from start cluster */
+ 				DWORD clen = (DWORD)((obj->objsize - 1) / SS(fs)) / fs->csize;	/* Number of clusters - 1 */
+ 
+@@ -1648,7 +1648,7 @@
+ {
+ 	DWORD sect;
+ 	UINT n, szb;
+-	BYTE *ibuf;
++	BYTE *ibuf = 0;
+ 
+ 
+ 	if (sync_window(fs) != FR_OK) return FR_DISK_ERR;	/* Flush disk access window */
+@@ -5970,7 +5970,7 @@
+ )
+ {
+ 	UINT i, n, sz_cyl, tot_cyl, b_cyl, e_cyl, p_cyl;
+-	BYTE s_hd, e_hd, *p, *buf; = (BYTE*)work;
++	BYTE s_hd, e_hd, *p, *buf = (BYTE*)work;
+ 	DSTATUS stat;
+ 	DWORD sz_disk, sz_part, s_part;
+ 	FRESULT res;

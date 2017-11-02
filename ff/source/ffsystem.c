@@ -1,10 +1,10 @@
-/*-----------------------------------------------------------------------*/
-/* Sample code for get_fattime() for FatFs                               */
-/* (C)Phillip Stevens, 2017                                              */
-/*-----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
+/*        Code for OS Dependent Functions for FatFs                       */
+/* (C)ChaN, & Phillip Stevens, 2017                                       */
+/*------------------------------------------------------------------------*/
 
 
-#include "ff.h"             /* FatFs Public API */
+#include "ff.h"
 
 #if !FF_FS_READONLY && !FF_FS_NORTC /* FF_FS_NORTC switches timestamp */
 
@@ -55,7 +55,7 @@ void* ff_memalloc (	/* Returns pointer to the allocated memory block (null on no
 /*------------------------------------------------------------------------*/
 
 void ff_memfree (
-	void* mblock	/* Pointer to the memory block to free */
+	void* mblock	/* Pointer to the memory block to free (nothing to do for null) */
 )
 {
 	free(mblock);	/* Free the memory block with POSIX API */
@@ -70,7 +70,7 @@ void ff_memfree (
 #include <lib/yaz180/FreeRTOS.h>
 
 /*------------------------------------------------------------------------*/
-/* Create a Synchronization Object
+/* Create a Synchronization Object                                        */
 /*------------------------------------------------------------------------*/
 /* This function is called in f_mount() function to create a new
 /  synchronization object for the volume, such as semaphore and mutex.
