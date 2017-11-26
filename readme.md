@@ -14,11 +14,11 @@ TBC
 The libraries can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine, from the relevant library sub-directory. e.g. for any `library`.
 
 ```bash
-cd ~/library
+cd ~/library/source
 zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node200000 @library.lst -o library
-mv library.lib target/lib/newlib/sdcc_ix
+mv library.lib ../target/lib/newlib/sdcc_ix
 zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node200000 @library.lst -o library
-mv library.lib target/lib/newlib/sdcc_iy
+mv library.lib ../target/lib/newlib/sdcc_iy
 ```
 The resulting `library.lib` file should be moved to `~/library/target/lib/newlib/sdcc_ix` or `~/library/target/lib/newlib/sdcc_iy` respectively, as noted above.
 
