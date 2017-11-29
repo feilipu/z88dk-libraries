@@ -1,5 +1,5 @@
 ## Introduction to selected z88dk Libraries
-This file describes some some z88dk compatible libraries.
+This file describes some z88dk compatible libraries.
 
 ### z88dk-time
 The implementation of `time.h` aspires to conform with ISO/IEC 9899 (C90). However, due to limitations of the target processor and the nature of its development environment, a practical implementation must of necessity deviate from the standard.
