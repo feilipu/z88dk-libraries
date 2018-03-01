@@ -100,18 +100,6 @@ typedef DWORD FSIZE_t;
 
 
 
-/* This set of options configures the range of sector size to be supported. */
-
-#ifndef FF_MIN_SS
-#define FF_MIN_SS        512
-#endif
-
-#ifndef FF_MAX_SS
-#define FF_MAX_SS        512
-#endif
-
-
-
 /* Filesystem object structure (FATFS) */
 
 typedef struct {
