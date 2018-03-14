@@ -1765,7 +1765,7 @@ FRESULT dir_sdi (    /* FR_OK(0):succeeded, !=0:error */
     dp->clust = clst;                    /* Current cluster# */
     if (dp->sect == 0) return FR_INT_ERR;
     dp->sect += ofs / SS(fs);            /* Sector# of the directory entry */
-    dp->dir = fs->win + (ofs % SS(fs));    /* Pointer to the entry in the win[] */
+    dp->dir = (BYTE*)(fs->win + (ofs % SS(fs)));    /* Pointer to the entry in the win[] */
 
     return FR_OK;
 }
@@ -1824,8 +1824,8 @@ FRESULT dir_next (    /* FR_OK(0):succeeded, FR_NO_FILE:End of table, FR_DENIED:
             }
         }
     }
-    dp->dptr = ofs;                        /* Current entry */
-    dp->dir = fs->win + ofs % SS(fs);    /* Pointer to the entry in the win[] */
+    dp->dptr = ofs;                               /* Current entry */
+    dp->dir = (BYTE*)(fs->win + ofs % SS(fs));    /* Pointer to the entry in the win[] */
 
     return FR_OK;
 }
@@ -3519,7 +3519,7 @@ FRESULT validate (    /* Returns FR_OK or FR_INVALID_OBJECT */
         }
 #endif
     }
-    *rfs = (res == FR_OK) ? obj->fs : 0;    /* Corresponding filesystem object */
+    *rfs = (res == FR_OK) ? (FATFS*)(obj->fs) : (FATFS*)(0);    /* Corresponding filesystem object */
     return res;
 }
 
@@ -4974,7 +4974,12 @@ FRESULT f_rename (
     FRESULT res;
     DIR djo, djn;
     FATFS *fs;
-    BYTE buf[FF_FS_EXFAT ? SZDIRE * 2 : SZDIRE], *dir;
+#if FF_FS_EXFAT != 0
+    BYTE buf[SZDIRE * 2];
+#else
+    BYTE buf[SZDIRE];
+#endif
+    BYTE *dir;
     DWORD dw;
     DEF_NAMBUF
 

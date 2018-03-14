@@ -31,6 +31,8 @@ Then configure the library to suit your requirements by adjusting the `source/ff
 
 The ff library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
+`zcc +target -lm -x -SO3 --opt-code-size -clib=new @ff.lst -o ff`
+
 `zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node100000 @ff.lst -o ff`
 
 `zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node100000 @ff.lst -o ff`

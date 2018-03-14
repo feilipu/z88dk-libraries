@@ -46,6 +46,7 @@
 
 #include "time.h"
 
+#ifndef __SCCZ80
 uint32_t
 gm_sidereal(const time_t * timer)
 {
@@ -59,3 +60,4 @@ gm_sidereal(const time_t * timer)
     tmp %= ONE_DAY;
     return tmp;
 }
+#endif

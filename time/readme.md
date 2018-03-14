@@ -39,6 +39,8 @@ Along with the usual smattering of utility functions, such as `is_leap_year()`, 
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
+`zcc +target -lm -x -SO3 --opt-code-size -clib=new @time.lst -o time`
+
 `zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node100000 @time.lst -o time`
 
 `zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node100000 @time.lst -o time`
