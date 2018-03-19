@@ -123,10 +123,8 @@ typedef struct {
 #if FF_FS_REENTRANT
     FF_SYNC_t    sobj;      /* Identifier of sync object */
 #endif
-#if !FF_FS_READONLY
     DWORD   last_clst;      /* Last allocated cluster */
     DWORD   free_clst;      /* Number of free clusters */
-#endif
 #if FF_FS_RPATH
     DWORD   cdir;           /* Current directory start cluster (0:root) */
 #if FF_FS_EXFAT

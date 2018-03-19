@@ -3442,8 +3442,6 @@ FRESULT find_volume (    /* FR_OK(0): successful, !=0: any error occurred */
                 fs->n_fatent * 2 : fs->n_fatent * 3 / 2 + (fs->n_fatent & 1);
         }
         if (fs->fsize < (szbfat + (SS(fs) - 1)) / SS(fs)) return FR_NO_FILESYSTEM;    /* (BPB_FATSz must not be less than the size needed) */
-
-#if !FF_FS_READONLY
         /* Get FSInfo if available */
         fs->last_clst = fs->free_clst = 0xFFFFFFFF;        /* Initialize cluster allocation information */
         fs->fsi_flag = 0x80;
@@ -3466,7 +3464,6 @@ FRESULT find_volume (    /* FR_OK(0): successful, !=0: any error occurred */
             }
         }
 #endif    /* (FF_FS_NOFSINFO & 3) != 3 */
-#endif    /* !FF_FS_READONLY */
     }
 
     fs->fs_type = fmt;        /* FAT sub-type */
@@ -4639,8 +4636,6 @@ FRESULT f_stat (
 }
 
 
-
-#if !FF_FS_READONLY
 /*-----------------------------------------------------------------------*/
 /* Get Number of Free Clusters                                           */
 /*-----------------------------------------------------------------------*/
@@ -4728,7 +4723,7 @@ FRESULT f_getfree (
 }
 
 
-
+#if !FF_FS_READONLY
 
 /*-----------------------------------------------------------------------*/
 /* Truncate File                                                         */
