@@ -43,7 +43,7 @@ The `z88dk-lib` function is used to install for the desired target. e.g.
 
 ```bash
 cd ..
-z88dk-lib +rc2014 -f ff
+z88dk-lib +target -f ff
 ```
 
 Some further examples of `z88dk-lib` usage.

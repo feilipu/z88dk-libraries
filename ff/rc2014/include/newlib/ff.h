@@ -19,6 +19,7 @@
 /----------------------------------------------------------------------------*/
 
 include(__link__.m4)
+define(`m4_SCCZ80_NOLIB', 1)
 
 #ifndef FF_DEFINED
 #define FF_DEFINED    89352    /* Revision ID */

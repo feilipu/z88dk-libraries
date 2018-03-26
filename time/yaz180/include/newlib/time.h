@@ -97,6 +97,7 @@
 */
 
 include(__link__.m4)
+define(`m4_SCCZ80_NOLIB', 1)
 
 #ifndef TIME_H
 #define TIME_H
