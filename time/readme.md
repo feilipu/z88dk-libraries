@@ -41,9 +41,9 @@ The library can be compiled using the following command lines in Linux, with the
 
 `zcc +target -lm -x -SO3 --opt-code-size -clib=new @time.lst -o time`
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node100000 @time.lst -o time`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node400000 @time.lst -o time`
 
-`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node100000 @time.lst -o time`
+`zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node400000 @time.lst -o time`
 
 The resulting `time.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
