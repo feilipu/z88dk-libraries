@@ -1777,7 +1777,8 @@ static FRESULT dir_next (    /* FR_OK(0):succeeded, FR_NO_FILE:End of table, FR_
 
 
     ofs = dp->dptr + SZDIRE;    /* Next entry */
-    if (dp->sect == 0 || ofs >= (DWORD)((FF_FS_EXFAT && fs->fs_type == FS_EXFAT) ? MAX_DIR_EX : MAX_DIR)) return FR_NO_FILE;    /* Report EOT when offset has reached max value */
+    if (ofs >= (DWORD)((FF_FS_EXFAT && fs->fs_type == FS_EXFAT) ? MAX_DIR_EX : MAX_DIR)) dp->sect = 0;    /* Disable it if the offset reached the max value */
+    if (dp->sect == 0) return FR_NO_FILE;    /* Report EOT if it has been disabled */
 
     if (ofs % SS(fs) == 0) {    /* Sector changed? */
         dp->sect++;                /* Next sector */
@@ -4885,6 +4886,7 @@ FRESULT f_mkdir (
 {
     FRESULT res;
     DIR dj;
+    FFOBJID sobj;
     FATFS *fs;
     BYTE *dir;
     DWORD dcl, pcl, tm;
@@ -4896,22 +4898,21 @@ FRESULT f_mkdir (
     if (res == FR_OK) {
         dj.obj.fs = fs;
         INIT_NAMBUF(fs);
-        res = follow_path(&dj, path);            /* Follow the file path */
-        if (res == FR_OK) res = FR_EXIST;        /* Any object with same name is already existing */
+        res = follow_path(&dj, path);           /* Follow the file path */
+        if (res == FR_OK) res = FR_EXIST;       /* Any object with same name is already existing */
         if (FF_FS_RPATH && res == FR_NO_FILE && (dj.fn[NSFLAG] & NS_DOT)) {
             res = FR_INVALID_NAME;
         }
         if (res == FR_NO_FILE) {                /* Can create a new directory */
-            dcl = create_chain(&dj.obj, 0);        /* Allocate a cluster for the new directory table */
-            dj.obj.objsize = (DWORD)fs->csize * SS(fs);
+            sobj.fs = fs;                       /* New object id to create a new chain */
+            dcl = create_chain(&sobj, 0);       /* Allocate a cluster for the new directory */
             res = FR_OK;
-            if (dcl == 0) res = FR_DENIED;        /* No space to allocate a new cluster */
+            if (dcl == 0) res = FR_DENIED;      /* No space to allocate a new cluster */
             if (dcl == 1) res = FR_INT_ERR;
             if (dcl == 0xFFFFFFFF) res = FR_DISK_ERR;
-            if (res == FR_OK) res = sync_window(fs);    /* Flush FAT */
             tm = GET_FATTIME();
-            if (res == FR_OK) {                    /* Initialize the new directory table */
-                res = dir_clear(fs, dcl);        /* Clean up the new table */
+            if (res == FR_OK) {                 /* Initialize the new directory table */
+                res = dir_clear(fs, dcl);       /* Clean up the new table */
                 if (res == FR_OK && (!FF_FS_EXFAT || fs->fs_type != FS_EXFAT)) {    /* Create dot entries (FAT only) */
                     dir = fs->win;
                     MEMSET(dir + DIR_Name, ' ', 11);    /* Create "." entry */
@@ -4933,8 +4934,8 @@ FRESULT f_mkdir (
                 if (fs->fs_type == FS_EXFAT) {    /* Initialize directory entry block */
                     STDWORD(fs->dirbuf + XDIR_ModTime, tm);    /* Created time */
                     STDWORD(fs->dirbuf + XDIR_FstClus, dcl);    /* Table start cluster */
-                    STDWORD(fs->dirbuf + XDIR_FileSize, (DWORD)dj.obj.objsize);    /* File size needs to be valid */
-                    STDWORD(fs->dirbuf + XDIR_ValidFileSize, (DWORD)dj.obj.objsize);
+                    STDWORD(fs->dirbuf + XDIR_FileSize, (DWORD)fs->csize * SS(fs));    /* File size needs to be valid */
+                    STDWORD(fs->dirbuf + XDIR_ValidFileSize, (DWORD)fs->csize * SS(fs));
                     fs->dirbuf[XDIR_GenFlags] = 3;                /* Initialize the object flag */
                     fs->dirbuf[XDIR_Attr] = AM_DIR;                /* Attribute */
                     res = store_xdir(&dj);
@@ -5751,12 +5752,12 @@ FRESULT f_mkfs (
         MEMSET(buf, 0, szb_buf);
         buf[SZDIRE * 0 + 0] = 0x83;        /* 83 entry (volume label) */
         buf[SZDIRE * 1 + 0] = 0x81;        /* 81 entry (allocation bitmap) */
-        STDWORD(buf + SZDIRE * 1 + 20, 2);
-        STDWORD(buf + SZDIRE * 1 + 24, szb_bit);
+        STDWORD(buf + SZDIRE * 1 + 20, 2);              /* cluster */
+        STDWORD(buf + SZDIRE * 1 + 24, szb_bit);        /* size */
         buf[SZDIRE * 2 + 0] = 0x82;        /* 82 entry (up-case table) */
-        STDWORD(buf + SZDIRE * 2 + 4, sum);
-        STDWORD(buf + SZDIRE * 2 + 20, 2 + tbl[0]);
-        STDWORD(buf + SZDIRE * 2 + 24, szb_case);
+        STDWORD(buf + SZDIRE * 2 + 4, sum);             /* sum */
+        STDWORD(buf + SZDIRE * 2 + 20, 2 + tbl[0]);     /* cluster */
+        STDWORD(buf + SZDIRE * 2 + 24, szb_case);       /* size */
         sect = b_data + au * (tbl[0] + tbl[1]);    nsect = au;    /* Start of the root directory and number of sectors */
         do {    /* Fill root directory sectors */
             n = (nsect > sz_buf) ? sz_buf : nsect;
@@ -5771,21 +5772,21 @@ FRESULT f_mkfs (
             /* Main record (+0) */
             MEMSET(buf, 0, ss);
             MEMCPY(buf + BS_JmpBoot, "\xEB\x76\x90" "EXFAT   ", 11);    /* Boot jump code (x86), OEM name */
-            STDWORD(buf + BPB_VolOfsEx, b_vol);                    /* Volume offset in the physical drive [sector] */
+            STDWORD(buf + BPB_VolOfsEx, b_vol);                     /* Volume offset in the physical drive [sector] */
             STDWORD(buf + BPB_TotSecEx, sz_vol);                    /* Volume size [sector] */
-            STDWORD(buf + BPB_FatOfsEx, b_fat - b_vol);            /* FAT offset [sector] */
-            STDWORD(buf + BPB_FatSzEx, sz_fat);                    /* FAT size [sector] */
-            STDWORD(buf + BPB_DataOfsEx, b_data - b_vol);            /* Data offset [sector] */
-            STDWORD(buf + BPB_NumClusEx, n_clst);                    /* Number of clusters */
-            STDWORD(buf + BPB_RootClusEx, 2 + tbl[0] + tbl[1]);    /* Root dir cluster # */
-            STDWORD(buf + BPB_VolIDEx, GET_FATTIME());                /* VSN */
-            STWORD(buf + BPB_FSVerEx, 0x100);                        /* Filesystem version (1.00) */
+            STDWORD(buf + BPB_FatOfsEx, b_fat - b_vol);             /* FAT offset [sector] */
+            STDWORD(buf + BPB_FatSzEx, sz_fat);                     /* FAT size [sector] */
+            STDWORD(buf + BPB_DataOfsEx, b_data - b_vol);           /* Data offset [sector] */
+            STDWORD(buf + BPB_NumClusEx, n_clst);                   /* Number of clusters */
+            STDWORD(buf + BPB_RootClusEx, 2 + tbl[0] + tbl[1]);     /* Root dir cluster # */
+            STDWORD(buf + BPB_VolIDEx, GET_FATTIME());              /* VSN */
+            STWORD(buf + BPB_FSVerEx, 0x100);                       /* Filesystem version (1.00) */
             for (buf[BPB_BytsPerSecEx] = 0, i = ss; i >>= 1; buf[BPB_BytsPerSecEx]++) ;    /* Log2 of sector size [byte] */
             for (buf[BPB_SecPerClusEx] = 0, i = au; i >>= 1; buf[BPB_SecPerClusEx]++) ;    /* Log2 of cluster size [sector] */
-            buf[BPB_NumFATsEx] = 1;                    /* Number of FATs */
-            buf[BPB_DrvNumEx] = 0x80;                /* Drive number (for int13) */
+            buf[BPB_NumFATsEx] = 1;                 /* Number of FATs */
+            buf[BPB_DrvNumEx] = 0x80;               /* Drive number (for int13) */
             STWORD(buf + BS_BootCodeEx, 0xFEEB);    /* Boot code (x86) */
-            STWORD(buf + BS_55AA, 0xAA55);            /* Signature (placed here regardless of sector size) */
+            STWORD(buf + BS_55AA, 0xAA55);          /* Signature (placed here regardless of sector size) */
             for (i = sum = 0; i < ss; i++) {        /* VBR checksum */
                 if (i != BPB_VolFlagEx && i != BPB_VolFlagEx + 1 && i != BPB_PercInUseEx) sum = xsum32(buf[i], sum);
             }
