@@ -320,7 +320,15 @@ R0.13b (April 07, 2018)
   Fixed accesing any object on the exFAT root directory beyond the cluster boundary can fail. (appeared at R0.12c)
   Fixed f_setlabel() does not reject some invalid characters. (appeared at R0.09b)
 
+R0.13bp1 (May 23, 2018)
+
+  Successive f_readdir() calls would not detect the end of directory if the directory was filled up and the last entry is not empty. 
+
 R0.13bp2 (July 08, 2018)
 
-  Successive f_readdir() calls would not detect the end of directory if the directory was filled up and the last entry is not empty.
   Creating a sub-directory in the fragmented sub-directory on the exFAT volume collapses FAT chain of the parent directory.
+
+R0.13bp3 (September 03, 2018)
+
+  f_getcwd function uses memory location beyond the output buffer length specified by argument if the buffer has a valid drive number. It can collapse the data located next to the output buffer.
+

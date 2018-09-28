@@ -2,7 +2,7 @@
 
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
-Current source version status is: 13b, Patch 2, July 8, 2018.<br>
+Current source version status is: 13b, Patch 3, September 3, 2018.<br>
 Current compiled version using sdcc version 3.6.9 #9958.
 
 #### Features
@@ -84,12 +84,9 @@ A simple usage example, for the `+yaz180` or `+rc2014` target.
 
 #endif
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node100000 ff_main.c -o ff_main -create-app
+// zcc +yaz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node100000 ff_main.c -o ff_main -create-app
-
-// doke &h2704, &h2900 (for yaz180. Look for __Start symbol in ff_main.map)
-// doke &h8224, &h9000 (for rc2014 subtype basic_dcio and NASCOM Basic)
+// zcc +yaz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
 
 static FATFS FatFs;		/* FatFs work area needed for each volume */
@@ -122,7 +119,7 @@ Please use his [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html) as the
 
 ## Licence
 
-Copyright (C) 2017, ChaN, all right reserved.
+Copyright (C) 2018, ChaN, all right reserved.
 
 FatFs module is an open source software. Redistribution and use of FatFs in source and binary forms, with or without modification, are permitted provided that the following condition is met:
 
