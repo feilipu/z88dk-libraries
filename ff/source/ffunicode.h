@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem module  R0.13b                              /
+/  FatFs - Generic FAT Filesystem module  R0.13c                              /
 /-----------------------------------------------------------------------------/
 /
 / Copyright (C) 2018, ChaN, all right reserved.

@@ -1,6 +1,6 @@
 /*------------------------------------------------------------------------*/
 /*  Code for OS Dependent Functions for FatFs                             */
-/* (C)ChaN, & Phillip Stevens, 2017                                       */
+/* (c)ChaN, 2018 & (c) Phillip Stevens, 2018                              */
 /*------------------------------------------------------------------------*/
 
 
@@ -42,8 +42,8 @@ DWORD get_fattime (void)
 /* Allocate a memory block                                                */
 /*------------------------------------------------------------------------*/
 
-void* ff_memalloc (    /* Returns pointer to the allocated memory block (null on not enough core) */
-    UINT msize        /* Number of bytes to allocate */
+void* ff_memalloc ( /* Returns pointer to the allocated memory block (null if not enough core) */
+    UINT msize      /* Number of bytes to allocate */
 )
 {
     return malloc(msize);    /* Allocate a new memory block with POSIX API */
@@ -55,7 +55,7 @@ void* ff_memalloc (    /* Returns pointer to the allocated memory block (null on
 /*------------------------------------------------------------------------*/
 
 void ff_memfree (
-    void* mblock    /* Pointer to the memory block to free (nothing to do for null) */
+    void* mblock    /* Pointer to the memory block to free (nothing to do if null) */
 )
 {
     free(mblock);    /* Free the memory block with POSIX API */
@@ -77,7 +77,7 @@ void ff_memfree (
 /  When a 0 is returned, the f_mount() function fails with FR_INT_ERR.
 */
 
-//const osMutexDef_t Mutex[FF_VOLUMES];    /* CMSIS-RTOS */
+//const osMutexDef_t Mutex[FF_VOLUMES]; /* Table of CMSIS-RTOS mutex */
 
 
 int ff_cre_syncobj (    /* 1:Function succeeded, 0:Could not create the sync object */
@@ -86,25 +86,25 @@ int ff_cre_syncobj (    /* 1:Function succeeded, 0:Could not create the sync obj
 )
 {
     /* Win32 */
-//    *sobj = CreateMutex(NULL, FALSE, NULL);
-//    return (int)(*sobj != INVALID_HANDLE_VALUE);
+//  *sobj = CreateMutex(NULL, FALSE, NULL);
+//  return (int)(*sobj != INVALID_HANDLE_VALUE);
 
     /* uITRON */
-//    T_CSEM csem = {TA_TPRI,1,1};
-//    *sobj = acre_sem(&csem);
-//    return (int)(*sobj > 0);
+//  T_CSEM csem = {TA_TPRI,1,1};
+//  *sobj = acre_sem(&csem);
+//  return (int)(*sobj > 0);
 
     /* uC/OS-II */
-//    OS_ERR err;
-//    *sobj = OSMutexCreate(0, &err);
-//    return (int)(err == OS_NO_ERR);
+//  OS_ERR err;
+//  *sobj = OSMutexCreate(0, &err);
+//  return (int)(err == OS_NO_ERR);
 
     /* FreeRTOS */
     *sobj = xSemaphoreCreateMutex();
     return (int)(*sobj != NULL);
 
     /* CMSIS-RTOS */
-//    *sobj = osMutexCreate(Mutex + vol);
+//    *sobj = osMutexCreate(&Mutex[vol]);
 //    return (int)(*sobj != NULL);
 }
 
@@ -122,22 +122,22 @@ int ff_del_syncobj (    /* 1:Function succeeded, 0:Could not delete due to an er
 )
 {
     /* Win32 */
-//    return (int)CloseHandle(sobj);
+//  return (int)CloseHandle(sobj);
 
     /* uITRON */
-//    return (int)(del_sem(sobj) == E_OK);
+//  return (int)(del_sem(sobj) == E_OK);
 
     /* uC/OS-II */
-//    OS_ERR err;
-//    OSMutexDel(sobj, OS_DEL_ALWAYS, &err);
-//    return (int)(err == OS_NO_ERR);
+//  OS_ERR err;
+//  OSMutexDel(sobj, OS_DEL_ALWAYS, &err);
+//  return (int)(err == OS_NO_ERR);
 
     /* FreeRTOS */
     vSemaphoreDelete(sobj);
     return 1;
 
     /* CMSIS-RTOS */
-//    return (int)(osMutexDelete(sobj) == osOK);
+//  return (int)(osMutexDelete(sobj) == osOK);
 }
 
 
@@ -153,21 +153,21 @@ int ff_req_grant (    /* 1:Got a grant to access the volume, 0:Could not get a g
 )
 {
     /* Win32 */
-//    return (int)(WaitForSingleObject(sobj, FF_FS_TIMEOUT) == WAIT_OBJECT_0);
+//  return (int)(WaitForSingleObject(sobj, FF_FS_TIMEOUT) == WAIT_OBJECT_0);
 
     /* uITRON */
-//    return (int)(wai_sem(sobj) == E_OK);
+//  return (int)(wai_sem(sobj) == E_OK);
 
     /* uC/OS-II */
-//    OS_ERR err;
-//    OSMutexPend(sobj, FF_FS_TIMEOUT, &err));
-//    return (int)(err == OS_NO_ERR);
+//  OS_ERR err;
+//  OSMutexPend(sobj, FF_FS_TIMEOUT, &err));
+//  return (int)(err == OS_NO_ERR);
 
     /* FreeRTOS */
     return (int)(xSemaphoreTake(sobj, FF_FS_TIMEOUT) == pdTRUE);
 
     /* CMSIS-RTOS */
-//    return (int)(osMutexWait(sobj, FF_FS_TIMEOUT) == osOK);
+//  return (int)(osMutexWait(sobj, FF_FS_TIMEOUT) == osOK);
 }
 
 
@@ -182,19 +182,19 @@ void ff_rel_grant (
 )
 {
     /* Win32 */
-//    ReleaseMutex(sobj);
+//  ReleaseMutex(sobj);
 
     /* uITRON */
-//    sig_sem(sobj);
+//  sig_sem(sobj);
 
     /* uC/OS-II */
-//    OSMutexPost(sobj);
+//  OSMutexPost(sobj);
 
     /* FreeRTOS */
     xSemaphoreGive(sobj);
 
     /* CMSIS-RTOS */
-//    osMutexRelease(sobj);
+//  osMutexRelease(sobj);
 }
 
 #endif

@@ -13,25 +13,25 @@ FRESULT test_contiguous_file (
 
 
     *cont = 0;
-    fr = f_lseek(fp, 0);
+    fr = f_lseek(fp, 0);            /* Validates and prepares the file */
     if (fr != FR_OK) return fr;
 
 #if FF_MAX_SS == FF_MIN_SS
-    clsz = (DWORD)fp->obj.fs->csize * FF_MAX_SS;
+    clsz = (DWORD)fp->obj.fs->csize * FF_MAX_SS;    /* Cluster size */
 #else
     clsz = (DWORD)fp->obj.fs->csize * fp->obj.fs->ssize;
 #endif
     fsz = fp->obj.objsize;
     if (fsz > 0) {
-        clst = fp->obj.sclust - 1;
+        clst = fp->obj.sclust - 1;  /* A cluster leading the first cluster for first test */
         while (fsz) {
             step = (fsz >= clsz) ? clsz : (DWORD)fsz;
-            fr = f_lseek(fp, f_tell(fp) + step);
+            fr = f_lseek(fp, f_tell(fp) + step);    /* Advances file pointer a cluster */
             if (fr != FR_OK) return fr;
-            if (clst + 1 != fp->clust) break;
-            clst = fp->clust; fsz -= step;
+            if (clst + 1 != fp->clust) break;       /* Is not the cluster next to previous one? */
+            clst = fp->clust; fsz -= step;          /* Get current cluster for next test */
         }
-        if (fsz <= clsz) *cont = 1;
+        if (fsz == 0) *cont = 1;    /* All done without fail? */
     }
 
     return FR_OK;
