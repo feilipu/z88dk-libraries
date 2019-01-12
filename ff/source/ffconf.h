@@ -61,7 +61,13 @@
 /* This option switches f_expand function. (0:Disable or 1:Enable) */
 
 
+#if __RC2014
 #define FF_USE_CHMOD    0
+#elif __YAZ180
+#define FF_USE_CHMOD    1
+#else
+#define FF_USE_CHMOD    0
+#endif
 /* This option switches attribute manipulation functions, f_chmod() and f_utime().
 /  (0:Disable or 1:Enable) Also FF_FS_READONLY needs to be 0 to enable this option. */
 
@@ -118,7 +124,7 @@
 /   3: Enable LFN with dynamic working buffer on the HEAP.
 /
 /  To enable the LFN, ffunicode.c needs to be added to the project. The LFN function
-/  requiers certain internal working buffer occupies (FF_MAX_LFN + 1) * 2 bytes and
+/  requires certain internal working buffer occupies (FF_MAX_LFN + 1) * 2 bytes and
 /  additional (FF_MAX_LFN + 44) / 15 * 32 bytes when exFAT is enabled.
 /  The FF_MAX_LFN defines size of the working buffer in UTF-16 code unit and it can
 /  be in range of 12 to 255. It is recommended to be set 255 to fully support LFN
