@@ -22,7 +22,7 @@ include(__link__.m4)
 define(`m4_SCCZ80_NOLIB', 1)
 
 #ifndef FF_DEFINED
-#define FF_DEFINED    89352    /* Revision ID */
+#define FF_DEFINED    86604    /* Revision ID */
 
 #ifdef __cplusplus
 extern "C" {
