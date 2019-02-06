@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem module  R0.13ap1                            /
+/  FatFs - Generic FAT Filesystem module  R0.13c                              /
 /-----------------------------------------------------------------------------/
 /
-/ Copyright (C) 2017, ChaN, all right reserved.
+/ Copyright (C) 2018, ChaN, all right reserved.
 /
 / FatFs module is an open source software. Redistribution and use of FatFs in
 / source and binary forms, with or without modification, are permitted provided
@@ -30,25 +30,31 @@ extern "C" {
 
 #ifndef __DISKIO_H__
 
-/* These types MUST be 16-bit or 32-bit */
-typedef int				INT;
-typedef unsigned int	UINT;
 
-/* This type MUST be 8-bit */
-typedef unsigned char	BYTE;
+/* Integer types used for FatFs API */
 
-/* These types MUST be 16-bit */
-typedef short			SHORT;
-typedef unsigned short	WORD;
-typedef unsigned short	WCHAR;
-
-/* These types MUST be 32-bit */
-typedef long			LONG;
-typedef unsigned long	DWORD;
-
+#if defined(_WIN32)	/* Main development platform */
+#define FF_INTDEF 2
+#include <windows.h>
+typedef unsigned __int64 QWORD;
+#elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__cplusplus)	/* C99 or later */
+#define FF_INTDEF 2
+#include <stdint.h>
+typedef unsigned char   BYTE;   /* char must be 8-bit */
+typedef unsigned int    UINT;   /* int must be 16-bit or 32-bit */
+typedef uint16_t        WORD;   /* 16-bit unsigned integer */
+typedef uint16_t        WCHAR;  /* 16-bit unsigned integer */
+typedef uint32_t        DWORD;  /* 32-bit unsigned integer */
 #ifndef __SCCZ80
-/* This type MUST be 64-bit (Remove this for ANSI C (C89) compatibility) */
-typedef unsigned long long QWORD;
+typedef uint64_t        QWORD;  /* 64-bit unsigned integer */
+#endif
+#else   /* Earlier than C99 */
+#define FF_INTDEF 1
+typedef unsigned char   BYTE;   /* char must be 8-bit */
+typedef unsigned int    UINT;   /* int must be 16-bit or 32-bit */
+typedef unsigned short  WORD;   /* 16-bit unsigned integer */
+typedef unsigned short  WCHAR;  /* 16-bit unsigned integer */
+typedef unsigned long   DWORD;  /* 32-bit unsigned integer */
 #endif
 
 #endif  /* __DISKIO_H__ */
@@ -62,6 +68,12 @@ typedef struct {
     BYTE pt;    /* Partition: 0:Auto detect, 1-4:Forced partition) */
 } PARTITION;
 extern PARTITION VolToPart[];    /* Volume - Partition resolution table */
+#endif
+
+#if FF_STR_VOLUME_ID
+#ifndef FF_VOLUME_STRS
+extern const char* VolumeStr[FF_VOLUMES];	/* User defined volume ID */
+#endif
 #endif
 
 
@@ -79,7 +91,11 @@ typedef WCHAR TCHAR;
 typedef char TCHAR;
 #define _T(x) u8 ## x
 #define _TEXT(x) u8 ## x
-#elif FF_USE_LFN && (FF_LFN_UNICODE < 0 || FF_LFN_UNICODE > 2)
+#elif FF_USE_LFN && FF_LFN_UNICODE == 3	/* Unicode in UTF-32 encoding */
+typedef DWORD TCHAR;
+#define _T(x) U ## x
+#define _TEXT(x) U ## x
+#elif FF_USE_LFN && (FF_LFN_UNICODE < 0 || FF_LFN_UNICODE > 3)
 #error Wrong FF_LFN_UNICODE setting
 #else                                    /* ANSI/OEM code in SBCS/DBCS */
 typedef char TCHAR;
@@ -94,6 +110,9 @@ typedef char TCHAR;
 /* Type of file size variables */
 
 #if FF_FS_EXFAT
+#if FF_INTDEF != 2
+#error exFAT feature wants C99 or later
+#endif
 typedef QWORD FSIZE_t;
 #else
 typedef DWORD FSIZE_t;
@@ -104,8 +123,8 @@ typedef DWORD FSIZE_t;
 /* Filesystem object structure (FATFS) */
 
 typedef struct {
-    BYTE    fs_type;        /* Filesystem type (0:N/A) */
-    BYTE    pdrv;           /* Physical drive number */
+    BYTE    fs_type;        /* Filesystem type (0:not mounted) */
+    BYTE    pdrv;           /* Associated physical drive */
     BYTE    n_fats;         /* Number of FATs (1 or 2) */
     BYTE    wflag;          /* win[] flag (b0:dirty) */
     BYTE    fsi_flag;       /* FSINFO flags (b7:disabled, b0:dirty) */
@@ -140,6 +159,9 @@ typedef struct {
     DWORD   fatbase;        /* FAT base sector */
     DWORD   dirbase;        /* Root directory base sector/cluster */
     DWORD   database;       /* Data base sector */
+#if FF_FS_EXFAT
+	DWORD	bitbase;		/* Allocation bitmap base sector */
+#endif
     DWORD   winsect;        /* Current sector appearing in the win[] */
     BYTE    win[FF_MAX_SS]; /* Disk access window for Directory, FAT (and file data at tiny cfg) */
 } FATFS;
@@ -152,7 +174,7 @@ typedef struct {
     FATFS*  fs;             /* Pointer to the hosting volume of this object */
     WORD    id;             /* Hosting volume mount ID */
     BYTE    attr;           /* Object attribute */
-    BYTE    stat;           /* Object chain status (b1-0: =0:not contiguous, =2:contiguous, =3:flagmented in this session, b2:sub-directory stretched) */
+    BYTE    stat;           /* Object chain status (b1-0: =0:not contiguous, =2:contiguous, =3:fragmented in this session, b2:sub-directory stretched) */
     DWORD   sclust;         /* Object data start cluster (0:no cluster or root directory) */
     FSIZE_t objsize;        /* Object size (valid when sclust != 0) */
 #if FF_FS_EXFAT
