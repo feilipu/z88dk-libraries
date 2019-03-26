@@ -15,9 +15,9 @@ The libraries can be compiled using the following command lines in Linux, with t
 
 ```bash
 cd ~/library/source
-zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_ix --max-allocs-per-node400000 @library.lst -o library
+zcc +target -lm -x -SO3 -clib=sdcc_ix --opt-code-size --allow-unsafe-read --max-allocs-per-node400000 @library.lst -o library
 mv library.lib ../target/lib/newlib/sdcc_ix
-zcc +target -lm -x -SO3 --opt-code-size -clib=sdcc_iy --max-allocs-per-node400000 @library.lst -o library
+zcc +target -lm -x -SO3 -clib=sdcc_iy --opt-code-size --allow-unsafe-read --max-allocs-per-node400000 @library.lst -o library
 mv library.lib ../target/lib/newlib/sdcc_iy
 ```
 The resulting `library.lib` file should be moved to `~/library/target/lib/newlib/sdcc_ix` or `~/library/target/lib/newlib/sdcc_iy` respectively, as noted above.

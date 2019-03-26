@@ -269,7 +269,7 @@
 #define LD2PD(vol) VolToPart[vol].pd    /* Get physical drive number */
 #define LD2PT(vol) VolToPart[vol].pt    /* Get partition index */
 #else
-#define LD2PD(vol) (BYTE)(vol)    /* Each logical drive is bound to the same physical drive number */
+#define LD2PD(vol) (BYTE)(vol)  /* Each logical drive is bound to the same physical drive number */
 #define LD2PT(vol) 0            /* Find first valid partition or in SFD */
 #endif
 
@@ -279,9 +279,9 @@
 #error Wrong sector size configuration
 #endif
 #if FF_MAX_SS == FF_MIN_SS
-#define SS(fs)    ((UINT)FF_MAX_SS)    /* Fixed sector size */
+#define SS(fs)    ((UINT)FF_MAX_SS)     /* Fixed sector size */
 #else
-#define SS(fs)    ((fs)->ssize)    /* Variable sector size */
+#define SS(fs)    ((fs)->ssize)         /* Variable sector size */
 #endif
 
 
@@ -302,10 +302,10 @@
 #error FF_FS_LOCK must be 0 at read-only configuration
 #endif
 typedef struct {
-    FATFS *fs;        /* Object ID 1, volume (NULL:blank entry) */
-    DWORD clu;        /* Object ID 2, containing directory (0:root) */
-    DWORD ofs;        /* Object ID 3, offset in the directory */
-    WORD ctr;        /* Object open counter, 0:none, 0x01..0xFF:read mode open count, 0x100:write mode */
+    FATFS *fs;          /* Object ID 1, volume (NULL:blank entry) */
+    DWORD clu;          /* Object ID 2, containing directory (0:root) */
+    DWORD ofs;          /* Object ID 3, offset in the directory */
+    WORD ctr;           /* Object open counter, 0:none, 0x01..0xFF:read mode open count, 0x100:write mode */
 } FILESEM;
 #endif
 
@@ -480,14 +480,14 @@ typedef struct {
 #error Wrong FF_VOLUMES setting
 #endif
 static FATFS *FatFs[FF_VOLUMES];    /* Pointer to the filesystem objects (logical drives) */
-static WORD Fsid;                    /* File system mount ID */
+static WORD Fsid;                   /* File system mount ID */
 
 #if FF_FS_RPATH != 0
 static BYTE CurrVol;                /* Current drive */
 #endif
 
 #if FF_FS_LOCK != 0
-static FILESEM Files[FF_FS_LOCK];    /* Open object lock semaphores */
+static FILESEM Files[FF_FS_LOCK];   /* Open object lock semaphores */
 #endif
 
 #if FF_STR_VOLUME_ID
