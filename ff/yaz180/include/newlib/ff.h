@@ -330,8 +330,8 @@ __OPROTO(,,FRESULT,,f_getlabel,const TCHAR* path,TCHAR* label,DWORD* vsn)
 __OPROTO(,,FRESULT,,f_setlabel,const TCHAR* label)
          //FRESULT f_forward (FIL* fp,UINT(*func)(const BYTE*,UINT),UINT btf,UINT* bf); /* Forward data to the stream */
 __OPROTO(,,FRESULT,,f_forward,FIL* fp,UINT(*func)(const BYTE*,UINT),UINT btf,UINT* bf)
-         //FRESULT f_expand (FIL* fp,FSIZE_t szf,BYTE opt);                 /* Allocate a contiguous block to the file */
-__OPROTO(,,FRESULT,,f_expand,FIL* fp,FSIZE_t szf,BYTE opt)
+         //FRESULT f_expand (FIL* fp,FSIZE_t fsz,BYTE opt);                 /* Allocate a contiguous block to the file */
+__OPROTO(,,FRESULT,,f_expand,FIL* fp,FSIZE_t fsz,BYTE opt)
          //FRESULT f_mount (FATFS* fs,const TCHAR* path,BYTE opt);          /* Mount/Unmount a logical drive */
 __OPROTO(,,FRESULT,,f_mount,FATFS* fs,const TCHAR* path,BYTE opt)
          //FRESULT f_mkfs (const TCHAR* path,BYTE opt,DWORD au,void* work,UINT len);    /* Create a FAT volume */
