@@ -334,3 +334,11 @@ R0.13c.p1 (December 22, 2018)
 R0.13c.p2 (January 9, 2019)
   Fixed f_readdir() function returns file names with wrong case conversion.
   When the directory item to be read has a file name within 8.3 format and only extension is in low case, the extension of file name returned in fname[] can be in wrong case conversion.
+
+R013c.p3 (February 14, 2019)
+  f_readdir() function cannot retrieve long file names in length of FF_MAX_LFN - 1 characters.
+  f_open() function cannot find the file with file name in length of FF_MAX_LFN characters.
+
+R013c.p4 (April 13, 2019)
+  Some compiler warns about unused variable and something.
+
