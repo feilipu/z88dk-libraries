@@ -155,7 +155,7 @@ uint16_t th02_read_data(void)
 
     i2c_write( I2C2_PORT, TH02_I2C_DEV_ID, readBuffer, 1, I2C_RESTART|I2C_MODE_BUFFER);
     i2c_read_set( I2C2_PORT, TH02_I2C_DEV_ID, readBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_get( I2C2_PORT, TH02_I2C_DEV_ID, 1);
+    i2c_read_get( I2C2_PORT, TH02_I2C_DEV_ID, 2);
 
     return returnWord = (readBuffer[0]<<8)|(readBuffer[1]);
 }
