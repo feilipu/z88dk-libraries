@@ -66,11 +66,11 @@ extern "C" {
 /****************************************************************************/
 
 //  float th02_read_temperature(void);
-extern float th02_read_temperature(void);
+extern float th02_read_temperature(uint8_t device);
 
 
 //  float th02_read_humidity(void);
-extern float th02_read_humidity(void);
+extern float th02_read_humidity(uint8_t device);
 
 
 #ifdef __cplusplus
