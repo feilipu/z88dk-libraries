@@ -21,11 +21,11 @@ This is a multifunctional sensor that gives you temperature and relative humidit
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +target --math32 -x -SO3 -clib=new th02.c -o th02`
+`zcc +yaz180 --math32 -x -SO3 -clib=new th02.c -o th02`
 
-`zcc +target --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 th02.c -o th02`
+`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 th02.c -o th02`
 
-`zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 th02.c -o th02`
+`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 th02.c -o th02`
 
 The resulting `th02.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
@@ -37,10 +37,12 @@ z88dk-lib +target th02
 ```
 
 Some further examples of `z88dk-lib` usage.
+
 list help
 ```bash
 z88dk-lib
 ```
+
 list 3rd party libraries already installed for the zx target
 ```bash
 z88dk-lib +zx
@@ -48,10 +50,11 @@ z88dk-lib +zx
 remove the `libname1` `libname2` ... libraries from the zx target, -f for no nagging about deleting files.
 ```bash
 z88dk-lib +zx -r -f libname1 libname2 ...
+```
 
 ## License
 
-This demo is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check LICENSE for more information.<br>
+This demo is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check LICENSE for more information.
 
 Contributing to this software is warmly welcomed. You can do this basically by 
 [forking](https://help.github.com/articles/fork-a-repo), committing modifications and then [pulling requests](https://help.github.com/articles/using-pull-requests) (follow the links above for operating guide). Adding change log and your contact into file header is encouraged. Thanks for your contribution.
