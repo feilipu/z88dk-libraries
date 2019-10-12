@@ -24,7 +24,7 @@
 
 void main(void)
 {
-    float temper;
+    float temperature;
     float humidity;
 
     i2c_reset(I2C2_PORT); // connected to the I2C Device 2
@@ -33,8 +33,8 @@ void main(void)
     i2c_initialise(I2C2_PORT);
     i2c_set_speed(I2C2_PORT, I2C_SPEED_STD);
 
-    temper = th02_read_temperature(I2C2_PORT);
-    printf("Temperature: %gc\n",temper);
+    temperature = th02_read_temperature(I2C2_PORT);
+    printf("Temperature: %gc\n",temperature);
 
     humidity = th02_read_humidity(I2C2_PORT);
     printf("Humidity: %g%%\n",humidity);

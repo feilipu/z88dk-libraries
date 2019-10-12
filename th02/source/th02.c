@@ -63,7 +63,7 @@ float th02_read_temperature(uint8_t device)
 
     writeBuffer[0] = REG_CONFIG;
     writeBuffer[1] = CMD_MEASURE_TEMP;
-    i2c_write( I2C2_PORT, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( device, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
 
     /* Wait until conversion is done */
 
