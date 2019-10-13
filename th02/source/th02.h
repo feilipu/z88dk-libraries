@@ -48,6 +48,14 @@ extern "C" {
 /***        Definitions                                                   ***/
 /****************************************************************************/
 
+/************************Readme first**************************
+For the YAZ180 the LCD can be attached to either I2C Port 1 or Port 2.
+These commence at addresses 0xA000 or 0x8000 respectively.
+***************************************************************/
+
+#define I2C_PORT2           0x80
+#define I2C_PORT1           0xA0
+
 #define TH02_I2C_DEV_ID     0x40
 
 #define REG_STATUS          0x00 
@@ -61,16 +69,26 @@ extern "C" {
 #define CMD_MEASURE_HUMI    0x01    //perform a humidity measurement
 #define CMD_MEASURE_TEMP    0x11    //perform a temperature measurement
 
+enum TH02_AttachPort
+{
+    TH02_PORT2 = I2C_PORT2,
+    TH02_PORT1 = I2C_PORT1
+};
+
 /****************************************************************************/
 /***        Function Definition                                           ***/
 /****************************************************************************/
 
-//  float th02_read_temperature(void);
-extern float th02_read_temperature(uint8_t device);
+//  void th02_init(enum TH02_AttachPort device);
+extern void th02_init(enum TH02_AttachPort device);
 
 
-//  float th02_read_humidity(void);
-extern float th02_read_humidity(uint8_t device);
+//  float th02_read_temperature(enum TH02_AttachPort device);
+extern float th02_read_temperature(enum TH02_AttachPort device);
+
+
+//  float th02_read_humidity(enum TH02_AttachPort device);
+extern float th02_read_humidity(enum TH02_AttachPort device);
 
 
 #ifdef __cplusplus
