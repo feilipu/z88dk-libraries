@@ -1,0 +1,24 @@
+I2C_LCD Library version: v1.22                    20161030
+1. Solve the bug that bitmap can't display on LinkIt One board.
+2. Solve the bug that LCD.DispStringAt() function can't display string more than 7 characters. 
+
+I2C_LCD Library version: v1.21                    20160821
+1. Support LinkIt One and other compatible boards.
+
+I2C_LCD Library version: v1.20                    20160416
+1. Reorganize I2C_LCD driver interface, make it easy to transplant to any other boards.
+
+I2C_LCD Library version: v1.12                    20150904
+1. Modify the bug that can't display bitmap when y coordinate is more than 16.
+
+I2C_LCD Library version: v1.11                    20150627
+1. Modify the bug that '\t' can't print.
+
+I2C_LCD Library version: v1.10                    20150625
+1. Add LCD print function.
+2. Edit DeviceAddressConfig example.
+
+I2C_LCD Library version: v1.00                    20140706
+1. Initial public release.
+
+
