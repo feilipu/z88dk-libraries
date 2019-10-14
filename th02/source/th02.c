@@ -73,7 +73,7 @@ float th02_read_temperature(enum TH02_AttachPort device)
     float temperature;
 
     /* Start a new temperature conversion */
-    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
 
     /* Wait until conversion is done */
     do{
@@ -106,7 +106,7 @@ float th02_read_humidity(enum TH02_AttachPort device)
     float humidity;
 
     /* Start a new humidity conversion */
-    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
 
     /* Wait until conversion is done */
     do{

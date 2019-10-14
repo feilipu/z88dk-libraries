@@ -42,7 +42,7 @@
 
 /*********** The start of I2C_LCD basic driver APIs ***********/
 
-uint8_t LCD_Port;   // Global PCA9665 Device Address
+uint8_t LCD_Port;   // Global for PCA9665 Device Port MSB
 
 const uint8_t fontYsizeTab[LCD_NUM_OF_FONT] = {8, 12, 16, 16, 20, 24, 32};
 
@@ -59,15 +59,13 @@ void LCD_SendBitmapData(const uint8_t *buf, const uint8_t length);
 
 void LCD_Init(enum LCD_AttachPort port)
 {
-    static uint8_t LCD_Port;
-    
-    LCD_Port = (uint8_t)port; // The host address MSB
+    LCD_Port = (uint8_t)port;
 
     i2c_reset(LCD_Port);
 
-    if (LCD_Port == I2C1_PORT)
+    if (port == I2C1_PORT)
         i2c_interrupt_attach(LCD_Port, &i2c1_isr);
-    if (LCD_Port == I2C2_PORT)
+    if (port == I2C2_PORT)
         i2c_interrupt_attach(LCD_Port, &i2c2_isr);
 
     i2c_initialise(LCD_Port);
@@ -80,11 +78,12 @@ void LCD_Init(enum LCD_AttachPort port)
 uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr)
 {
     static uint8_t regAddress;
-    static uint8_t readByte;
+
+    uint8_t readByte;
 
     regAddress = (uint8_t)regAddr;
 
-    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_RESTART|I2C_MODE_BUFFER);
     i2c_read_set( LCD_Port, LCD_ADDRESS, &readByte, 1, I2C_STOP|I2C_MODE_BUFFER);
     i2c_read_get( LCD_Port, LCD_ADDRESS, 1);
     return readByte;
@@ -114,7 +113,7 @@ void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint
 
     if(length > 68) return; // maximum Rx sentence length is 68 Bytes
 
-    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_RESTART|I2C_MODE_BUFFER);
     i2c_read_set( LCD_Port, LCD_ADDRESS, buf, length, I2C_STOP|I2C_MODE_BUFFER);
     i2c_read_get( LCD_Port, LCD_ADDRESS, length);
 }
@@ -145,7 +144,7 @@ void LCD_ReadRAMGotoXY(const uint8_t x, const uint8_t y)
 {
     static uint8_t writeBuffer[3];
     
-    writeBuffer[0] = ReadRAM_XPosRegAddr;
+    writeBuffer[0] = (uint8_t)ReadRAM_XPosRegAddr;
     writeBuffer[1] = x;
     writeBuffer[2] = y;
 
@@ -156,7 +155,7 @@ void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y)
 {
     static uint8_t writeBuffer[3];
 
-    writeBuffer[0] = WriteRAM_XPosRegAddr;
+    writeBuffer[0] = (uint8_t)WriteRAM_XPosRegAddr;
     writeBuffer[1] = x;
     writeBuffer[2] = y;
 
@@ -169,7 +168,7 @@ void LCD_SendBitmapData(const uint8_t *buf, const uint8_t length)
 
     if(length > 67) return; // maximum Tx sentence length is 68 Bytes
 
-    writeBuffer[0] = DisRAMAddr;
+    writeBuffer[0] = (uint8_t)DisRAMAddr;
     memcpy(&writeBuffer[1], buf, length);
 
     i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);

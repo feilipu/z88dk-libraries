@@ -21,11 +21,11 @@ Visit all support files and product documents [click here](https://github.com/Sp
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +target --math32 -x -SO3 -clib=new i2c_lcd.c -o i2c_lcd`
+`zcc +yaz180 --math32 -x -SO3 -clib=new i2c_lcd.c -o i2c_lcd`
 
-`zcc +target--math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
+`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
 
-`zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
+`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
 
 The resulting `i2c_lcd.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
