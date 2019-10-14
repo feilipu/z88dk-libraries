@@ -21,11 +21,11 @@ This is a multifunctional sensor that gives you temperature and relative humidit
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +yaz180 --math32 -x -SO3 -clib=new th02.c -o th02`
+`zcc +target --math32 -x -SO3 -clib=new th02.c -o th02`
 
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 th02.c -o th02`
+`zcc +target --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 th02.c -o th02`
 
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 th02.c -o th02`
+`zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 th02.c -o th02`
 
 The resulting `th02.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 

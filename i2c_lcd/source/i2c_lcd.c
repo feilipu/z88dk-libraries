@@ -59,7 +59,9 @@ void LCD_SendBitmapData(const uint8_t *buf, const uint8_t length);
 
 void LCD_Init(enum LCD_AttachPort port)
 {
-    uint8_t LCD_Port = (uint8_t)port; // The host address MSB
+    static uint8_t LCD_Port;
+    
+    LCD_Port = (uint8_t)port; // The host address MSB
 
     i2c_reset(LCD_Port);
 
@@ -77,8 +79,10 @@ void LCD_Init(enum LCD_AttachPort port)
 ***************************************************************/
 uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr)
 {
-    uint8_t regAddress = (uint8_t)regAddr;
-    uint8_t readByte;
+    static uint8_t regAddress;
+    static uint8_t readByte;
+
+    regAddress = (uint8_t)regAddr;
 
     i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER);
     i2c_read_set( LCD_Port, LCD_ADDRESS, &readByte, 1, I2C_STOP|I2C_MODE_BUFFER);
@@ -91,7 +95,7 @@ uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr)
 ***************************************************************/
 void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, const uint8_t byte)
 {
-    uint8_t writeBuffer[2];
+    static uint8_t writeBuffer[2];
 
     writeBuffer[0] = (uint8_t)regAddr;
     writeBuffer[1] = byte;
@@ -104,7 +108,9 @@ void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, const uint8_t byte)
 ***************************************************************/
 void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint8_t length)
 {
-    uint8_t regAddress = (uint8_t)regAddr;
+    static uint8_t regAddress;
+    
+    regAddress = (uint8_t)regAddr;
 
     if(length > 68) return; // maximum Rx sentence length is 68 Bytes
 
@@ -118,7 +124,7 @@ void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint
 ***************************************************************/
 void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, const uint8_t length)
 {
-    uint8_t writeBuffer[68];
+    static uint8_t writeBuffer[68];
     
     if(length > 67) return; // maximum Tx sentence length is 68 Bytes
 
@@ -137,7 +143,7 @@ void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, const
 
 void LCD_ReadRAMGotoXY(const uint8_t x, const uint8_t y)
 {
-    uint8_t writeBuffer[3];
+    static uint8_t writeBuffer[3];
     
     writeBuffer[0] = ReadRAM_XPosRegAddr;
     writeBuffer[1] = x;
@@ -148,7 +154,7 @@ void LCD_ReadRAMGotoXY(const uint8_t x, const uint8_t y)
 
 void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y)
 {
-    uint8_t writeBuffer[3];
+    static uint8_t writeBuffer[3];
 
     writeBuffer[0] = WriteRAM_XPosRegAddr;
     writeBuffer[1] = x;
@@ -159,7 +165,7 @@ void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y)
 
 void LCD_SendBitmapData(const uint8_t *buf, const uint8_t length)
 {
-    uint8_t writeBuffer[68];
+    static uint8_t writeBuffer[68];
 
     if(length > 67) return; // maximum Tx sentence length is 68 Bytes
 
@@ -181,7 +187,7 @@ void LCD_CharGotoXY(uint8_t x, uint8_t y)
 
 void LCD_FontModeConf(enum LCD_FontSort font, enum LCD_FontMode mode, enum LCD_CharMode cMode)
 {
-    LCD_WriteByteToReg(FontModeRegAddr,(uint8_t)(cMode|mode|font));
+    LCD_WriteByteToReg(FontModeRegAddr,(uint8_t)cMode|(uint8_t)mode|(uint8_t)font);
 }
 
 void LCD_DispCharAt(char character, uint8_t x, uint8_t y)
@@ -199,7 +205,7 @@ void LCD_DispStringAt(char *buf, uint8_t x, uint8_t y)
 
 void LCD_CursorConf(enum LCD_SwitchState swi, uint8_t freq)
 {
-    LCD_WriteByteToReg(CursorConfigRegAddr,(char)(swi<<7)|freq);
+    LCD_WriteByteToReg(CursorConfigRegAddr,(uint8_t)(swi<<7)|freq);
 }
 
 void LCD_CursorGotoXY(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
@@ -228,12 +234,12 @@ void LCD_DrawDotAt(uint8_t x, uint8_t y, enum LCD_ColorSort color)
 
 void LCD_DrawHLineAt(uint8_t startX, uint8_t endX, uint8_t y, enum LCD_ColorSort color)
 {
-    LCD_DrawLineAt(startX, endX, y, y, color);
+    LCD_DrawLineAt(startX, endX, y, y, (uint8_t)color);
 }
 
 void LCD_DrawVLineAt(uint8_t startY, uint8_t endY, uint8_t x, enum LCD_ColorSort color)
 {
-    LCD_DrawLineAt(x, x, startY, endY, color);
+    LCD_DrawLineAt(x, x, startY, endY, (uint8_t)color);
 }
 
 void LCD_DrawLineAt(uint8_t startX, uint8_t endX, uint8_t startY, uint8_t endY, enum LCD_ColorSort color)
@@ -345,29 +351,21 @@ void LCD_DisplayConf(enum LCD_DisplayMode mode)
 
 void LCD_WorkingModeConf(enum LCD_SwitchState logoSwi, enum LCD_SwitchState backLightSwi, enum LCD_WorkingMode mode)
 {
-    uint8_t logoSwitch = (uint8_t)(logoSwi<<3);
-    uint8_t backLightSwitch = (uint8_t)(backLightSwi<<2);
-    uint8_t workingMode = (uint8_t)mode;
-
-    LCD_WriteByteToReg(WorkingModeRegAddr, 0x50|logoSwitch|backLightSwitch|workingMode);
+    LCD_WriteByteToReg(WorkingModeRegAddr, 0x50|(uint8_t)(logoSwi<<3)|(uint8_t)(backLightSwi<<2)|(uint8_t)mode);
 }
 
 void LCD_BacklightConf(enum LCD_SettingMode mode, uint8_t byte)
 {
-    uint8_t workingMode = (uint8_t)mode;
-
     if(byte>0x7f)
         byte = 0x7f;
-    LCD_WriteByteToReg(BackLightConfigRegAddr, workingMode|byte);
+    LCD_WriteByteToReg(BackLightConfigRegAddr, (uint8_t)mode|byte);
 }
 
 void LCD_ContrastConf(enum LCD_SettingMode mode, uint8_t byte)
 {
-    uint8_t workingMode = (uint8_t)mode;
-
     if(byte>0x3f)
         byte = 0x3f;
-    LCD_WriteByteToReg(ContrastConfigRegAddr, workingMode|byte);
+    LCD_WriteByteToReg(ContrastConfigRegAddr, (uint8_t)mode|byte);
 }
 
 void LCD_DeviceAddrEdit(uint8_t newAddr)

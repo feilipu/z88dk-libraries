@@ -50,7 +50,9 @@
 
 void th02_init(enum TH02_AttachPort device)
 {
-    uint8_t port = (uint8_t)device;
+    static uint8_t port;
+    
+    port = (uint8_t)device;
 
     i2c_reset(port);
 
@@ -65,16 +67,17 @@ void th02_init(enum TH02_AttachPort device)
 
 float th02_read_temperature(enum TH02_AttachPort device)
 {
-    uint8_t port = (uint8_t)device;
+    static uint8_t port;
+    static uint8_t writeBuffer[2] = {REG_CONFIG, CMD_MEASURE_TEMP};
+    static uint8_t readBuffer[2] = {0};    
 
     uint16_t value;
     float temperature;
     
     uint8_t regStatus = REG_STATUS;
     uint8_t regData = REG_DATA_H;
-        
-    uint8_t writeBuffer[2] = {REG_CONFIG, CMD_MEASURE_TEMP};
-    uint8_t readBuffer[2] = {0};
+
+    port = (uint8_t)device;
          
     /* Start a new temperature conversion */
     i2c_write( port, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
@@ -100,7 +103,9 @@ float th02_read_temperature(enum TH02_AttachPort device)
 
 float th02_read_humidity(enum TH02_AttachPort device)
 {
-    uint8_t port = (uint8_t)device;
+    static uint8_t port;
+    uint8_t writeBuffer[2] = {REG_CONFIG,CMD_MEASURE_HUMI};
+    uint8_t readBuffer[2] = {0};
 
     uint16_t value;
     float humidity;
@@ -108,8 +113,7 @@ float th02_read_humidity(enum TH02_AttachPort device)
     uint8_t regStatus = REG_STATUS;
     uint8_t regData = REG_DATA_H;
 
-    uint8_t writeBuffer[2] = {REG_CONFIG,CMD_MEASURE_HUMI};
-    uint8_t readBuffer[2] = {0};
+    port = (uint8_t)device;
 
     /* Start a new humidity conversion */
     i2c_write( port, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);

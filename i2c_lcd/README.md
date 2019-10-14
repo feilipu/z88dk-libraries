@@ -10,11 +10,11 @@ Visit all support files and product documents [click here](https://github.com/Sp
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +yaz180 --math32 -x -SO3 -clib=new i2c_lcd.c -o i2c_lcd`
+`zcc +target --math32 -x -SO3 -clib=new i2c_lcd.c -o i2c_lcd`
 
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
+`zcc +target--math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
 
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
+`zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 i2c_lcd.c -o i2c_lcd`
 
 The resulting `i2c_lcd.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
@@ -45,6 +45,6 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
 
-This library is build for I2C_LCD12864. Please do not use this library on any other devices, that could cause unpredictable damage to the unknow device. See the GNU Lesser General Public License for more details.
+This library is build for I2C_LCD12864. Please do not use this library on any other devices, that could cause unpredictable damage to the unknown device. See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
