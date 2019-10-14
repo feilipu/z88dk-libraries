@@ -4,7 +4,18 @@ The library for I2C_LCD.
 Visit all support files and product documents [click here](https://github.com/SparkingStudio/I2C_LCD) please.
 
 
-`zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 @i2ctest.lst -o i2ctest`
+## Usage
+    1.git clone this repository.
+    2.use `z88dk-lib` to import into z88k
+	3.open a demo
+	4.use incantation below
+	5.profit
+
+### ZSDCC
+`zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180  -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node400000 @test.lst -o test -create-app`
+
+### SCCZ80
+`zcc +yaz180 -subtype=app -clib=new -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd @test.lst -o test -create-app`
 
 ## Preparation
 

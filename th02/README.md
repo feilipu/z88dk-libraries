@@ -12,10 +12,14 @@ This is a multifunctional sensor that gives you temperature and relative humidit
     1.git clone this repository.
     2.use `z88dk-lib` to import into z88k
 	3.open the demo `TH02_demo.c`
-	4.use incantation
+	4.use incantation below
 	5.profit
 
-`zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180 -llib/yaz180/th02 --c-code-in-asm --max-allocs-per-node200000 @i2ctest.lst -o i2ctest`
+### ZSDCC
+`zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180  -llib/yaz180/th02 --c-code-in-asm --max-allocs-per-node400000 @test.lst -o test -create-app`
+
+### SCCZ80
+`zcc +yaz180 -subtype=app -clib=new -v -m -SO3 --list --math32_z180 -llib/yaz180/th02 @test.lst -o test -create-app`
 
 ## Preparation
 

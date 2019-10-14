@@ -50,49 +50,42 @@
 
 void th02_init(enum TH02_AttachPort device)
 {
-    static uint8_t port;
-    
-    port = (uint8_t)device;
+    i2c_reset((uint8_t)device);
 
-    i2c_reset(port);
-
-    if (port == I2C1_PORT)
+    if (device == I2C1_PORT)
         i2c_interrupt_attach(I2C1_PORT, &i2c1_isr);
-    if (port == I2C2_PORT)
+    if (device == I2C2_PORT)
         i2c_interrupt_attach(I2C2_PORT, &i2c2_isr);
 
-    i2c_initialise(port);
-    i2c_set_speed(port, I2C_SPEED_STD);
+    i2c_initialise((uint8_t)device);
+    i2c_set_speed((uint8_t)device, I2C_SPEED_STD);
 }
 
 float th02_read_temperature(enum TH02_AttachPort device)
 {
-    static uint8_t port;
-    static uint8_t writeBuffer[2] = {REG_CONFIG, CMD_MEASURE_TEMP};
-    static uint8_t readBuffer[2] = {0};    
+    const uint8_t writeBuffer[2] = {REG_CONFIG, CMD_MEASURE_TEMP};
+    const uint8_t regStatus = REG_STATUS;
+    const uint8_t regData = REG_DATA_H;
+
+    uint8_t readBuffer[2] = {0};
 
     uint16_t value;
     float temperature;
-    
-    uint8_t regStatus = REG_STATUS;
-    uint8_t regData = REG_DATA_H;
 
-    port = (uint8_t)device;
-         
     /* Start a new temperature conversion */
-    i2c_write( port, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
 
     /* Wait until conversion is done */
     do{
-    i2c_write( port, TH02_I2C_DEV_ID, &regStatus, 1, I2C_RESTART|I2C_MODE_BUFFER);
-    i2c_read_set( port, TH02_I2C_DEV_ID, readBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_get( port, TH02_I2C_DEV_ID, 1);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &regStatus, 1, I2C_RESTART|I2C_MODE_BUFFER);
+    i2c_read_set( (uint8_t)device, TH02_I2C_DEV_ID, readBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_read_get( (uint8_t)device, TH02_I2C_DEV_ID, 1);
     }while(readBuffer[0]&STATUS_RDY_MASK != 0);
 
     /* Get the reading */
-    i2c_write( port, TH02_I2C_DEV_ID, &regData, 1, I2C_RESTART|I2C_MODE_BUFFER);
-    i2c_read_set( port, TH02_I2C_DEV_ID, readBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_get( port, TH02_I2C_DEV_ID, 2);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &regData, 1, I2C_RESTART|I2C_MODE_BUFFER);
+    i2c_read_set( (uint8_t)device, TH02_I2C_DEV_ID, readBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_read_get( (uint8_t)device, TH02_I2C_DEV_ID, 2);
 
     value = (readBuffer[0]<<8)|(readBuffer[1]);
     value = value >> 2;
@@ -103,32 +96,29 @@ float th02_read_temperature(enum TH02_AttachPort device)
 
 float th02_read_humidity(enum TH02_AttachPort device)
 {
-    static uint8_t port;
-    uint8_t writeBuffer[2] = {REG_CONFIG,CMD_MEASURE_HUMI};
+    const uint8_t writeBuffer[2] = {REG_CONFIG,CMD_MEASURE_HUMI};
+    const uint8_t regStatus = REG_STATUS;
+    const uint8_t regData = REG_DATA_H;
+
     uint8_t readBuffer[2] = {0};
 
     uint16_t value;
     float humidity;
-    
-    uint8_t regStatus = REG_STATUS;
-    uint8_t regData = REG_DATA_H;
-
-    port = (uint8_t)device;
 
     /* Start a new humidity conversion */
-    i2c_write( port, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &writeBuffer[0], 2, I2C_STOP|I2C_MODE_BUFFER);
 
     /* Wait until conversion is done */
     do{
-    i2c_write( port, TH02_I2C_DEV_ID, &regStatus, 1, I2C_RESTART|I2C_MODE_BUFFER);
-    i2c_read_set( port, TH02_I2C_DEV_ID, readBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_get( port, TH02_I2C_DEV_ID, 1);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &regStatus, 1, I2C_RESTART|I2C_MODE_BUFFER);
+    i2c_read_set( (uint8_t)device, TH02_I2C_DEV_ID, readBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_read_get( (uint8_t)device, TH02_I2C_DEV_ID, 1);
     }while(readBuffer[0]&STATUS_RDY_MASK != 0);
 
     /* Get the reading */
-    i2c_write( port, TH02_I2C_DEV_ID, &regData, 1, I2C_RESTART|I2C_MODE_BUFFER);
-    i2c_read_set( port, TH02_I2C_DEV_ID, readBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_get( port, TH02_I2C_DEV_ID, 2);
+    i2c_write( (uint8_t)device, TH02_I2C_DEV_ID, &regData, 1, I2C_RESTART|I2C_MODE_BUFFER);
+    i2c_read_set( (uint8_t)device, TH02_I2C_DEV_ID, readBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_read_get( (uint8_t)device, TH02_I2C_DEV_ID, 2);
 
     value = (readBuffer[0]<<8)|(readBuffer[1]);
     value = value >> 4;
