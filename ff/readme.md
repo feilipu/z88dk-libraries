@@ -2,8 +2,8 @@
 
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
-Current source version status is: 13c, Patch 4, April 13, 2019.<br>
-Compiled using zsdcc version 3.9.1 [r11311](https://sourceforge.net/p/sdcc/code/11311/log/?path=/trunk/sdcc).
+Current source version status is: 0.14, October 14, 2019.<br>
+Compiled using zsdcc version 3.9.3 [r11369](https://sourceforge.net/p/sdcc/code/11369/log/?path=/trunk/sdcc).
 
 #### Features
 <ul>
@@ -31,13 +31,13 @@ Then configure the library to suit your requirements by adjusting the `source/ff
 
 The ff library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +target -lm -x -SO3 -clib=new @ff.lst -o ff`
+`zcc +target --math32 -x -SO3 -clib=new @ff.lst -o ff`
 
-`zcc +target -lm -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @ff.lst -o ff`
+`zcc +target --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @ff.lst -o ff`
 
-`zcc +target -lm -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @ff.lst -o ff`
+`zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @ff.lst -o ff`
 
-The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
 The `z88dk-lib` function is used to install for the desired target. e.g.
 
@@ -119,7 +119,7 @@ Please use his [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html) as the
 
 ## Licence
 
-Copyright (C) 2018, ChaN, all right reserved.
+Copyright (C) 2019, ChaN, all right reserved.
 
 FatFs module is an open source software. Redistribution and use of FatFs in source and binary forms, with or without modification, are permitted provided that the following condition is met:
 
