@@ -56,9 +56,12 @@ These commence at addresses 0xA000 or 0x8000 respectively.
 #define     SUPPORT_FULL_API_LIB        TRUE
 #define     SUPPORT_2D_GRAPHIC_LIB      TRUE
 
-#define     I2C_PORT2           (0x80)
-#define     I2C_PORT1           (0xA0)
-
+#ifndef     I2C_PORT2
+#define     I2C_PORT2                   (0x80)
+#endif
+#ifndef     I2C_PORT1
+#define     I2C_PORT1                   (0xA0)
+#endif
 
 /**************************************************************
       Defines for hardware parameters
