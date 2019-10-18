@@ -51,7 +51,6 @@ const uint8_t fontYsizeTab[LCD_NUM_OF_FONT] = {8, 12, 16, 16, 20, 24, 32};
 ***************************************************************/
 void LCD_ReadRAMGotoXY(const uint8_t x, const uint8_t y);
 void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y);
-void LCD_SendBitmapData(uint8_t *buf, uint8_t length);
 
 /**************************************************************
       I2C init.
@@ -177,33 +176,6 @@ void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y)
     i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER);
 }
 
-void LCD_SendBitmapData(uint8_t *buf, uint8_t length)
-{
-    static uint8_t writeBuffer[I2C_TX_SENTENCE+1];
-    static uint8_t *bufIndex;
-
-    writeBuffer[0] = (uint8_t)DisRAMAddr;
-    bufIndex = (uint8_t *)buf;
-
-    while(length/I2C_TX_SENTENCE)
-    {
-        memcpy(&writeBuffer[1], bufIndex, I2C_TX_SENTENCE);
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE+1, I2C_RESTART|I2C_MODE_BUFFER);
-        bufIndex+=I2C_TX_SENTENCE;
-        length-=I2C_TX_SENTENCE;
-    }
-
-    if(length%I2C_TX_SENTENCE)
-    {
-        memcpy(&writeBuffer[1], bufIndex, length);
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);
-    }
-    else
-    {
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
-    }
-}
-
 /************* The end of I2C_LCD private functions ***********/
 
 void LCD_CharGotoXY(uint8_t x, uint8_t y)
@@ -323,10 +295,9 @@ void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
         LCD_WriteSeriesToReg(DrawBitmapXPosRegAddr, regBuf, 4);
         
         byteMax = regBuf[3]*bitmap->BytesPerLine;
-        LCD_SendBitmapData(buf, byteMax);
+        LCD_WriteSeriesToReg(DisRAMAddr, buf, byteMax);
     }
 }
-
 
 void LCD_DrawFullScreen(const uint8_t *buf)
 {
@@ -339,14 +310,11 @@ void LCD_DrawFullScreen(const uint8_t *buf)
 #endif
 #endif
 
-
-
 uint8_t LCD_ReadByteDispRAM(uint8_t x, uint8_t y)
 {
     LCD_ReadRAMGotoXY(x,y);
     return LCD_ReadByteFromReg(DisRAMAddr);
 }
-
 
 void LCD_ReadSeriesDispRAM(uint8_t *buf, uint8_t length, uint8_t x, uint8_t y)
 {
@@ -360,13 +328,11 @@ void LCD_WriteByteDispRAM(uint8_t byte, uint8_t x, uint8_t y)
     LCD_WriteByteToReg(DisRAMAddr,byte);
 }
 
-
 void LCD_WriteSeriesDispRAM(uint8_t *buf, uint8_t length, uint8_t x, uint8_t y)
 {
     LCD_WriteRAMGotoXY(x,y);
     LCD_WriteSeriesToReg(DisRAMAddr, buf, length);
 }
-
 
 void LCD_DisplayConf(enum LCD_DisplayMode mode)
 {
@@ -399,7 +365,6 @@ void LCD_DeviceAddrEdit(uint8_t newAddr)
     buf[1]=newAddr;
     LCD_WriteSeriesToReg(DeviceAddressRegAddr, buf, 2);
 }
-
 
 void LCD_CleanAll(enum LCD_ColorSort color)
 {
