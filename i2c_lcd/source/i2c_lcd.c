@@ -198,7 +198,7 @@ void LCD_DispCharAt(char character, uint8_t x, uint8_t y)
 void LCD_DispStringAt(char *buf, uint8_t x, uint8_t y)
 {
     LCD_CharGotoXY(x,y);
-    for(; *buf; buf++)
+    for(; *buf; ++buf)
       LCD_WriteByteToReg(DisRAMAddr,*buf);
 }
 
@@ -294,7 +294,7 @@ void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
         byteMax = regBuf[3]*bitmap->BytesPerLine;
         counter = byteMax/31;
         if(counter)
-            for(i=0; i<counter; i++,buf+=31)
+            for(i=0; i<counter; ++i,buf+=31)
                 LCD_SendBitmapData(buf, 31);
         counter = byteMax%31;
         if(counter)
@@ -307,7 +307,7 @@ void LCD_DrawFullScreen(const uint8_t *buf)
 {
     uint16_t i;
     LCD_WriteRAMGotoXY(0,0);
-    for(i=0; i<1024; i++)
+    for(i=0; i<1024; ++i)
         LCD_WriteByteToReg(DisRAMAddr,buf[i]);
 }
 
