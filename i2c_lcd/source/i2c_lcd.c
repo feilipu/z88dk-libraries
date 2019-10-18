@@ -111,7 +111,7 @@ void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint
     
     regAddress = (uint8_t)regAddr;
 
-    if(length > 68) return; // maximum Rx sentence length is 68 Bytes
+    if(length > I2C_RX_SENTENCE) return; // maximum Rx sentence length is 68 Bytes
 
     i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_RESTART|I2C_MODE_BUFFER);
     i2c_read_set( LCD_Port, LCD_ADDRESS, buf, length, I2C_STOP|I2C_MODE_BUFFER);
@@ -123,9 +123,9 @@ void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint
 ***************************************************************/
 void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, const uint8_t length)
 {
-    static uint8_t writeBuffer[68];
+    static uint8_t writeBuffer[I2C_TX_SENTENCE+1];
     
-    if(length > 67) return; // maximum Tx sentence length is 68 Bytes
+    if(length > I2C_TX_SENTENCE) return; // maximum Tx sentence length is 68 Bytes
 
     writeBuffer[0] = (uint8_t)regAddr;
     memcpy(&writeBuffer[1], buf, length);
@@ -164,9 +164,9 @@ void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y)
 
 void LCD_SendBitmapData(const uint8_t *buf, const uint8_t length)
 {
-    static uint8_t writeBuffer[68];
+    static uint8_t writeBuffer[I2C_TX_SENTENCE+1];
 
-    if(length > 67) return; // maximum Tx sentence length is 68 Bytes
+    if(length > I2C_TX_SENTENCE) return; // maximum Tx sentence length is 67 Bytes
 
     writeBuffer[0] = (uint8_t)DisRAMAddr;
     memcpy(&writeBuffer[1], buf, length);
@@ -223,7 +223,7 @@ void LCD_CursorGotoXY(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 void LCD_DrawDotAt(uint8_t x, uint8_t y, enum LCD_ColorSort color)
 {
     uint8_t buf[2];
-    if(x<128 && y<64)
+    if(x<LCD_X_SIZE_MAX && y<LCD_Y_SIZE_MAX)
     {
         buf[0]=x;
         buf[1]=(uint8_t)(color<<7)|y;
@@ -244,7 +244,7 @@ void LCD_DrawVLineAt(uint8_t startY, uint8_t endY, uint8_t x, enum LCD_ColorSort
 void LCD_DrawLineAt(uint8_t startX, uint8_t endX, uint8_t startY, uint8_t endY, enum LCD_ColorSort color)
 {
     uint8_t buf[4];
-    if(endY<64)
+    if(endY<LCD_Y_SIZE_MAX)
     {
         buf[0]=startX;
         buf[1]=endX;
@@ -268,7 +268,7 @@ void LCD_DrawRectangleAt(uint8_t x, uint8_t y, uint8_t width, uint8_t height, en
 void LCD_DrawCircleAt(uint8_t x, uint8_t y, uint8_t r, enum LCD_DrawMode mode)
 {
     uint8_t buf[4];
-    if(x<128 && y<64 && r<64)
+    if(x<LCD_X_SIZE_MAX && y<LCD_Y_SIZE_MAX && r<LCD_Y_SIZE_MAX)
     {
         buf[0]=x;
         buf[1]=y;
@@ -284,7 +284,7 @@ void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
     int16_t byteMax;
     uint8_t i,counter;
     const uint8_t *buf = bitmap->pData;
-    if(y<64 && x<128)
+    if(y<LCD_X_SIZE_MAX && x<LCD_Y_SIZE_MAX)
     {
         regBuf[0] = x;
         regBuf[1] = y;
@@ -292,11 +292,11 @@ void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
         regBuf[3] = bitmap->YSize;
         LCD_WriteSeriesToReg(DrawBitmapXPosRegAddr, regBuf, 4);
         byteMax = regBuf[3]*bitmap->BytesPerLine;
-        counter = byteMax/31;
+        counter = byteMax/I2C_TX_SENTENCE;
         if(counter)
-            for(i=0; i<counter; ++i,buf+=31)
-                LCD_SendBitmapData(buf, 31);
-        counter = byteMax%31;
+            for(i=0; i<counter; ++i,buf+=I2C_TX_SENTENCE)
+                LCD_SendBitmapData(buf, I2C_TX_SENTENCE);
+        counter = byteMax%I2C_TX_SENTENCE;
         if(counter)
             LCD_SendBitmapData(buf, counter);
     }
@@ -307,7 +307,7 @@ void LCD_DrawFullScreen(const uint8_t *buf)
 {
     uint16_t i;
     LCD_WriteRAMGotoXY(0,0);
-    for(i=0; i<1024; ++i)
+    for(i=0; i<LCD_X_SIZE_MAX*LCD_Y_SIZE_MAX/8; ++i)
         LCD_WriteByteToReg(DisRAMAddr,buf[i]);
 }
 
