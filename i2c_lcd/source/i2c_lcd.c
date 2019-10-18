@@ -51,7 +51,7 @@ const uint8_t fontYsizeTab[LCD_NUM_OF_FONT] = {8, 12, 16, 16, 20, 24, 32};
 ***************************************************************/
 void LCD_ReadRAMGotoXY(const uint8_t x, const uint8_t y);
 void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y);
-void LCD_SendBitmapData(const uint8_t *buf, const uint8_t length);
+void LCD_SendBitmapData(uint8_t *buf, uint8_t length);
 
 /**************************************************************
       I2C init.
@@ -105,7 +105,7 @@ void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, const uint8_t byte)
 /**************************************************************
       Read multiple bytes from device register.
 ***************************************************************/
-void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint8_t length)
+void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint8_t length)
 {
     static uint8_t regAddress;
     
@@ -121,16 +121,31 @@ void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint
 /**************************************************************
       Write multiple bytes to device register.
 ***************************************************************/
-void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, const uint8_t length)
+void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint8_t length)
 {
     static uint8_t writeBuffer[I2C_TX_SENTENCE+1];
-    
-    if(length > I2C_TX_SENTENCE) return; // maximum Tx sentence length is 68 Bytes
+    static uint8_t *bufIndex;
 
     writeBuffer[0] = (uint8_t)regAddr;
-    memcpy(&writeBuffer[1], buf, length);
+    bufIndex = (uint8_t *)buf;
 
-    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);
+    while(length/I2C_TX_SENTENCE)
+    {
+        memcpy(&writeBuffer[1], bufIndex, I2C_TX_SENTENCE);
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE+1, I2C_RESTART|I2C_MODE_BUFFER);
+        bufIndex+=I2C_TX_SENTENCE;
+        length-=I2C_TX_SENTENCE;
+    }
+
+    if(length%I2C_TX_SENTENCE)
+    {
+        memcpy(&writeBuffer[1], bufIndex, length);
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);
+    }
+    else
+    {
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
+    }
 }
 
 /************ The end of I2C_LCD basic driver APIs ************/
@@ -162,16 +177,31 @@ void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y)
     i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER);
 }
 
-void LCD_SendBitmapData(const uint8_t *buf, const uint8_t length)
+void LCD_SendBitmapData(uint8_t *buf, uint8_t length)
 {
     static uint8_t writeBuffer[I2C_TX_SENTENCE+1];
-
-    if(length > I2C_TX_SENTENCE) return; // maximum Tx sentence length is 67 Bytes
+    static uint8_t *bufIndex;
 
     writeBuffer[0] = (uint8_t)DisRAMAddr;
-    memcpy(&writeBuffer[1], buf, length);
+    bufIndex = (uint8_t *)buf;
 
-    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);
+    while(length/I2C_TX_SENTENCE)
+    {
+        memcpy(&writeBuffer[1], bufIndex, I2C_TX_SENTENCE);
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE+1, I2C_RESTART|I2C_MODE_BUFFER);
+        bufIndex+=I2C_TX_SENTENCE;
+        length-=I2C_TX_SENTENCE;
+    }
+
+    if(length%I2C_TX_SENTENCE)
+    {
+        memcpy(&writeBuffer[1], bufIndex, length);
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);
+    }
+    else
+    {
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
+    }
 }
 
 /************* The end of I2C_LCD private functions ***********/
@@ -281,9 +311,9 @@ void LCD_DrawCircleAt(uint8_t x, uint8_t y, uint8_t r, enum LCD_DrawMode mode)
 void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
 {
     uint8_t regBuf[4];
-    int16_t byteMax;
-    uint8_t i,counter;
-    const uint8_t *buf = bitmap->pData;
+    uint16_t byteMax;
+    uint8_t *buf = (uint8_t *)bitmap->pData;
+
     if(y<LCD_X_SIZE_MAX && x<LCD_Y_SIZE_MAX)
     {
         regBuf[0] = x;
@@ -291,14 +321,9 @@ void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
         regBuf[2] = bitmap->XSize;
         regBuf[3] = bitmap->YSize;
         LCD_WriteSeriesToReg(DrawBitmapXPosRegAddr, regBuf, 4);
+        
         byteMax = regBuf[3]*bitmap->BytesPerLine;
-        counter = byteMax/I2C_TX_SENTENCE;
-        if(counter)
-            for(i=0; i<counter; ++i,buf+=I2C_TX_SENTENCE)
-                LCD_SendBitmapData(buf, I2C_TX_SENTENCE);
-        counter = byteMax%I2C_TX_SENTENCE;
-        if(counter)
-            LCD_SendBitmapData(buf, counter);
+        LCD_SendBitmapData(buf, byteMax);
     }
 }
 

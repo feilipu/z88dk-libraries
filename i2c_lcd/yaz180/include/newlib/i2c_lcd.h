@@ -346,7 +346,7 @@ typedef struct {
   uint8_t YSize;
   uint8_t BytesPerLine;
   uint8_t BitsPerPixel;
-  const unsigned char *pData;
+  const uint8_t *pData;
 } GUI_Bitmap_t;
 
 
@@ -492,11 +492,11 @@ __OPROTO(,,uint8_t,,LCD_ReadByteFromReg,enum LCD_RegAddress regAddr)
 //  void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, const uint8_t byte);
 __OPROTO(,,void,,LCD_WriteByteToReg,enum LCD_RegAddress regAddr, const uint8_t byte)
 
-//  void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, const uint8_t length);
-__OPROTO(,,void,,LCD_ReadSeriesFromReg,enum LCD_RegAddress regAddr, uint8_t *buf, const uint8_t length)
+//  void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint8_t length);
+__OPROTO(,,void,,LCD_ReadSeriesFromReg,enum LCD_RegAddress regAddr, uint8_t *buf, uint8_t length)
 
-//  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, const uint8_t length);
-__OPROTO(,,void,,LCD_WriteSeriesToReg,enum LCD_RegAddress regAddr, const uint8_t *buf, const uint8_t length)
+//  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint8_t length);
+__OPROTO(,,void,,LCD_WriteSeriesToReg,enum LCD_RegAddress regAddr, const uint8_t *buf, uint8_t length)
 
 #ifdef  SUPPORT_FULL_API_LIB
 #if  SUPPORT_FULL_API_LIB == TRUE
