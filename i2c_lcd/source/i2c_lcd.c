@@ -128,17 +128,17 @@ void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint8
     writeBuffer[0] = (uint8_t)regAddr;
     bufIndex = (uint8_t *)buf;
 
-    while(length/I2C_TX_SENTENCE)
+    while( length/I2C_TX_SENTENCE && i2c_available(LCD_Port) )
     {
-        memcpy(&writeBuffer[1], bufIndex, I2C_TX_SENTENCE);
+        memcpy(&writeBuffer[1], bufIndex, I2C_TX_SENTENCE); // do buffer copy only when bus is available
         i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE+1, I2C_RESTART|I2C_MODE_BUFFER);
         bufIndex+=I2C_TX_SENTENCE;
         length-=I2C_TX_SENTENCE;
     }
 
-    if(length%I2C_TX_SENTENCE)
+    if(length%I2C_TX_SENTENCE && i2c_available(LCD_Port) )
     {
-        memcpy(&writeBuffer[1], bufIndex, length);
+        memcpy(&writeBuffer[1], bufIndex, length); // do buffer copy only when bus is available
         i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);
     }
     else
