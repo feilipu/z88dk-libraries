@@ -77,12 +77,11 @@ void LCD_Init(enum LCD_AttachPort port)
 uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr)
 {
     static uint8_t regAddress;
-
-    uint8_t readByte;
+    static uint8_t readByte;
 
     regAddress = (uint8_t)regAddr;
 
-    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_RESTART|I2C_MODE_BUFFER);
+    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER);
     i2c_read_set( LCD_Port, LCD_ADDRESS, &readByte, 1, I2C_STOP|I2C_MODE_BUFFER);
     i2c_read_get( LCD_Port, LCD_ADDRESS, 1);
     return readByte;
@@ -107,13 +106,15 @@ void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, const uint8_t byte)
 void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint8_t length)
 {
     static uint8_t regAddress;
+    static uint8_t *bufIndex;
     
     regAddress = (uint8_t)regAddr;
+    bufIndex = (uint8_t *)buf;
 
     if(length > I2C_RX_SENTENCE) return; // maximum Rx sentence length is 68 Bytes
 
-    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_RESTART|I2C_MODE_BUFFER);
-    i2c_read_set( LCD_Port, LCD_ADDRESS, buf, length, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_read_set( LCD_Port, LCD_ADDRESS, bufIndex, length, I2C_STOP|I2C_MODE_BUFFER);
     i2c_read_get( LCD_Port, LCD_ADDRESS, length);
 }
 
@@ -194,14 +195,15 @@ void LCD_FontModeConf(enum LCD_FontSort font, enum LCD_FontMode mode, enum LCD_C
 void LCD_DispCharAt(char character, uint8_t x, uint8_t y)
 {
     LCD_CharGotoXY(x,y);
-    LCD_WriteByteToReg(DisRAMAddr,character);
+    LCD_WriteByteToReg(DisRAMAddr, (uint8_t)character);
 }
 
 void LCD_DispStringAt(char *buf, uint8_t x, uint8_t y)
 {
+    size_t length = strlen(buf);
+
     LCD_CharGotoXY(x,y);
-    for(; *buf; ++buf)
-      LCD_WriteByteToReg(DisRAMAddr,*buf);
+    LCD_WriteSeriesToReg(DisRAMAddr, (uint8_t *)buf, (uint8_t)length);
 }
 
 void LCD_CursorConf(enum LCD_SwitchState swi, uint8_t freq)
