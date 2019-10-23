@@ -47,12 +47,6 @@ uint8_t LCD_Port;   // Global for PCA9665 Device Port MSB
 const uint8_t fontYsizeTab[LCD_NUM_OF_FONT] = {8, 12, 16, 16, 20, 24, 32};
 
 /**************************************************************
-      Private Function Definitions
-***************************************************************/
-void LCD_ReadRAMGotoXY(const uint8_t x, const uint8_t y);
-void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y);
-
-/**************************************************************
       I2C init.
 ***************************************************************/
 
@@ -81,8 +75,8 @@ uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr)
 
     regAddress = (uint8_t)regAddr;
 
-    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_set( LCD_Port, LCD_ADDRESS, &readByte, 1, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER );
+    i2c_read_set( LCD_Port, LCD_ADDRESS, &readByte, 1, I2C_STOP|I2C_MODE_BUFFER );
     i2c_read_get( LCD_Port, LCD_ADDRESS, 1);
     return readByte;
 }
@@ -97,31 +91,31 @@ void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, const uint8_t byte)
     writeBuffer[0] = (uint8_t)regAddr;
     writeBuffer[1] = byte;
 
-    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER);
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 /**************************************************************
       Read multiple bytes from device register.
 ***************************************************************/
-void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint8_t length)
+void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length)
 {
     static uint8_t regAddress;
     static uint8_t *bufIndex;
-    
+
     regAddress = (uint8_t)regAddr;
     bufIndex = (uint8_t *)buf;
 
     if(length > I2C_RX_SENTENCE) return; // maximum Rx sentence length is 68 Bytes
 
-    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_set( LCD_Port, LCD_ADDRESS, bufIndex, length, I2C_STOP|I2C_MODE_BUFFER);
-    i2c_read_get( LCD_Port, LCD_ADDRESS, length);
+    i2c_write( LCD_Port, LCD_ADDRESS, &regAddress, 1, I2C_STOP|I2C_MODE_BUFFER );
+    i2c_read_set( LCD_Port, LCD_ADDRESS, bufIndex, (uint8_t)length, I2C_STOP|I2C_MODE_BUFFER );
+    i2c_read_get( LCD_Port, LCD_ADDRESS, (uint8_t)length);
 }
 
 /**************************************************************
       Write multiple bytes to device register.
 ***************************************************************/
-void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint8_t length)
+void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint16_t length)
 {
     static uint8_t writeBuffer[I2C_TX_SENTENCE+1];
     static uint8_t *bufIndex;
@@ -132,19 +126,19 @@ void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint8
     while( length/I2C_TX_SENTENCE && i2c_available(LCD_Port) )
     {
         memcpy(&writeBuffer[1], bufIndex, I2C_TX_SENTENCE); // do buffer copy only when bus is available
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE+1, I2C_RESTART|I2C_MODE_BUFFER);
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE+1, I2C_RESTART|I2C_MODE_BUFFER );
         bufIndex+=I2C_TX_SENTENCE;
         length-=I2C_TX_SENTENCE;
     }
 
-    if(length%I2C_TX_SENTENCE && i2c_available(LCD_Port) )
+    if( length%I2C_TX_SENTENCE && i2c_available(LCD_Port) )
     {
         memcpy(&writeBuffer[1], bufIndex, length); // do buffer copy only when bus is available
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER);
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, length+1, I2C_STOP|I2C_MODE_BUFFER );
     }
     else
     {
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 1, I2C_STOP|I2C_MODE_BUFFER);
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 1, I2C_STOP|I2C_MODE_BUFFER );
     }
 }
 
@@ -153,72 +147,81 @@ void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint8
 #ifdef  SUPPORT_FULL_API_LIB
 #if  SUPPORT_FULL_API_LIB == TRUE
 
-/************ The start of I2C_LCD private functions **********/
-
-void LCD_ReadRAMGotoXY(const uint8_t x, const uint8_t y)
-{
-    static uint8_t writeBuffer[3];
-    
-    writeBuffer[0] = (uint8_t)ReadRAM_XPosRegAddr;
-    writeBuffer[1] = x;
-    writeBuffer[2] = y;
-
-    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER);
-}
-
-void LCD_WriteRAMGotoXY(const uint8_t x, const uint8_t y)
-{
-    static uint8_t writeBuffer[3];
-
-    writeBuffer[0] = (uint8_t)WriteRAM_XPosRegAddr;
-    writeBuffer[1] = x;
-    writeBuffer[2] = y;
-
-    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER);
-}
-
-/************* The end of I2C_LCD private functions ***********/
-
 void LCD_CharGotoXY(uint8_t x, uint8_t y)
 {
-    uint8_t buf[2];
-    buf[0]=x;
-    buf[1]=y;
-    LCD_WriteSeriesToReg(CharXPosRegAddr, buf, 2);
+    static uint8_t writeBuffer[3];
+
+    writeBuffer[0] = (uint8_t)CharXPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_FontModeConf(enum LCD_FontSort font, enum LCD_FontMode mode, enum LCD_CharMode cMode)
 {
-    LCD_WriteByteToReg(FontModeRegAddr,(uint8_t)cMode|(uint8_t)mode|(uint8_t)font);
+    static uint8_t writeBuffer[2];
+
+    writeBuffer[0] = (uint8_t)FontModeRegAddr;
+    writeBuffer[1] = (uint8_t)cMode|(uint8_t)mode|(uint8_t)font;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_DispCharAt(char character, uint8_t x, uint8_t y)
 {
-    LCD_CharGotoXY(x,y);
-    LCD_WriteByteToReg(DisRAMAddr, (uint8_t)character);
+    static uint8_t writeBuffer[3];
+    
+    writeBuffer[0] = (uint8_t)CharXPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
+    
+    if( i2c_available(LCD_Port) ){
+        writeBuffer[0] = (uint8_t)DisRAMAddr;
+        writeBuffer[1] = (uint8_t)character;
+    }
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_DispStringAt(char *buf, uint8_t x, uint8_t y)
 {
+    static uint8_t writeBuffer[3];
+
     size_t length = strlen(buf);
 
-    LCD_CharGotoXY(x,y);
-    LCD_WriteSeriesToReg(DisRAMAddr, (uint8_t *)buf, (uint8_t)length);
+    writeBuffer[0] = (uint8_t)CharXPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
+
+    LCD_WriteSeriesToReg(DisRAMAddr, (uint8_t *)buf, (uint16_t)length);
 }
 
 void LCD_CursorConf(enum LCD_SwitchState swi, uint8_t freq)
 {
-    LCD_WriteByteToReg(CursorConfigRegAddr,(uint8_t)(swi<<7)|freq);
+    static uint8_t writeBuffer[2];
+
+    writeBuffer[0] = (uint8_t)CursorConfigRegAddr;
+    writeBuffer[1] = (uint8_t)(swi<<7)|freq;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_CursorGotoXY(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 {
-    uint8_t buf[4];
-    buf[0]=x;
-    buf[1]=y;
-    buf[2]=width;
-    buf[3]=height;
-    LCD_WriteSeriesToReg(CursorXPosRegAddr, buf, 4);
+    static uint8_t writeBuffer[5];
+
+    writeBuffer[0] = (uint8_t)CharXPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+    writeBuffer[3] = width;
+    writeBuffer[4] = height;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 5, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 #ifdef  SUPPORT_2D_GRAPHIC_LIB
@@ -226,12 +229,15 @@ void LCD_CursorGotoXY(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 
 void LCD_DrawDotAt(uint8_t x, uint8_t y, enum LCD_ColorSort color)
 {
-    uint8_t buf[2];
+    static uint8_t writeBuffer[3];
+
     if(x<LCD_X_SIZE_MAX && y<LCD_Y_SIZE_MAX)
     {
-        buf[0]=x;
-        buf[1]=(uint8_t)(color<<7)|y;
-        LCD_WriteSeriesToReg(DrawDotXPosRegAddr, buf, 2);
+        writeBuffer[0] = (uint8_t)DrawDotXPosRegAddr;
+        writeBuffer[1] = x;
+        writeBuffer[2] = (uint8_t)(color<<7)|y;
+
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
     }
 }
 
@@ -247,66 +253,93 @@ void LCD_DrawVLineAt(uint8_t startY, uint8_t endY, uint8_t x, enum LCD_ColorSort
 
 void LCD_DrawLineAt(uint8_t startX, uint8_t endX, uint8_t startY, uint8_t endY, enum LCD_ColorSort color)
 {
-    uint8_t buf[4];
-    if(endY<LCD_Y_SIZE_MAX)
+    static uint8_t writeBuffer[5];
+
+    if(endY < LCD_Y_SIZE_MAX)
     {
-        buf[0]=startX;
-        buf[1]=endX;
-        buf[2]=startY;
-        buf[3]=(uint8_t)(color<<7)|endY;
-        LCD_WriteSeriesToReg(DrawLineStartXRegAddr, buf, 4);
+        writeBuffer[0] = (uint8_t)DrawLineStartXRegAddr;
+        writeBuffer[1] = startX;
+        writeBuffer[2] = endX;
+        writeBuffer[3] = startY;
+        writeBuffer[4] = (uint8_t)(color<<7)|endY;
+
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 5, I2C_STOP|I2C_MODE_BUFFER );
     }
 }
 
 void LCD_DrawRectangleAt(uint8_t x, uint8_t y, uint8_t width, uint8_t height, enum LCD_DrawMode mode)
 {
-    uint8_t buf[5];
-    buf[0]=x;
-    buf[1]=y;
-    buf[2]=width;
-    buf[3]=height;
-    buf[4]=(uint8_t)mode;
-    LCD_WriteSeriesToReg(DrawRectangleXPosRegAddr, buf, 5);
+    static uint8_t writeBuffer[6];
+
+    writeBuffer[0] = (uint8_t)DrawRectangleXPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+    writeBuffer[3] = width;
+    writeBuffer[4] = height;
+    writeBuffer[5] = (uint8_t)mode;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 6, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_DrawCircleAt(uint8_t x, uint8_t y, uint8_t r, enum LCD_DrawMode mode)
 {
-    uint8_t buf[4];
+    static uint8_t writeBuffer[5];
+
     if(x<LCD_X_SIZE_MAX && y<LCD_Y_SIZE_MAX && r<LCD_Y_SIZE_MAX)
     {
-        buf[0]=x;
-        buf[1]=y;
-        buf[2]=r;
-        buf[3]=(uint8_t)mode;
-        LCD_WriteSeriesToReg(DrawCircleXPosRegAddr, buf, 4);
+        writeBuffer[0] = (uint8_t)DrawCircleXPosRegAddr;
+        writeBuffer[1] = x;
+        writeBuffer[2] = y;
+        writeBuffer[3] = r;
+        writeBuffer[4] = (uint8_t)mode;
+
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 5, I2C_STOP|I2C_MODE_BUFFER );
     }
 }
 
 void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
 {
-    uint8_t regBuf[4];
+    static uint8_t writeBuffer[5];
+    static uint8_t *buf;
+
     uint16_t byteMax;
-    uint8_t *buf = (uint8_t *)bitmap->pData;
+    
+    buf = (uint8_t *)bitmap->pData;
 
     if(y<LCD_X_SIZE_MAX && x<LCD_Y_SIZE_MAX)
     {
-        regBuf[0] = x;
-        regBuf[1] = y;
-        regBuf[2] = bitmap->XSize;
-        regBuf[3] = bitmap->YSize;
-        LCD_WriteSeriesToReg(DrawBitmapXPosRegAddr, regBuf, 4);
-        
-        byteMax = regBuf[3]*bitmap->BytesPerLine;
+        writeBuffer[0] = (uint8_t)DrawBitmapXPosRegAddr;
+        writeBuffer[1] = x;
+        writeBuffer[2] = y;
+        writeBuffer[3] = bitmap->XSize;
+
+        byteMax = bitmap->BytesPerLine * bitmap->XSize;
+
+        writeBuffer[4] = bitmap->YSize;
+
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 5, I2C_STOP|I2C_MODE_BUFFER );
+
         LCD_WriteSeriesToReg(DisRAMAddr, buf, byteMax);
     }
 }
 
 void LCD_DrawFullScreen(const uint8_t *buf)
 {
-    uint16_t i;
-    LCD_WriteRAMGotoXY(0,0);
-    for(i=0; i<LCD_X_SIZE_MAX*LCD_Y_SIZE_MAX/8; ++i)
-        LCD_WriteByteToReg(DisRAMAddr,buf[i]);
+    static uint8_t writeBuffer[3];
+    
+    writeBuffer[0] = (uint8_t)WriteRAM_XPosRegAddr;
+    writeBuffer[1] = 0;
+    writeBuffer[2] = 0;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
+
+    for(uint16_t i=0; i<LCD_X_SIZE_MAX*LCD_Y_SIZE_MAX/8; ++i) {
+        if( i2c_available(LCD_Port) ){
+            writeBuffer[0] = (uint8_t)DisRAMAddr;
+            writeBuffer[1] = buf[i];
+        }
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
+    }
 }
 
 #endif
@@ -314,68 +347,128 @@ void LCD_DrawFullScreen(const uint8_t *buf)
 
 uint8_t LCD_ReadByteDispRAM(uint8_t x, uint8_t y)
 {
-    LCD_ReadRAMGotoXY(x,y);
+    static uint8_t writeBuffer[3];
+
+    writeBuffer[0] = (uint8_t)ReadRAM_XPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
+
     return LCD_ReadByteFromReg(DisRAMAddr);
 }
 
-void LCD_ReadSeriesDispRAM(uint8_t *buf, uint8_t length, uint8_t x, uint8_t y)
+void LCD_ReadSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y)
 {
-    LCD_ReadRAMGotoXY(x,y);
+    static uint8_t writeBuffer[3];
+
+    writeBuffer[0] = (uint8_t)ReadRAM_XPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
+
     LCD_ReadSeriesFromReg(DisRAMAddr, buf, length);
 }
 
 void LCD_WriteByteDispRAM(uint8_t byte, uint8_t x, uint8_t y)
 {
-    LCD_WriteRAMGotoXY(x,y);
-    LCD_WriteByteToReg(DisRAMAddr,byte);
+    static uint8_t writeBuffer[3];
+    
+    writeBuffer[0] = (uint8_t)WriteRAM_XPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
+
+    if( i2c_available(LCD_Port) ) {
+        writeBuffer[0] = (uint8_t)DisRAMAddr;
+        writeBuffer[1] = byte;
+    }
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
-void LCD_WriteSeriesDispRAM(uint8_t *buf, uint8_t length, uint8_t x, uint8_t y)
+void LCD_WriteSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y)
 {
-    LCD_WriteRAMGotoXY(x,y);
+    static uint8_t writeBuffer[3];
+
+    writeBuffer[0] = (uint8_t)WriteRAM_XPosRegAddr;
+    writeBuffer[1] = x;
+    writeBuffer[2] = y;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
+
     LCD_WriteSeriesToReg(DisRAMAddr, buf, length);
 }
 
 void LCD_DisplayConf(enum LCD_DisplayMode mode)
 {
-    LCD_WriteByteToReg(DisplayConfigRegAddr,mode);
+    static uint8_t writeBuffer[2];
+
+    writeBuffer[0] = (uint8_t)DisplayConfigRegAddr;
+    writeBuffer[1] = (uint8_t)mode;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_WorkingModeConf(enum LCD_SwitchState logoSwi, enum LCD_SwitchState backLightSwi, enum LCD_WorkingMode mode)
 {
-    LCD_WriteByteToReg(WorkingModeRegAddr, 0x50|(uint8_t)(logoSwi<<3)|(uint8_t)(backLightSwi<<2)|(uint8_t)mode);
+    static uint8_t writeBuffer[2];
+
+    writeBuffer[0] = (uint8_t)WorkingModeRegAddr;
+    writeBuffer[1] = 0x50|(uint8_t)(logoSwi<<3)|(uint8_t)(backLightSwi<<2)|(uint8_t)mode;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_BacklightConf(enum LCD_SettingMode mode, uint8_t byte)
 {
-    if(byte>0x7f)
-        byte = 0x7f;
-    LCD_WriteByteToReg(BackLightConfigRegAddr, (uint8_t)mode|byte);
+    static uint8_t writeBuffer[2];
+
+    writeBuffer[0] = (uint8_t)BackLightConfigRegAddr;
+    writeBuffer[1] = (uint8_t)mode|(byte&0x7f);
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_ContrastConf(enum LCD_SettingMode mode, uint8_t byte)
 {
-    if(byte>0x3f)
-        byte = 0x3f;
-    LCD_WriteByteToReg(ContrastConfigRegAddr, (uint8_t)mode|byte);
+    static uint8_t writeBuffer[2];
+
+    writeBuffer[0] = (uint8_t)ContrastConfigRegAddr;
+    writeBuffer[1] = (uint8_t)mode|(byte&0x3f);
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_DeviceAddrEdit(uint8_t newAddr)
 {
-    uint8_t buf[2];
-    buf[0]=0x80;
-    buf[1]=newAddr;
-    LCD_WriteSeriesToReg(DeviceAddressRegAddr, buf, 2);
+    static uint8_t writeBuffer[3];
+
+    writeBuffer[0] = (uint8_t)DeviceAddressRegAddr;
+    writeBuffer[1] = 0x80;
+    writeBuffer[2] = newAddr;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 void LCD_CleanAll(enum LCD_ColorSort color)
 {
+    static uint8_t writeBuffer[2];
     uint8_t buf;
+
     buf = LCD_ReadByteFromReg(DisplayConfigRegAddr);
+
+    writeBuffer[0] = (uint8_t)DisplayConfigRegAddr;
+    writeBuffer[1] = buf;
+
     if(color == WHITE)
-        LCD_WriteByteToReg(DisplayConfigRegAddr, (buf|0x40)&0xdf);
-    else
-        LCD_WriteByteToReg(DisplayConfigRegAddr, buf|0x60);
+        writeBuffer[1] = (buf|0x40)&0xdf;
+    if(color == BLACK)
+        writeBuffer[1] = buf|0x60;
+
+    i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
 
 #endif

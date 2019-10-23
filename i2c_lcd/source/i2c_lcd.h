@@ -497,12 +497,12 @@ extern uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr);
 extern void LCD_WriteByteToReg(enum LCD_RegAddress regAddr,const uint8_t byte);
 
 
-//  void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint8_t length);
-extern void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint8_t length);
+//  void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length);
+extern void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length);
 
 
-//  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint8_t length);
-extern void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr,const uint8_t *buf,uint8_t length);
+//  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint16_t length);
+extern void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr,const uint8_t *buf,uint16_t length);
 
 
 #ifdef  SUPPORT_FULL_API_LIB
@@ -578,12 +578,12 @@ extern uint8_t LCD_ReadByteDispRAM(uint8_t x,uint8_t y);
 extern void LCD_WriteByteDispRAM(uint8_t byte,uint8_t x,uint8_t y);
 
 
-//  void LCD_ReadSeriesDispRAM(uint8_t *buf, uint8_t length, uint8_t x, uint8_t y);
-extern void LCD_ReadSeriesDispRAM(uint8_t *buf,uint8_t length,uint8_t x,uint8_t y);
+//  void LCD_ReadSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y);
+extern void LCD_ReadSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y);
 
 
-//  void LCD_WriteSeriesDispRAM(uint8_t *buf, uint8_t length, uint8_t x, uint8_t y);
-extern void LCD_WriteSeriesDispRAM(uint8_t *buf,uint8_t length,uint8_t x,uint8_t y);
+//  void LCD_WriteSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y);
+extern void LCD_WriteSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y);
 
 
 //  void LCD_DisplayConf(enum LCD_DisplayMode mode);
