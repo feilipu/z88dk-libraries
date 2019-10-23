@@ -1,0 +1,3 @@
+./th02_init.c
+./th02_read_humidity.c
+./th02_read_temperature.c
