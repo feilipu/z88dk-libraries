@@ -34,47 +34,26 @@ extern "C" {
 #include <stdint.h>
 #include <stdlib.h>
 
-#ifndef     TRUE
-#define     TRUE            (1)
-#endif
-
-#ifndef     FALSE
-#define     FALSE           (0)
-#endif
-
 /************************Readme first**************************
-If you want to reduce the code size and you do not need full API Library
-or 2D Graphic API Library, please set the realted define to "FALSE".
-
-If you need all API Library or 2D Graphic API Library, please set the
-realted define to "TRUE".
-
-The default setting is use full API library and 2D Graphic API Library.
-
 For the YAZ180 the LCD can be attached to either I2C Port 1 or Port 2.
 These commence at addresses 0xA000 or 0x8000 respectively.
 ***************************************************************/
 
-#define     SUPPORT_FULL_API_LIB        TRUE
-#define     SUPPORT_2D_GRAPHIC_LIB      TRUE
-
 #ifndef     I2C_PORT2
-#define     I2C_PORT2                   (0x80)
+#define     I2C_PORT2       (0x80)
 #endif
 #ifndef     I2C_PORT1
-#define     I2C_PORT1                   (0xA0)
+#define     I2C_PORT1       (0xA0)
 #endif
 
 /**************************************************************
       Defines for hardware parameters
 ***************************************************************/
 
-#define     LCD_ADDRESS         (0x51)  //Device default: 0x51
+#define     LCD_ADDRESS     (0x51)  //Default address: 0x51
 
-#define     LCD_X_SIZE_MAX      (128)
-#define     LCD_Y_SIZE_MAX      (64)
-
-#define     LCD_NUM_OF_FONT     (7)
+#define     LCD_X_SIZE_MAX  (128)
+#define     LCD_Y_SIZE_MAX  (64)
 
 /**************************************************************
       Defines for graphic constant
@@ -342,6 +321,8 @@ These commence at addresses 0xA000 or 0x8000 respectively.
 #define ArrowUp        0x1e
 #define ArrowDown      0x1f
 
+// Global for PCA9665 Device Port MSB
+extern uint8_t LCD_Port;
 
 typedef struct {
   uint8_t XSize;
@@ -356,7 +337,6 @@ typedef struct {
   uint8_t YSize;
   uint8_t offset;
 } Font_Info_t;
-
 
 enum LCD_AttachPort
 {
@@ -412,9 +392,6 @@ enum LCD_RegAddress
     ContrastConfigRegAddr=131,
     DeviceAddressRegAddr=132
 };
-
-#ifdef  SUPPORT_FULL_API_LIB
-#if  SUPPORT_FULL_API_LIB == TRUE
 
 enum LCD_ColorSort
 {
@@ -482,9 +459,6 @@ enum LCD_SettingMode
     LOAD_TO_EEPROM=0x80
 };
 
-#endif
-#endif
-
 //  void LCD_Init(enum LCD_AttachPort port);
 extern void LCD_Init(enum LCD_AttachPort port);
 
@@ -493,20 +467,17 @@ extern void LCD_Init(enum LCD_AttachPort port);
 extern uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr);
 
 
-//  void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, const uint8_t byte);
-extern void LCD_WriteByteToReg(enum LCD_RegAddress regAddr,const uint8_t byte);
+//  void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, uint8_t byte);
+extern void LCD_WriteByteToReg(enum LCD_RegAddress regAddr,uint8_t byte);
 
 
 //  void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length);
 extern void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length);
 
 
-//  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, const uint8_t *buf, uint16_t length);
-extern void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr,const uint8_t *buf,uint16_t length);
+//  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length);
+extern void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length);
 
-
-#ifdef  SUPPORT_FULL_API_LIB
-#if  SUPPORT_FULL_API_LIB == TRUE
 
 //  void LCD_FontModeConf(enum LCD_FontSort font, enum LCD_FontMode mode, enum LCD_CharMode cMode);
 extern void LCD_FontModeConf(enum LCD_FontSort font,enum LCD_FontMode mode,enum LCD_CharMode cMode);
@@ -531,9 +502,6 @@ extern void LCD_CursorConf(enum LCD_SwitchState swi,uint8_t freq);
 //  void LCD_CursorGotoXY(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
 extern void LCD_CursorGotoXY(uint8_t x,uint8_t y,uint8_t width,uint8_t height);
 
-
-#ifdef  SUPPORT_2D_GRAPHIC_LIB
-#if  SUPPORT_2D_GRAPHIC_LIB == TRUE
 
 //  void LCD_DrawDotAt(uint8_t x, uint8_t y, enum LCD_ColorSort color);
 extern void LCD_DrawDotAt(uint8_t x,uint8_t y,enum LCD_ColorSort color);
@@ -566,9 +534,6 @@ extern void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap,uint8_t x,uint8_t y);
 //  void LCD_DrawFullScreen(const uint8_t *buf);
 extern void LCD_DrawFullScreen(const uint8_t *buf);
 
-
-#endif
-#endif
 
 //  uint8_t LCD_ReadByteDispRAM(uint8_t x, uint8_t y);
 extern uint8_t LCD_ReadByteDispRAM(uint8_t x,uint8_t y);
@@ -610,11 +575,8 @@ extern void LCD_DeviceAddrEdit(uint8_t newAddr);
 extern void LCD_CleanAll(enum LCD_ColorSort color);
 
 
-#endif
-#endif
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif  /* __I2C_LCD_H_  */
+#endif  /* !__I2C_LCD_H_  */
