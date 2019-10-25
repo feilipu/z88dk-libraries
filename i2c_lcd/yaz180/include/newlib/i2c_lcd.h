@@ -511,8 +511,8 @@ __OPROTO(,,void,,LCD_DrawCircleAt,uint8_t x, uint8_t y, uint8_t r, enum LCD_Draw
 //  void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y);
 __OPROTO(,,void,,LCD_DrawScreenAreaAt,GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y)
 
-//  void LCD_DrawFullScreen(const uint8_t *buf);
-__OPROTO(,,void,,LCD_DrawFullScreen,const uint8_t *buf)
+//  void LCD_DrawFullScreen(uint8_t *buf);
+__OPROTO(,,void,,LCD_DrawFullScreen,uint8_t *buf)
 
 //  uint8_t LCD_ReadByteDispRAM(uint8_t x, uint8_t y);
 __OPROTO(,,uint8_t,,LCD_ReadByteDispRAM,uint8_t x, uint8_t y)

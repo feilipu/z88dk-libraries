@@ -33,7 +33,7 @@
         Draw full screen at.
 ***************************************************************/
 
-void LCD_DrawFullScreen(const uint8_t *buf)
+void LCD_DrawFullScreen(uint8_t *buf)
 {
     static uint8_t writeBuffer[3];
     
@@ -43,11 +43,6 @@ void LCD_DrawFullScreen(const uint8_t *buf)
 
     i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
 
-    for(uint16_t i=0; i<LCD_X_SIZE_MAX*LCD_Y_SIZE_MAX/8; ++i) {
-        i2c_available( LCD_Port );
-        writeBuffer[0] = (uint8_t)DisRAMAddr;   // do only after some delay
-        writeBuffer[1] = buf[i];
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
-    }
+    LCD_WriteSeriesToReg(DisRAMAddr, buf, LCD_X_SIZE_MAX*LCD_Y_SIZE_MAX/8);
 }
 
