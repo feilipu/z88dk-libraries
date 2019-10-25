@@ -35,30 +35,24 @@
 
 void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length)
 {
-    static uint8_t writeBuffer[I2C_TX_SENTENCE+1];
+    static uint8_t writeBuffer[LCD_W_BUFFER+1];
     static uint8_t *bufIndex;
 
     writeBuffer[0] = (uint8_t)regAddr;
     bufIndex = buf;
 
-    while( length/I2C_TX_SENTENCE )
-    {
+    while( length > LCD_W_BUFFER ) {
         i2c_available( LCD_Port );
-        memcpy(&writeBuffer[1], bufIndex, I2C_TX_SENTENCE); // do buffer copy only after some delay
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE+1, I2C_RESTART|I2C_MODE_BUFFER );
-        bufIndex+=I2C_TX_SENTENCE;
-        length-=I2C_TX_SENTENCE;
+        memcpy(&writeBuffer[1], bufIndex, LCD_W_BUFFER);    // do buffer copy only after some delay
+        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, LCD_W_BUFFER+1, I2C_STOP|I2C_MODE_BUFFER );
+        bufIndex+=LCD_W_BUFFER;
+        length-=LCD_W_BUFFER;
     }
 
-    if( length%I2C_TX_SENTENCE )
-    {
+    if( length > 0 ) {
         i2c_available( LCD_Port ); 
         memcpy(&writeBuffer[1], bufIndex, length);          // do buffer copy only after some delay
         i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, (uint8_t)(length+1), I2C_STOP|I2C_MODE_BUFFER );
-    }
-    else
-    {
-        i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 1, I2C_STOP|I2C_MODE_BUFFER );
     }
 }
 

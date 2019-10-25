@@ -52,6 +52,7 @@ These commence at addresses 0xA000 or 0x8000 respectively.
 
 #define     LCD_X_SIZE_MAX  (128)
 #define     LCD_Y_SIZE_MAX  (64)
+#define     LCD_W_BUFFER    (32)
 
 /**************************************************************
       Defines for graphic constant
