@@ -43,10 +43,9 @@ void LCD_WriteByteDispRAM(uint8_t byte, uint8_t x, uint8_t y)
 
     i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 3, I2C_STOP|I2C_MODE_BUFFER );
 
-    if( i2c_available(LCD_Port) ){
-        writeBuffer[0] = (uint8_t)DisRAMAddr;
-        writeBuffer[1] = byte;
-    }
+    i2c_available( LCD_Port );
+    writeBuffer[0] = (uint8_t)DisRAMAddr;   // do copy only after some delay
+    writeBuffer[1] = byte;
 
     i2c_write( LCD_Port, LCD_ADDRESS, writeBuffer, 2, I2C_STOP|I2C_MODE_BUFFER );
 }
