@@ -13,6 +13,9 @@ This is a multifunctional sensor that gives you temperature and relative humidit
 ### i2c_lcd
 This library is build for I2C_LCD12864 from Seeed Studio - Sparking. Please do not use this library on any other devices, that could cause unpredictable damage to an unknown device.
 
+### ft80x
+This library is build for FT801 EVE display, using I2C. Hardware tested is 4D Systems ADAM and EVE platform (with modification to convert from SPI). Please do not use this library on any other devices, that could cause unpredictable damage to an unknown device.
+
 ### z88dk-FreeRTOS
 TBC
 
