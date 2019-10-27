@@ -1,11 +1,11 @@
 /*
-    Title:			i2c_life.c
+    Title:            i2c_life.c
     Date Created:   16/10/2019
     Last Modified:  28/10/2019
-    Target:			Zilog Z180
+    Target:            Zilog Z180
     Environment:    z88dk
     Purpose:        Drive Sparking I2C LCD Display
-    Application:	Conway's Life
+    Application:    Conway's Life
     Author:         Phillip Stevens
 
     Adapted for the Seeed Studio Sparking I2C LCD.
@@ -42,6 +42,8 @@
 // SCCZ80
 // zcc +yaz180 -subtype=app -clib=new -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd i2c_life.c -o i2c_life -create-app
 
+/////////////////////////////////////////////////////////////////////////
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -56,7 +58,9 @@
 
 #include <lib/yaz180/i2c_lcd.h>
 
-#pragma printf = "%li %lu %s %c %u %X %g" // enables %li %lu %s, %c, %u, %X %g only
+/////////////////////////////////////////////////////////////////////////
+
+#pragma printf = "%li %lu %s %u" // enables %li %lu %s, %u only
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -68,59 +72,59 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-extern uint8_t LCD_Port;                   // Global for PCA9665 Device Port MSB
+extern uint8_t LCD_Port;    // Global for PCA9665 Device Port MSB
 
 uint8_t current_generation[CELLS_X*CELLS_Y/8];
 uint8_t old_generation[CELLS_X*CELLS_Y/8];
 
 /////////////////////////////////////////////////////////////////////////
 
-uint8_t get_cell(uint8_t *from, uint8_t x, uint8_t y)
+inline uint8_t get_cell(uint8_t *from, uint8_t x, uint8_t y)
 {
-    x &= (CELLS_X-1);  // ensure x < 128 this is non-portable (but fast)
-    y &= (CELLS_Y-1);  // ensure y < 64 this is non-portable (but fast)
+    x &= (CELLS_X-1);   // ensure x < 128 this is non-portable (but fast)
+    y &= (CELLS_Y-1);   // ensure y < 64 this is non-portable (but fast)
 
-    return ((from[(uint16_t)(x*y)/8] & ( (uint8_t)(1 << y%8))) ? 1 : 0);
+    return ( (from[(uint16_t)(x*y)/8] & (uint8_t)(1 << y%8) ) ? 1 : 0 );
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 uint16_t get_total(uint8_t *from)
 {
-	uint16_t total = 0;
+    uint16_t total = 0;
 
-	for(uint8_t x=0; x < CELLS_X; ++x)
-	{
-		for(uint8_t y=0; y < CELLS_Y; ++y)
-		{
-			if(get_cell(from,x,y)) ++total;
-		}
-	}
-	return total;
+    for(uint8_t x=0; x < CELLS_X; ++x)
+    {
+        for(uint8_t y=0; y < CELLS_Y; ++y)
+        {
+            if(get_cell(from,x,y)) ++total;
+        }
+    }
+    return total;
 }
 
- /////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 
 void set_cell(uint8_t *to, uint8_t x, uint8_t y, uint8_t value)
 {
-	if(value)
-		to[(uint16_t)(x*y)/8] |= (uint8_t)(1 << y%8);
-	else
-		to[(uint16_t)(x*y)/8] &= ~( (uint8_t)(1 << y%8) );
+    if(value)
+        to[(uint16_t)(x*y)/8] |= (uint8_t)(1 << y%8);
+    else
+        to[(uint16_t)(x*y)/8] &= ~( (uint8_t)(1 << y%8) );
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void fill_cell(uint8_t *to, uint8_t x, uint8_t y)
+inline void fill_cell(uint8_t *to, uint8_t x, uint8_t y)
 {
-	to[(uint16_t)(x*y)/8] |= (uint8_t)(1 << y%8);
+    to[(uint16_t)(x*y)/8] |= (uint8_t)(1 << y%8);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void clear_cell(uint8_t *to, uint8_t x, uint8_t y)
+inline void clear_cell(uint8_t *to, uint8_t x, uint8_t y)
 {
-	to[(uint16_t)(x*y)/8] &= ~( (uint8_t)(1 << y%8) );
+    to[(uint16_t)(x*y)/8] &= ~( (uint8_t)(1 << y%8) );
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -147,40 +151,40 @@ void inline clear_data(uint8_t *to)
 
 void inline copy_old_new(uint8_t *to, uint8_t *from)
 {
-	memcpy( to, from, CELLS_X*CELLS_Y/8);
+    memcpy( to, from, CELLS_X*CELLS_Y/8);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 uint8_t get_neighbours(uint8_t *from, uint8_t x, uint8_t y)
 {
-	uint8_t out = 0;
+    uint8_t out = 0;
 
-	if(get_cell(from,x-1,y-1))
-		++out;
+    if(get_cell(from,x-1,y-1))
+        ++out;
 
-	if(get_cell(from,x-1,y))
-		++out;
+    if(get_cell(from,x-1,y))
+        ++out;
 
-	if(get_cell(from,x-1,y+1))
-		++out;
+    if(get_cell(from,x-1,y+1))
+        ++out;
 
-	if(get_cell(from,x,y-1))
-		++out;
+    if(get_cell(from,x,y-1))
+        ++out;
 
-	if(get_cell(from,x,y+1))
-		++out;
+    if(get_cell(from,x,y+1))
+        ++out;
 
-	if(get_cell(from,x+1,y-1))
-		++out;
+    if(get_cell(from,x+1,y-1))
+        ++out;
 
-	if(get_cell(from,x+1,y))
-		++out;
+    if(get_cell(from,x+1,y))
+        ++out;
 
-	if(get_cell(from,x+1,y+1))
-		++out;
+    if(get_cell(from,x+1,y+1))
+        ++out;
 
-	return out;
+    return out;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -189,19 +193,18 @@ uint8_t get_difference(uint8_t *a,uint8_t *b)
 {
     uint16_t diff=0;
 
-	for(uint8_t  x=0; x < CELLS_X; ++x)
-	{
-		for(uint8_t  y=0; y < CELLS_Y; ++y)
-		{
-			if((get_cell(a,x,y) && !get_cell(b,x,y)) || (!get_cell(a,x,y) && get_cell(b,x,y)))
-			    ++diff;
-		}
-	}
-	return diff;
+    for(uint8_t  x=0; x < CELLS_X; ++x)
+    {
+        for(uint8_t  y=0; y < CELLS_Y; ++y)
+        {
+            if((get_cell(a,x,y) && !get_cell(b,x,y)) || (!get_cell(a,x,y) && get_cell(b,x,y)))
+                ++diff;
+        }
+    }
+    return diff;
 }
 
 /////////////////////////////////////////////////////////////////////////
-
 
 void display(uint8_t *from)
 {
@@ -210,14 +213,10 @@ void display(uint8_t *from)
 
 /////////////////////////////////////////////////////////////////////////
 
-
-
-/////////////////////////////////////////////////////////////////////////
-
 void main(void)
 {
-	uint16_t generations = 0;
-	
+    uint16_t generations = 0;
+    
     struct timespec startTime, endTime, resTime;
 
     clock_gettime(CLOCK_REALTIME,&startTime);
@@ -235,50 +234,50 @@ void main(void)
 
     while(1)    //Main Loop
     {
-	    for(uint8_t x=0; x < CELLS_X; ++x)
-	    {
-		    for(uint8_t y=0; y < CELLS_Y; ++y)		// Inner loop; should be made quick as possible.
-		    {
-		        uint8_t neighbours;
+        for(uint8_t x=0; x < CELLS_X; ++x)
+        {
+            for(uint8_t y=0; y < CELLS_Y; ++y)        // Inner loop; should be made quick as possible.
+            {
+                uint8_t neighbours;
 
-			    neighbours = get_neighbours(old_generation, x, y);
+                neighbours = get_neighbours(old_generation, x, y);
 
-			    if(neighbours < 2 || neighbours > 3)
-				    clear_cell(current_generation, x, y);
+                if(neighbours < 2 || neighbours > 3)
+                    clear_cell(current_generation, x, y);
 
-			    if(neighbours == 3)
-				    fill_cell(current_generation, x, y);
-		    }
-	    }
+                if(neighbours == 3)
+                    fill_cell(current_generation, x, y);
+            }
+        }
 
         display(current_generation);
 
-	    // Exit after a few generations
-	    if( ++generations > 255 ) break;	    
+        // Exit after a few generations
+        if( ++generations > 255 ) break;        
 #if 0
-	    // Boringness detector:
-	    if( get_difference(old_generation,current_generation) < 8 || get_total(current_generation) < 6)
-	    {
-		    current_generation[7] = (uint8_t)rand();
-		    current_generation[8] = (uint8_t)rand();
-		    current_generation[9] = (uint8_t)rand();
-		    current_generation[10] = (uint8_t)rand();
-		    current_generation[11] = (uint8_t)rand();
-		    current_generation[12] = (uint8_t)rand();
-		    current_generation[13] = (uint8_t)rand();
-		    current_generation[14] = (uint8_t)rand();
+        // Boringness detector:
+        if( get_difference(old_generation,current_generation) < 8 || get_total(current_generation) < 6)
+        {
+            current_generation[7] = (uint8_t)rand();
+            current_generation[8] = (uint8_t)rand();
+            current_generation[9] = (uint8_t)rand();
+            current_generation[10] = (uint8_t)rand();
+            current_generation[11] = (uint8_t)rand();
+            current_generation[12] = (uint8_t)rand();
+            current_generation[13] = (uint8_t)rand();
+            current_generation[14] = (uint8_t)rand();
 
-		    current_generation[1000] = (uint8_t)rand();
-		    current_generation[1001] = (uint8_t)rand();
-		    current_generation[1002] = (uint8_t)rand();
-		    current_generation[1003] = (uint8_t)rand();
-		    current_generation[1004] = (uint8_t)rand();
-		    current_generation[1005] = (uint8_t)rand();
-		    current_generation[1006] = (uint8_t)rand();
-		    current_generation[1007] = (uint8_t)rand();
+            current_generation[1000] = (uint8_t)rand();
+            current_generation[1001] = (uint8_t)rand();
+            current_generation[1002] = (uint8_t)rand();
+            current_generation[1003] = (uint8_t)rand();
+            current_generation[1004] = (uint8_t)rand();
+            current_generation[1005] = (uint8_t)rand();
+            current_generation[1006] = (uint8_t)rand();
+            current_generation[1007] = (uint8_t)rand();
 
-		    generations = 0;
-	    }
+            generations = 0;
+        }
 #endif
         copy_old_new(old_generation, current_generation);
         io_pio_port_b = (uint8_t)generations;
