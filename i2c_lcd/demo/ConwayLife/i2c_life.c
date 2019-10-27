@@ -38,6 +38,8 @@
 // ZSDCC
 // zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
 
+// zcc +yaz180 -subtype=cpm -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
+
 
 // SCCZ80
 // zcc +yaz180 -subtype=app -clib=new -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd i2c_life.c -o i2c_life -create-app
@@ -74,8 +76,8 @@
 
 extern uint8_t LCD_Port;    // Global for PCA9665 Device Port MSB
 
-uint8_t current_generation[CELLS_X*CELLS_Y/8];
-uint8_t old_generation[CELLS_X*CELLS_Y/8];
+static uint8_t current_generation[CELLS_X*CELLS_Y/8];
+static uint8_t old_generation[CELLS_X*CELLS_Y/8];
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -142,14 +144,14 @@ void fill_random_data(uint8_t *to)
 
 /////////////////////////////////////////////////////////////////////////
 
-void inline clear_data(uint8_t *to)
+inline void clear_data(uint8_t *to)
 {
     memset( to, 0, CELLS_X*CELLS_Y/8);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-void inline copy_old_new(uint8_t *to, uint8_t *from)
+inline void copy_old_new(uint8_t *to, uint8_t *from)
 {
     memcpy( to, from, CELLS_X*CELLS_Y/8);
 }
@@ -221,8 +223,8 @@ void main(void)
 
     clock_gettime(CLOCK_REALTIME,&startTime);
     
-    io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
-    io_pio_port_b = 0x00;
+//  io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
+//  io_pio_port_b = 0x00;
     
     LCD_Init(I2C2_PORT);
     printf("LCD life on I2C port: %u\n", (LCD_Port == I2C_PORT1 ? 1 : 2));
@@ -280,7 +282,7 @@ void main(void)
         }
 #endif
         copy_old_new(old_generation, current_generation);
-        io_pio_port_b = (uint8_t)generations;
+//      io_pio_port_b = (uint8_t)generations;
     }
 
     clock_gettime(CLOCK_REALTIME,&endTime);
