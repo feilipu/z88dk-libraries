@@ -86,7 +86,7 @@ inline uint8_t get_cell(uint8_t *from, uint8_t x, uint8_t y)
     x &= (CELLS_X-1);   // ensure x < 128 this is non-portable (but fast)
     y &= (CELLS_Y-1);   // ensure y < 64 this is non-portable (but fast)
 
-    return ( (from[(uint16_t)(x*y)/8] & (uint8_t)(1 << y%8) ) ? 1 : 0 );
+    return from[(uint16_t)x+(uint16_t)y*(CELLS_X/8)] & (uint8_t)(1 << y%8);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -110,23 +110,23 @@ uint16_t get_total(uint8_t *from)
 void set_cell(uint8_t *to, uint8_t x, uint8_t y, uint8_t value)
 {
     if(value)
-        to[(uint16_t)(x*y)/8] |= (uint8_t)(1 << y%8);
+        to[(uint16_t)x+(uint16_t)y*(CELLS_X/8)] |= (uint8_t)(1 << y%8);
     else
-        to[(uint16_t)(x*y)/8] &= ~( (uint8_t)(1 << y%8) );
+        to[(uint16_t)x+(uint16_t)y*(CELLS_X/8)] &= ~( (uint8_t)(1 << y%8) );
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 inline void fill_cell(uint8_t *to, uint8_t x, uint8_t y)
 {
-    to[(uint16_t)(x*y)/8] |= (uint8_t)(1 << y%8);
+    to[(uint16_t)x+(uint16_t)y*(CELLS_X/8)] |= (uint8_t)(1 << y%8);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
 inline void clear_cell(uint8_t *to, uint8_t x, uint8_t y)
 {
-    to[(uint16_t)(x*y)/8] &= ~( (uint8_t)(1 << y%8) );
+    to[(uint16_t)x+(uint16_t)y*(CELLS_X/8)] &= ~( (uint8_t)(1 << y%8) );
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -223,8 +223,8 @@ void main(void)
 
     clock_gettime(CLOCK_REALTIME,&startTime);
     
-//  io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
-//  io_pio_port_b = 0x00;
+    io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
+    io_pio_port_b = 0x00;
     
     LCD_Init(I2C2_PORT);
     printf("LCD life on I2C port: %u\n", (LCD_Port == I2C_PORT1 ? 1 : 2));
@@ -260,9 +260,9 @@ void main(void)
         // Boringness detector:
         if( get_difference(old_generation,current_generation) < 8 || get_total(current_generation) < 6)
         {
-            current_generation[7] = (uint8_t)rand();
-            current_generation[8] = (uint8_t)rand();
-            current_generation[9] = (uint8_t)rand();
+            current_generation[7]  = (uint8_t)rand();
+            current_generation[8]  = (uint8_t)rand();
+            current_generation[9]  = (uint8_t)rand();
             current_generation[10] = (uint8_t)rand();
             current_generation[11] = (uint8_t)rand();
             current_generation[12] = (uint8_t)rand();
@@ -282,7 +282,7 @@ void main(void)
         }
 #endif
         copy_old_new(old_generation, current_generation);
-//      io_pio_port_b = (uint8_t)generations;
+        io_pio_port_b = (uint8_t)generations;
     }
 
     clock_gettime(CLOCK_REALTIME,&endTime);
