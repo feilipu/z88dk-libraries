@@ -34,11 +34,14 @@
 */
 
 #include <inttypes.h>
-#include "/home/phillip/Z80/z88dk/include/_DEVELOPMENT/sdcc/arch/yaz180/system_time.h"
+
+#ifdef __YAZ180
+#include <arch/yaz180/system_time.h>
+#elif __SCZ180
+#include <arch/scz180/system_time.h>
+#endif
 
 #include "time.h"
-
-extern time_t _system_time;
 
 time_t
 time(time_t * timer)

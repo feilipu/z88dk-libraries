@@ -1,4 +1,3 @@
-./__system_time_basic.asm
 ./asc_store.c
 ./asctime.c
 ./asctime_r.c
