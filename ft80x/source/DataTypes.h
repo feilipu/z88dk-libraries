@@ -1,16 +1,16 @@
-#ifndef _FT_DATATYPES_H_
-#define _FT_DATATYPES_H_
+#ifndef _DATATYPES_H_
+#define _DATATYPES_H_
 
 /*
-File:   FT_DataTypes.h
+File:   DataTypes.h
 */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define FT_FALSE                (0)
-#define FT_TRUE                 (1)
+#define FALSE                (0)
+#define TRUE                 (1)
 
 typedef char                    ft_char8_t;
 typedef signed char             ft_int8_t;
@@ -36,6 +36,6 @@ typedef const unsigned long     ft_const_uint32_t;
 #endif
 
 
-#endif /* !_FT_DATATYPES_H_ */
+#endif /* !_DATATYPES_H_ */
 
 /* Nothing beyond this*/

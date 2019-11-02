@@ -1,15 +1,15 @@
 
-#ifndef _FT_GPU_H_
-#define _FT_GPU_H_
+#ifndef _GPU_H_
+#define _GPU_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Definitions used for FT800 co-processor command buffer */
-#define FT_DL_SIZE            (0x2000)   // 8kB Display List buffer size
-#define FT_CMD_FIFO_SIZE     (0x1000)    // 4kB co-processor FIFO size
-#define FT_CMD_SIZE          (4)        // 4 byte per co-processor and Display List command of EVE
+#define DL_SIZE             (0x2000)    // 8kB Display List buffer size
+#define CMD_FIFO_SIZE       (0x1000)    // 4kB co-processor FIFO size
+#define CMD_SIZE            (4)         // 4 byte per co-processor and Display List command of EVE
 /* Definition used for FT800 co-processor Display List Buffer */
 
 
@@ -215,7 +215,7 @@ extern "C" {
 
 
 /* RAM Register locations */
-#define RAM_G                0UL            // Main graphics RAM
+#define RAM_G                0UL              // Main graphics RAM
 #define ROM_FONT             0766524UL        // Font table and bitmap
 #define ROM_CHIPID           0786432UL        // FT800 chip identification and revision information: Byte [0:1] Chip ID: “0800” Byte [2:3] Version ID: “0100”
 #define ROM_FONT_ADDR        1048572UL        // Font table pointer address
@@ -307,6 +307,16 @@ extern "C" {
 #define REG_VSIZE            1057860UL
 #define REG_VSYNC0           1057864UL
 #define REG_VSYNC1           1057868UL
+/* FT801 Registers */
+#define REG_CTOUCH_EXTENDED  1058036UL
+#define REG_CTOUCH_GESTURE   1058104UL
+#define REG_CTOUCH_IDS       1058060UL
+#define REG_CTOUCH_TOUCH0_XY 1058064UL
+#define REG_CTOUCH_TOUCH1_XY 1058056UL
+#define REG_CTOUCH_TOUCH2_XY 1058164UL
+#define REG_CTOUCH_TOUCH3_XY 1058168UL
+#define REG_CTOUCH_TOUCH4_X  1058104UL
+#define REG_CTOUCH_TOUCH4_Y  1058060UL
 
 
 /******** Command Groups ************/
@@ -364,23 +374,23 @@ extern "C" {
 #define MACRO(m)                    (((uint32_t)0x25<<24)|((m)&0x01))
 
 
-/* allow FT_GPU_CoCmd_*Color commands to use X11 colours stored in PROGMEM - only used colours are actually stored by linker */
+/* allow GPU_CoCmd_*Color commands to use X11 colours stored in PROGMEM - only used colours are actually stored by linker */
 #define X11(colour)                 (((uint32_t)(pgm_read_byte(&(colour)[0]))<<16)|((uint16_t)(pgm_read_byte(&(colour)[1]))<<8)|(pgm_read_byte(&(colour)[2])))
 
 #define NOTE(n, sharp)              (((n) - 'C') + ((sharp) * 128))
 
 
-#define FT_GPU_NUMCHAR_PERFONT (128)
-#define FT_GPU_FONT_TABLE_SIZE (148)
+#define GPU_NUMCHAR_PERFONT (128)
+#define GPU_FONT_TABLE_SIZE (148)
 
-/* FT800 font table structure */
+/* FT80x font table structure */
 /* Font table address in ROM can be found by reading the address from 0xFFFFC location. */
 /* 16 font tables are present at the address read from location 0xFFFFC */
-typedef struct FT_GPU_Fonts
+typedef struct GPU_Fonts
 {
     /* All the values are in bytes */
     /* Width of each character font from 0 to 127 */
-    ft_uint8_t    FontWidth[FT_GPU_NUMCHAR_PERFONT];
+    ft_uint8_t    FontWidth[GPU_NUMCHAR_PERFONT];
     /* Bitmap format of font wrt bitmap formats supported by FT800 - L1, L4, L8 */
     ft_uint32_t    FontBitmapFormat;
     /* Font line stride in FT800 ROM */
@@ -391,13 +401,66 @@ typedef struct FT_GPU_Fonts
     ft_uint32_t    FontHeightInPixels;
     /* Pointer to font graphics raw data */
     ft_uint32_t    PointerToFontGraphicsData;
-}FT_GPU_Fonts_t;
+}GPU_Fonts_t;
 
+
+#if defined(DISPLAY_RESOLUTION_QVGA)
+    /* Values specific to QVGA LCD display */
+    #define DispWidth      320L
+    #define DispHeight     240L
+    #define DispHCycle     408L
+    #define DispHOffset    70L
+    #define DispHSync0     0L
+    #define DispHSync1     10L
+    #define DispVCycle     263L
+    #define DispVOffset    13L
+    #define DispVSync0     0L
+    #define DispVSync1     2L
+    #define DispPCLK       8
+    #define DispSwizzle    2
+    #define DispPCLKPol    0
+    #define DispCSpread    1
+    #define DispDither     1
+#elif defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
+    /* Values specific to HVGA LCD display */
+    #define DispWidth      320L
+    #define DispHeight     480L
+    #define DispHCycle     400L
+    #define DispHOffset    40L
+    #define DispHSync0     0L
+    #define DispHSync1     10L
+    #define DispVCycle     500L
+    #define DispVOffset    10L
+    #define DispVSync0     0L
+    #define DispVSync1     5L
+    #define DispPCLK       4
+    #define DispSwizzle    2
+    #define DispPCLKPol    1
+    #define DispCSpread    1
+    #define DispDither     1
+#else
+    /* Default is WQVGA - 480x272 */
+    #define DispWidth     480L
+    #define DispHeight    272L
+    #define DispHCycle    548L
+    #define DispHOffset   43L
+    #define DispHSync0    0L
+    #define DispHSync1    41L
+    #define DispVCycle    292L
+    #define DispVOffset   12L
+    #define DispVSync0    0L
+    #define DispVSync1    10L
+    #define DispPCLK      5
+    #define DispSwizzle   0
+    #define DispPCLKPol   1
+    #define DispCSpread   1
+    #define DispDither    1
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* !_FT_GPU_H_ */
+#endif /* !_GPU_H_ */
 
 /* Nothing beyond this */

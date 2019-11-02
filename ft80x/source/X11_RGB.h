@@ -3,8 +3,8 @@
  * https://en.wikipedia.org/wiki/X11_color_names
  *
  */
-#ifndef _FT_X11_RGB_H_
-#define _FT_X11_RGB_H_
+#ifndef _X11_RGB_H_
+#define _X11_RGB_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -157,4 +157,4 @@ extern ft_const_uint8_t LIGHTGREEN          [];    // = { 144, 238, 144 };
 }
 #endif
 
-#endif  /* !_FT_X11_RGB_H_ */
+#endif  /* !_X11_RGB_H_ */

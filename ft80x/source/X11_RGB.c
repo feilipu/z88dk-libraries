@@ -3,7 +3,7 @@
  * https://en.wikipedia.org/wiki/X11_color_names
  *
  */
-#include "FT_Platform.h"
+#include "Platform.h"
 
 ft_const_uint8_t WHITE               [] = { 255, 255, 255 };
 ft_const_uint8_t BLACK               [] = {   0,   0,   0 };
