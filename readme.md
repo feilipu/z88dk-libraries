@@ -7,17 +7,17 @@ The implementation of `time.h` aspires to conform with ISO/IEC 9899 (C90). Howev
 ### FatFs
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
-### th02
-This is a multifunctional sensor that gives you temperature and relative humidity information at the same time. It utilizes a TH02 sensor that can meet measurement needs of general purposes. It provides reliable readings when environment humidity condition inbetween 0-80% RH, and temperature condition inbetween 0-70°C, covering needs in most home and daily applications that don't contain extreme conditions.
-
 ### i2c_lcd
 This library is build for I2C_LCD12864 from Seeed Studio - Sparking. Please do not use this library on any other devices, that could cause unpredictable damage to an unknown device.
 
 ### ft80x
 This library is build for FT801 EVE display, using I2C. Hardware tested is 4D Systems ADAM and EVE platform (with modification to convert from SPI). Please do not use this library on any other devices, that could cause unpredictable damage to an unknown device.
 
+### th02
+This is a multifunctional sensor that gives you temperature and relative humidity information at the same time. It utilizes a TH02 sensor that can meet measurement needs of general purposes. It provides reliable readings when environment humidity condition inbetween 0-80% RH, and temperature condition inbetween 0-70°C, covering needs in most home and daily applications that don't contain extreme conditions.
+
 ### z88dk-FreeRTOS
-TBC
+TBA
 
 ## Preparation
 The libraries can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine, from the relevant library sub-directory. e.g. for any `library`.

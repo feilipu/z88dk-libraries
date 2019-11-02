@@ -12,6 +12,8 @@
 #define FF_FS_READONLY  1
 #elif __YAZ180
 #define FF_FS_READONLY  0
+#elif __SCZ180
+#define FF_FS_READONLY  0
 #else
 #define FF_FS_READONLY  0
 #endif
@@ -22,7 +24,9 @@
 
 #if __RC2014
 #define FF_FS_MINIMIZE  0
-#elif __YAZ180
+#elif __YAZ180 
+#define FF_FS_MINIMIZE  0
+#elif __SCZ180
 #define FF_FS_MINIMIZE  0
 #else
 #define FF_FS_MINIMIZE  0
@@ -63,7 +67,9 @@
 
 #if __RC2014
 #define FF_USE_CHMOD    0
-#elif __YAZ180
+#elif __YAZ180 
+#define FF_USE_CHMOD    1
+#elif __SCZ180
 #define FF_USE_CHMOD    1
 #else
 #define FF_USE_CHMOD    0
@@ -170,6 +176,8 @@
 #define FF_FS_RPATH     1
 #elif __YAZ180
 #define FF_FS_RPATH     2
+#elif __SCZ180
+#define FF_FS_RPATH     2
 #else
 #define FF_FS_RPATH     2
 #endif
@@ -259,6 +267,8 @@
 #if __RC2014
 #define FF_FS_NORTC     1
 #elif __YAZ180
+#define FF_FS_NORTC     0
+#elif  __SCZ180
 #define FF_FS_NORTC     0
 #else
 #define FF_FS_NORTC     1

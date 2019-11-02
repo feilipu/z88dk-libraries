@@ -10,7 +10,13 @@
 
 #if __YAZ180
 #include <lib/yaz180/time.h> /* Declarations of YAZ180 time functions */
+#elif __SCZ180
+#include <lib/scz180/time.h> /* Declarations of SCZ180 time functions */
+#else
+#error - No RTC time functions available for your target - Set FF_FS_NORTC = 1 in ffconf.h
+#endif
 
+#if __YAZ180 || __SCZ180
 DWORD get_fattime (void)
 {
     struct tm y2ktime;
@@ -23,12 +29,8 @@ DWORD get_fattime (void)
     return ( (DWORD)system_fatfs( &y2ktime ) );
 }
 
-#else
-#error - No RTC time functions available for your target - Set FF_FS_NORTC = 1 in ffconf.h
 #endif
-
 #endif
-
 
 /*-----------------------------------------------------------------------*/
 /* Sample code of OS dependent controls for FatFs                        */

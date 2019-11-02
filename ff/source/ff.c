@@ -25,6 +25,8 @@
 #include <arch/rc2014/diskio.h>     /* Device I/O functions */
 #elif __YAZ180
 #include <arch/yaz180/diskio.h>     /* Device I/O functions */
+#elif __SCZ180
+#include <arch/scz180/diskio.h>     /* Device I/O functions */
 #else
 #error  - No diskio functions available for your target
 #endif

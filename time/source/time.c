@@ -39,6 +39,8 @@
 #include <arch/yaz180/system_time.h>
 #elif __SCZ180
 #include <arch/scz180/system_time.h>
+#else
+#error - Check whether you have a system tick available.
 #endif
 
 #include "time.h"
