@@ -99,8 +99,8 @@
 include(__link__.m4)
 define(`m4_SCCZ80_NOLIB', 1)
 
-#ifndef TIME_H
-#define TIME_H
+#ifndef LIB_TIME_H
+#define LIB_TIME_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,24 +108,22 @@ extern "C" {
 
 #include <inttypes.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include <arch.h>
 
     /**
         time_t represents seconds elapsed from Midnight, Jan 1 2000 UTC (the Y2K 'epoch').
         Its range allows this implementation to represent time up to Tue Feb 7 06:28:15 2136 UTC.
+        found in <time.h>
     */
-    typedef     uint32_t time_t;
 
     /**
     Locations of YAZ180 system tick for both ROM and NASCOM Basic versions
     */
 
-    extern uint8_t      _system_time_fraction;
-    extern time_t       _system_time;
-
-    extern uint8_t      _system_time_fraction_basic;
-    extern time_t       _system_time_basic;
+    extern volatile uint32_t     _system_time;
+    extern volatile uint8_t      _system_time_fraction;
 
     /**
     The time_basic function returns the systems current time stamp, when run with NASCOM Basic.
@@ -163,9 +161,9 @@ __OPROTO(,,int32_t,,difftime,time_t time1,time_t time0)
         tm_min      minutes after the hour - [ 0 to 59 ]
         tm_hour     hours since midnight - [ 0 to 23 ]
         tm_mday     day of the month - [ 1 to 31 ]
-        tm_wday     days since Sunday - [ 0 to 6 ]
         tm_mon      months since January - [ 0 to 11 ]
         tm_year     years since 2000
+        tm_wday     days since Sunday - [ 0 to 6 ]
         tm_yday     days since January 1 - [ 0 to 365 ]
         tm_isdst    Daylight Saving Time flag *
 
@@ -180,18 +178,6 @@ __OPROTO(,,int32_t,,difftime,time_t time1,time_t time0)
         See the set_dst() function for more information about Daylight Saving.
 
     */
-    typedef struct tm {
-        uint8_t          tm_sec;
-        uint8_t          tm_min;
-        uint8_t          tm_hour;
-        uint8_t          tm_mday;
-        uint8_t          tm_wday;
-        uint8_t          tm_mon;
-        uint16_t         tm_year;
-        uint16_t         tm_yday;
-         int16_t         tm_isdst;
-    };
-
 
     /**
     This function 'compiles' the elements of a broken-down time structure, returning a binary time stamp.
@@ -591,4 +577,4 @@ __OPROTO(,,uint32_t,,lm_sidereal,const time_t * timer)
 }
 #endif
 
-#endif  /* TIME_H  */
+#endif  /* !LIB_TIME_H  */
