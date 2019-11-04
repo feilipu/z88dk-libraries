@@ -337,10 +337,14 @@ DSTATUS disk_initialize (
     ptr = buff;
 
     if (pdrv) return RES_NOTRDY;
+    
+    sd_clock(__IO_CNTR_SS_DIV_160);             /* Slow clock to between 100kHz and 400kHz (115kHz to 230kHz) */
 
-    for (n = 10; n; n--) sd_read_byte();    /* Apply 80 dummy clocks and the card gets ready to receive command */
+    for (n = 100; n; n--) sd_write_byte(0xFF);  /* Apply 800 dummy clocks and the card gets ready to receive command */
 
     ty = 0;
+    while (send_cmd(CMD0, 0) != R1_IDLE_STATE && --n);  /* Don't give up easily trying to get to idle state */
+
     if (send_cmd(CMD0, 0) == R1_IDLE_STATE) {           /* Enter Idle state */
         if (send_cmd(CMD8, 0x1AA) == R1_IDLE_STATE) {   /* SDv2? */
             *ptr++ =sd_read_byte();                     /* Get trailing return value of R7 resp */
@@ -379,6 +383,8 @@ DSTATUS disk_initialize (
     s = ty ? 0 : STA_NOINIT;
     Stat = s;
 
+    sd_clock(__IO_CNTR_SS_DIV_20);      /* Maximum clock is Phi/20 */
+    sd_write_byte(0xFF);                /* Give SD Card 8 Clocks to complete command. */
     deselect();
 
     return s;
