@@ -106,10 +106,10 @@ define(`m4_SCCZ80_NOLIB', 1)
 extern "C" {
 #endif
 
-#include <inttypes.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/types.h>
 
+#include <time.h>
 #include <arch.h>
 
     /**
@@ -124,13 +124,6 @@ extern "C" {
 
     extern volatile uint32_t     _system_time;
     extern volatile uint8_t      _system_time_fraction;
-
-    /**
-    The time_basic function returns the systems current time stamp, when run with NASCOM Basic.
-    If timer is not a null pointer, the return value is also assigned to the object it points to.
-    */
-//  time_t      time_basic(time_t *timer);
-__OPROTO(,,time_t,,time_basic,time_t *timer)
 
     /**
     The time function returns the systems current time stamp.

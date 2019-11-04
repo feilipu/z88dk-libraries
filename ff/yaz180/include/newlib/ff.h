@@ -57,7 +57,9 @@ typedef unsigned short  WCHAR;  /* 16-bit unsigned integer */
 typedef unsigned long   DWORD;  /* 32-bit unsigned integer */
 #endif
 
-#endif  /* __DISKIO_H__ */
+#define FF_MAX_SS       512
+
+#endif  /* !__DISKIO_H__ */
 
 
 /* Definitions of volume management */
