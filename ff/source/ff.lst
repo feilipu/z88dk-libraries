@@ -1,3 +1,6 @@
+
+;./diskio_sd.c
+
 ./ffsystem.c
 ./ffunicode.c
 ./ff.c
