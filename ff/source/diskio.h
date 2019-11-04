@@ -137,7 +137,7 @@ extern void sd_read_block(uint8_t *to) __preserves_regs(iyh,iyl);
 extern void sd_read_block_fastcall(uint8_t *to) __preserves_regs(iyh,iyl) __z88dk_fastcall;
 #define sd_read_block(a) sd_read_block_fastcall(a)
 
-#elif _SCCZ80
+#elif __SCCZ80
 
 //
 // IDE DISK COMMANDS

@@ -250,9 +250,9 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     DWORD arg           /* Argument */
 )
 {
-    unsigned char *p;
     BYTE n;
     WORD d;
+    BYTE *p;
 
     if (cmd & 0x80) {    /* ACMD<n> is the command sequense of CMD55-CMD<n> */
         cmd &= 0x7F;
@@ -274,7 +274,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     sd_write_byte(cmd);                         /* Start + Command index */
 
     /* sdcc sadly unable to figure this out for itself yet */
-    p = &arg+3;
+    p = (BYTE *)&arg+3;
     sd_write_byte(*p);                          /* Argument[31..24] */
     --p;
     sd_write_byte(*p);                          /* Argument[23..16] */
@@ -323,7 +323,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
 DSTATUS disk_initialize_fastcall (
     BYTE pdrv               /* Physical drive number (0) */
 ) __preserves_regs(b,c,d,e,iyh,iyl) __z88dk_fastcall
-#else
+#elif __SCCZ80
 DSTATUS disk_initialize (
     BYTE pdrv               /* Physical drive number (0) */
 )
@@ -392,7 +392,7 @@ DSTATUS disk_initialize (
 DSTATUS disk_status_fastcall (
     BYTE pdrv               /* Drive number (always 0) */
 ) __preserves_regs(d,e,iyh,iyl) __z88dk_fastcall
-#else
+#elif __SCCZ80
 DSTATUS disk_status_fastcall (
     BYTE pdrv               /* Drive number (always 0) */
 ) __smallc __z88dk_fastcall
