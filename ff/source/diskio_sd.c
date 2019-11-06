@@ -121,7 +121,7 @@ static WORD send_cmd (BYTE cmd, DWORD arg);
 /*-----------------------------------------------------------------------*/
 
 static
-BYTE wait_ready (uint8_t want_ff)    /* 1:OK, 0:Timeout */
+BYTE wait_ready (uint8_t want_ff)
 {
     uint8_t b;
 
@@ -222,8 +222,8 @@ BYTE sd_read_sector (   /* DATA_RES_ACCEPTED:OK, 0:Failed */
 /*-----------------------------------------------------------------------*/
 
 static
-BYTE sd_write_sector (   /* 1:OK, 0:Failed */
-    const BYTE *buff,    /* 512 byte data block to be transmitted */
+BYTE sd_write_sector (  /* DATA_RES_ACCEPTED:OK, 0:Failed */
+    const BYTE *buff,   /* 512 byte data block to be transmitted */
     BYTE token          /* Data/Stop token */
 )
 {
@@ -253,7 +253,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
 { 
     WORD i;
     WORD resp;
-    BYTE *p;
+    BYTE *ptr;
     BYTE n;
 
     if (cmd & 0x80) {                           /* ACMD<n> is the command sequence of CMD55 + CMD<n> */
@@ -289,12 +289,12 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     /* Send command byte */
     sd_write_byte((0x40|cmd)&0x7F);             /* Start + Command index */
 
-    /* Send command arguments */
-    p = (BYTE *)&arg+3;
-    sd_write_byte(*p); --p;                     /* Argument[31..24] */
-    sd_write_byte(*p); --p;                     /* Argument[23..16] */
-    sd_write_byte(*p); --p;                     /* Argument[15..8] */
-    sd_write_byte(*p);                          /* Argument[7..0] */
+    /* Send command arguments - unusual grammar to optimise code */
+    ptr = (BYTE *)&arg+3;
+    sd_write_byte(*ptr); --ptr;                 /* Argument[31..24] */
+    sd_write_byte(*ptr); --ptr;                 /* Argument[23..16] */
+    sd_write_byte(*ptr); --ptr;                 /* Argument[15..8] */
+    sd_write_byte(*ptr);                        /* Argument[7..0] */
 
     /* there's only a few commands (in native mode) that need correct CRCs */
     n = 0xAA | 0x01;                            /* Dummy CRC + Stop */
@@ -356,8 +356,6 @@ DSTATUS disk_initialize (
     Stat = STA_NOINIT;                                      /* Set uninitialised, initially */
     CardType = 0;                                           /* Set invalid SD card type, initially */
 
-    ptr = buff;
-
     if (pdrv)
         return RES_NOTRDY;                                  /* Supports only single drive */
 
@@ -374,6 +372,7 @@ DSTATUS disk_initialize (
     if ( resp == R1_IDLE_STATE)                             /* Entered Idle state */
     {
         if ((resp = send_cmd(CMD8, 0x1AA)) == R1_IDLE_STATE ) {     /* SDv2? */
+            ptr = buff;                                     /* Unusual grammar to optimise code */
             *ptr++ =sd_read_byte();                         /* Get trailing return value of R7 resp */
             *ptr++ =sd_read_byte();
             *ptr++ =sd_read_byte();
@@ -387,7 +386,9 @@ DSTATUS disk_initialize (
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command, before trying again. */
                     while (--i);                            /* short delay loop */
                 }
+
                 if ( send_cmd(CMD58, 0) == R1_READY_STATE ) {   /* Check CCS bit in the OCR */
+                    ptr = buff;                             /* Unusual grammar to optimise code */
                     *ptr++ =sd_read_byte();
                     *ptr++ =sd_read_byte();
                     *ptr++ =sd_read_byte();

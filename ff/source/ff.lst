@@ -1,5 +1,5 @@
 
-;./diskio_sd.c
+./diskio_sd.c
 
 ./ffsystem.c
 ./ffunicode.c
