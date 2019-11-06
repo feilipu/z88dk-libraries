@@ -17,12 +17,10 @@
 
 #include "diskio.h"
 
-#if __YAZ180
-#include <lib/yaz180/ff.h>       /* Declarations of FatFs API */
-#elif __SCZ180
+#if __SCZ180
 #include <lib/scz180/ff.h>       /* Declarations of FatFs API */
 #else
-#error Do you have FAT?
+#error Do you have SD FAT?
 #endif
 
 /*--------------------------------------------------------------------------
@@ -83,7 +81,7 @@
 
 #define DATA_START_BLOCK        0xFE    /** start data token for read or write single block*/
 
-#define DATA_RES_ACCEPTED       0x05    /** write data accepted token */
+#define DATA_RES_ACCEPTED       0x05    /** write data & read data accepted token */
 #define DATA_RES_CRC_ERROR      0x0B    /** write data failed CRC error token */
 #define DATA_RES_WRITE_ERROR    0x0D    /** write data failed write error */
 
@@ -94,6 +92,9 @@
 #define CRC_ON                  (0x00000001UL)
 #define CRC_OFF                 (0x00000000UL)
 #define CRC_INIT                (0x0000)
+
+#define READ_ATTEMPTS           (3)        /** Attempts to read block. */
+#define WRITE_ATTEMPTS          (3)        /** Attempts to write block. */
 
 /*-----------------------------------------------------------------------*/
 /* Static variables                                                      */
@@ -153,10 +154,11 @@ void deselect (void)
 static
 BYTE select (void)    /* 1:OK, 0:Timeout */
 {
-    uint8_t b;
     sd_cs_lower();                  /* Set CS# low */
+
     if (wait_ready(true))           /* Wait for card ready */
         return 1;
+
     deselect();                     /* Otherwise, */
     return 0;                       /* failed */
 }
@@ -166,7 +168,7 @@ BYTE select (void)    /* 1:OK, 0:Timeout */
 /*-----------------------------------------------------------------------*/
 
 static
-BYTE sd_read_data (     /* 1:OK, 0:Failed */
+BYTE sd_read_data (     /* DATA_RES_ACCEPTED:OK, 0:Failed */
     BYTE *buff,         /* Data buffer to store received data */
     BYTE length         /* Length of data to read */
 )
@@ -187,7 +189,7 @@ BYTE sd_read_data (     /* 1:OK, 0:Failed */
     sd_read_byte();                             /* Discard CRC */
     sd_read_byte();
 
-    return 1;                                   /* Return with success */
+    return DATA_RES_ACCEPTED;                   /* Return with success */
 }
 
 /*-----------------------------------------------------------------------*/
@@ -195,7 +197,7 @@ BYTE sd_read_data (     /* 1:OK, 0:Failed */
 /*-----------------------------------------------------------------------*/
 
 static
-BYTE sd_read_sector (   /* 1:OK, 0:Failed */
+BYTE sd_read_sector (   /* DATA_RES_ACCEPTED:OK, 0:Failed */
     BYTE *buff          /* Data buffer to store received data */
 )
 {
@@ -212,7 +214,7 @@ BYTE sd_read_sector (   /* 1:OK, 0:Failed */
     sd_read_byte();                             /* Discard CRC */
     sd_read_byte();
 
-    return 1;                                   /* Return with success */
+    return DATA_RES_ACCEPTED;                   /* Return with success */
 }
 
 /*-----------------------------------------------------------------------*/
@@ -234,10 +236,9 @@ BYTE sd_write_sector (   /* 1:OK, 0:Failed */
         sd_write_byte(0xFF);        /* Xmit dummy CRC (0xFF,0xFF) */
         sd_write_byte(0xFF);
 
-        if ((sd_read_byte() & DATA_RES_MASK) != DATA_RES_ACCEPTED)
-            return 0;               /* If not accepted, return with error */
+        return (sd_read_byte() & DATA_RES_MASK);    /* Receive data response. If accepted then xxx00101 */
     }
-    return 1;
+    return DATA_RES_ACCEPTED;       /* STOP_TRAN_TOKEN received so return with success */
 }
 
 /*-----------------------------------------------------------------------*/
@@ -285,17 +286,14 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
         select();
     }
 
-    /* Send command packet */
-    sd_write_byte(0x40|cmd);                    /* Start + Command index */
+    /* Send command byte */
+    sd_write_byte((0x40|cmd)&0x7F);             /* Start + Command index */
 
-    /* sdcc sadly unable to figure this out for itself yet */
+    /* Send command arguments */
     p = (BYTE *)&arg+3;
-    sd_write_byte(*p);                          /* Argument[31..24] */
-    --p;
-    sd_write_byte(*p);                          /* Argument[23..16] */
-    --p;
-    sd_write_byte(*p);                          /* Argument[15..8] */
-    --p;
+    sd_write_byte(*p); --p;                     /* Argument[31..24] */
+    sd_write_byte(*p); --p;                     /* Argument[23..16] */
+    sd_write_byte(*p); --p;                     /* Argument[15..8] */
     sd_write_byte(*p);                          /* Argument[7..0] */
 
     /* there's only a few commands (in native mode) that need correct CRCs */
@@ -327,7 +325,6 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     if (cmd == CMD13 || cmd == ACMD13) {        /* Capture R2 response second byte from CMD13 (or ACMD13),*/
         resp |= sd_read_byte();                 /* collect a R2 second byte response*/
     }
-    printf("\nresp = 0x%X\n", resp);
     return resp;                                /* Return with the R1 (and R2) response value in uint16 (two bytes) */
 }
 
@@ -476,29 +473,34 @@ DRESULT disk_read (
 )
 #endif
 {
+    uint8_t rattempt = READ_ATTEMPTS;           /* Read attempts */
+    uint8_t resp = 0;
     BYTE cmd;
-    DWORD sect = (DWORD)sector;
 
-    if (disk_status(pdrv) & STA_NOINIT) return RES_NOTRDY;
+    if (pdrv || !count) return RES_PARERR;      /* only single drive supported, and sector count can't be zero */
+    if (Stat & STA_NOINIT) return RES_NOTRDY;   /* drive must be initialised */
 
-    select();
+    do {
+        select();
 
-    if (!(CardType & CT_BLOCK)) sect *= 512;    /* Convert LBA to byte address if needed */
-    
-    cmd = count > 1 ? CMD18 : CMD17;            /*  READ_MULTIPLE_BLOCK : READ_SINGLE_BLOCK */
+        if (!(CardType & CT_BLOCK)) sector *= 512;  /* Convert LBA to byte address if needed */
 
-    if (send_cmd(cmd, sect) == 0) {
-        do {
-            if (!sd_read_sector(buff)) break;
-            buff += 512;
-        } while (--count);
-        if (cmd == CMD18) send_cmd(CMD12, 0);    /* STOP_TRANSMISSION */
-    }
-    deselect();                                 /* Give SD Card 8 Clocks to complete command. */
+        cmd = count > 1 ? CMD18 : CMD17;            /*  READ_MULTIPLE_BLOCK : READ_SINGLE_BLOCK */
 
-    return count ? RES_ERROR : RES_OK;
+        if (send_cmd(cmd, sector) == R1_READY_STATE) {
+            do {
+                if ((resp = sd_read_sector(buff) ) != DATA_RES_ACCEPTED) break;
+                buff += 512;
+            } while (--count);
+            if (cmd == CMD18) send_cmd(CMD12, 0x00);/* STOP_TRANSMISSION */
+        }
+
+        deselect();                                 /* Give SD Card 8 Clocks to complete command. */
+
+    } while  ((--rattempt != 0) && (resp != DATA_RES_ACCEPTED) );
+
+    return resp == DATA_RES_ACCEPTED ? RES_OK : RES_ERROR;
 }
-
 
 
 /*-----------------------------------------------------------------------*/
@@ -521,31 +523,38 @@ DRESULT disk_write_callee (
 ) __smallc __z88dk_callee
 #endif
 {
-    DWORD sect = (DWORD)sector;
+    uint8_t wattempt = WRITE_ATTEMPTS;        /* Write attempts */
+    uint8_t resp = 0;
 
-    if (disk_status(pdrv) & STA_NOINIT) return RES_NOTRDY;
+    if (pdrv || !count) return RES_PARERR;
+    if (Stat & STA_NOINIT) return RES_NOTRDY;
+    if (Stat & STA_PROTECT) return RES_WRPRT;
 
-    select();
+    do {
+        select();
 
-    if (!(CardType & CT_BLOCK)) sect *= 512;    /* Convert LBA to byte address if needed */
+        if (!(CardType & CT_BLOCK)) sector *= 512;  /* Convert LBA to byte address if needed */
 
-    if (count == 1) {                           /* Single block write */
-        if ((send_cmd(CMD24, sect) == 0)        /* WRITE_BLOCK */
-            && sd_write_sector(buff, 0xFE))
-            count = 0;
-    }
-    else {                                      /* Multiple block write */
-        if (CardType & CT_SDC) send_cmd(ACMD23, count);
-        if (send_cmd(CMD25, sect) == 0) {       /* WRITE_MULTIPLE_BLOCK */
-            do {
-                if (!sd_write_sector(buff, WRITE_MULTIPLE_TOKEN)) break;
-                buff += 512;
-            } while (--count);
-            if (!sd_write_sector(0, STOP_TRAN_TOKEN))   /* STOP_TRAN token */
-                count = 1;
+        if (count == 1) {                           /* Single block write */
+            if ((send_cmd(CMD24, sector) == R1_READY_STATE)) {  /* WRITE_BLOCK */
+                resp = sd_write_sector(buff, DATA_START_BLOCK);
+                count = 0;
+            }
+        } else {                                    /* Multiple block write */
+            if (CardType & CT_SDC) send_cmd(ACMD23, count);
+            if (send_cmd(CMD25, sector) == R1_READY_STATE) {    /* WRITE_MULTIPLE_BLOCK */
+                do {
+                    if ((resp = sd_write_sector(buff, WRITE_MULTIPLE_TOKEN)) != DATA_RES_ACCEPTED) break;
+                    buff += 512;
+                } while (--count);
+                if ((CardType & CT_SDC) && resp == DATA_RES_ACCEPTED)
+                    sd_write_sector(0, STOP_TRAN_TOKEN);        /* Send STOP_TRAN token for SD cards. */
+            }
         }
-    }
-    deselect();                                 /* Give SD Card 8 Clocks to complete command. */
+
+        deselect();                                 /* Give SD Card 8 Clocks to complete command. */
+
+    } while ((--wattempt != 0) && (resp != DATA_RES_ACCEPTED) );
 
     return count ? RES_ERROR : RES_OK;
 }
