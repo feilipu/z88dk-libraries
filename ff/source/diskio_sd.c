@@ -93,8 +93,9 @@
 #define CRC_OFF                 (0x00000000UL)
 #define CRC_INIT                (0x0000)
 
-#define READ_ATTEMPTS           (3)        /** Attempts to read block. */
-#define WRITE_ATTEMPTS          (3)        /** Attempts to write block. */
+#define CMD0_RETRY              (10)       /* Attempts to with CMD0 */
+#define READ_ATTEMPTS           (3)        /* Attempts to read block. */
+#define WRITE_ATTEMPTS          (3)        /* Attempts to write block. */
 
 /*-----------------------------------------------------------------------*/
 /* Static variables                                                      */
@@ -108,9 +109,15 @@ static BYTE CardType;   /* b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressing */
 /*   Private Functions                                                   */
 /*-----------------------------------------------------------------------*/
 
-static BYTE wait_ready (uint8_t want_ff);
+#if __SDCC
+static inline void deselect (void);
+static inline void select (void);
+#elif __SCCZ80
 static void deselect (void);
-static BYTE select (void);
+static void select (void);
+#endif
+
+static BYTE wait_ready (uint8_t want_ff);
 static BYTE sd_read_data (BYTE *buff, BYTE length);
 static BYTE sd_read_sector (BYTE *buff);
 static BYTE sd_write_sector (const BYTE *buff, BYTE token);
@@ -140,8 +147,13 @@ BYTE wait_ready (uint8_t want_ff)
 /* Deselect the card and release SPI bus                                 */
 /*-----------------------------------------------------------------------*/
 
+#if __SDCC
+static
+inline void deselect (void)
+#elif __SCCZ80
 static
 void deselect (void)
+#endif
 {
     sd_cs_raise();                  /* Set CS# high */
     sd_write_byte(0xFF);
@@ -151,16 +163,15 @@ void deselect (void)
 /* Select the card and wait for ready                                    */
 /*-----------------------------------------------------------------------*/
 
+#if __SDCC
 static
-BYTE select (void)    /* 1:OK, 0:Timeout */
+inline void select (void)
+#elif __SCCZ80
+static
+void select (void)
+#endif
 {
     sd_cs_lower();                  /* Set CS# low */
-
-    if (wait_ready(true))           /* Wait for card ready */
-        return 1;
-
-    deselect();                     /* Otherwise, */
-    return 0;                       /* failed */
 }
 
 /*-----------------------------------------------------------------------*/
@@ -251,16 +262,15 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     DWORD arg           /* Argument */
 )
 { 
-    WORD i;
     WORD resp;
     BYTE *ptr;
     BYTE n;
 
-    if (cmd & 0x80) {                           /* ACMD<n> is the command sequence of CMD55 + CMD<n> */
+    if (cmd != CMD0 || cmd != CMD12) {          /* Long wait for ready except to to initialise or stop multiple block read */
+        wait_ready(true);                       /* Wait while SD busy (0x00 signal) */
+    }
 
-        select();                               // Long wait while SD busy (0x00 signal).       
-                                                // It is finishing up a prior command, so wait.
-                                                // Busy signal 0x00.
+    if (cmd & 0x80) {                           /* ACMD<n> is the command sequence of CMD55 + CMD<n> */
 
         /* Send special CMD55 as precursor to Alternate Command packet */
         sd_write_byte(0x40 | CMD55);            /* Start Bit + Command index */
@@ -268,61 +278,47 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
         sd_write_byte(0x00);
         sd_write_byte(0x00);
         sd_write_byte(0x00);
-        sd_write_byte(0x55 | 0x01);             /* Dummy CRC + Stop */
+        sd_write_byte(0xA5 | 0x01);             /* Dummy CRC + Stop */
 
-        /* Receive command response */
-        i = 8;                                  /* Wait for a valid response within 8 attempts */
-        do {
-            resp = sd_read_byte();
-        } while ( (resp & 0x80) && i-- );
+        sd_read_byte();                         /* Skip a stuff byte to avoid MISO pull-up problem */   
 
-        if (resp > 0x01) return (resp << 8);    // something bad happened so we didn't see R1 = 0x01
-    }
+        /* Receive command response */          /* Wait for a valid response within 8 attempts */     
+        for ( uint8_t n = 8; ((resp = sd_read_byte()) & 0x80) && n; --n) ;
 
-    /* Select the card and wait for ready except to stop multiple block read */
-    if (cmd != CMD12) {
-        /* Select the card and wait for ready */
-        deselect(); /* raise CS, then sends 8 clocks (some cards require this) */
-        select();
+        if (resp > 0x01) {
+            deselect();                         /* raise CS */
+            return (resp << 8);                 /* something bad happened so we didn't see R1 = 0x01 */
+        }
     }
 
     /* Send command byte */
     sd_write_byte((0x40|cmd)&0x7F);             /* Start + Command index */
 
-    /* Send command arguments - unusual grammar to optimise code */
-    ptr = (BYTE *)&arg+3;
-    sd_write_byte(*ptr); --ptr;                 /* Argument[31..24] */
-    sd_write_byte(*ptr); --ptr;                 /* Argument[23..16] */
-    sd_write_byte(*ptr); --ptr;                 /* Argument[15..8] */
+    /* Send command arguments */
+    ptr = (BYTE *)&arg+3;                       /* Unusual grammar to optimise compiled code */
+    sd_write_byte(*ptr--);                      /* Argument[31..24] */
+    sd_write_byte(*ptr--);                      /* Argument[23..16] */
+    sd_write_byte(*ptr--);                      /* Argument[15..8] */
     sd_write_byte(*ptr);                        /* Argument[7..0] */
 
-    /* there's only a few commands (in native mode) that need correct CRCs */
-    n = 0xAA | 0x01;                            /* Dummy CRC + Stop */
+    /* there's only a few commands (when still in native mode) that need correct CRCs */
+    n = 0xA5 | 0x01;                            /* Dummy CRC + Stop */
     if (cmd == CMD0) n = 0x95;                  /* Valid CRC for CMD0(0) */
     if (cmd == CMD8) n = 0x87;                  /* Valid CRC for CMD8(0x1AA) */
-    
     sd_write_byte(n);
 
-    /* Receive command response */
-    if (cmd == CMD12) {                         /* Skip a stuff byte for command CMD12*/
-        sd_read_byte();
-    }
+    sd_read_byte();                             /* Skip a stuff byte to avoid MISO pull-up problem */   
 
-    n = 8;                                      /* Wait for a valid response within 8 attempts */
-    do {
-        resp = sd_read_byte();
-    } while ((resp & 0x80) && n--);
+    /* Receive command response */              /* Wait for a valid response within 8 attempts */     
+    for ( uint8_t n = 8; ((resp = sd_read_byte()) & 0x80) && n; --n) ;
 
     resp <<= 8;                                 /* shift first part of response word up */
 
     if ( cmd == CMD12 || cmd == CMD38 ) {       /* Skip busy signal for command CMD12 (stop transmission) and CMD38 (erase) */
-        i = 0;
-        do {
-            n = sd_read_byte();
-        } while ( (n == 0x00) && --i);          /* Wait while SD busy (0x00 signal) */
+        wait_ready(true);                       /* Wait while SD busy (0x00 signal) */
     }
 
-    if (cmd == CMD13 || cmd == ACMD13) {        /* Capture R2 response second byte from CMD13 (or ACMD13),*/
+    if ( cmd == CMD13 || cmd == ACMD13) {       /* Capture R2 response second byte from CMD13 (or ACMD13),*/
         resp |= sd_read_byte();                 /* collect a R2 second byte response*/
     }
     return resp;                                /* Return with the R1 (and R2) response value in uint16 (two bytes) */
@@ -348,31 +344,36 @@ DSTATUS disk_initialize (
 )
 #endif
 {
-    BYTE CardType, buff[4];
-    WORD i;
+    BYTE buff[4];
     WORD resp;
     BYTE *ptr;
+    BYTE CardType = 0;                                      /* Set invalid SD card type, initially */
 
     Stat = STA_NOINIT;                                      /* Set uninitialised, initially */
-    CardType = 0;                                           /* Set invalid SD card type, initially */
 
     if (pdrv)
         return RES_NOTRDY;                                  /* Supports only single drive */
 
     sd_clock(__IO_CNTR_SS_DIV_160);                         /* Slow clock to between 100kHz and 400kHz (115kHz to 230kHz) */
 
-    for ( uint8_t n = 100; n; --n ) sd_write_byte(0xFF);    /* 800 (minimum 74) dummy clocks on SPI bus; without SD card selected. */
-                                                            /* Some SD cards are really slow to get started. */
+    for ( uint8_t n = 10; n; --n ) sd_write_byte(0xFF);     /* 80 (minimum 74) dummy clocks on SPI bus; without SD card selected. */
 
-    sd_cs_lower();                                          /* MISO will be low on CMD0 initially */
+    select();                                               /* MISO will be low on CMD0 initially */
 
-    while ( (resp = send_cmd(CMD0, 0)) != R1_IDLE_STATE ) { /* Don't give up easily trying to get to idle state */
+    for ( uint8_t n = 0; n < CMD0_RETRY; ++n) {             /* Don't give up easily trying to get to idle state */
+        if ( (resp = send_cmd(CMD0, 0)) == R1_IDLE_STATE )
+            break;
+
+        sd_write_byte(STOP_TRAN_TOKEN);                     /* stop interrupted multi-block write */
+        for ( uint16_t i = 0; i < 520; ++i ) {              /* finish interrupted block transfer */
+          sd_read_byte();
+        }
     }
 
     if ( resp == R1_IDLE_STATE)                             /* Entered Idle state */
     {
         if ((resp = send_cmd(CMD8, 0x1AA)) == R1_IDLE_STATE ) {     /* SDv2? */
-            ptr = buff;                                     /* Unusual grammar to optimise code */
+            ptr = buff;                                     /* Unusual grammar to optimise compiled code */
             *ptr++ =sd_read_byte();                         /* Get trailing return value of R7 resp */
             *ptr++ =sd_read_byte();
             *ptr++ =sd_read_byte();
@@ -384,11 +385,11 @@ DSTATUS disk_initialize (
                 /* Wait for leaving idle state (ACMD41 with HCS bit) */
                 for ( uint8_t n = 250; n && (send_cmd(ACMD41, HIGH_CAPACITY_SUPPORT) == R1_IDLE_STATE ); --n) {
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command, before trying again. */
-                    while (--i);                            /* short delay loop */
+                    for (uint8_t n = 0; n; ++n);            /* short delay loop */
                 }
 
                 if ( send_cmd(CMD58, 0) == R1_READY_STATE ) {   /* Check CCS bit in the OCR */
-                    ptr = buff;                             /* Unusual grammar to optimise code */
+                    ptr = buff;                             /* Unusual grammar to optimise compiled code */
                     *ptr++ =sd_read_byte();
                     *ptr++ =sd_read_byte();
                     *ptr++ =sd_read_byte();
@@ -400,14 +401,14 @@ DSTATUS disk_initialize (
         } else if ( resp == (R1_ILLEGAL_COMMAND | R1_IDLE_STATE) ) {    /* SDv1 or MMCv3 */
             for ( uint8_t n = 250; n && ((resp = send_cmd(ACMD41, 0x00)) == R1_IDLE_STATE ); --n) {   /* initialise for 2 seconds */
                 sd_write_byte(0xFF);                        /* Give SD Card 8 Clocks to complete command. */
-                while (--i);                                /* short delay loop */
+                for (uint8_t n = 0; n; ++n);                /* short delay loop */
             }
             if (resp = 0x00) {                              /* SDv1 */
                 CardType = CT_SD1;
             } else {                                        /* MMCv3 ?? */
                 for ( uint8_t n = 250; n && ((resp = send_cmd(CMD1, 0x00)) == R1_IDLE_STATE ); --n) { /* initialise for 2 seconds */
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command. */
-                    while (--i);                            /* short delay loop */
+                for (uint8_t n = 0; n; ++n);                /* short delay loop */
                 }
                 if (resp == 0x00)                           /* MMCv3 */
                     CardType = CT_MMC;
@@ -460,26 +461,26 @@ DSTATUS disk_status_fastcall (
 
 #if __SDCC
 DRESULT disk_read(
-    BYTE pdrv,               /* Physical drive number (0) */
-    BYTE *buff,              /* Pointer to the data buffer to store read data */
+    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_read (
-    BYTE pdrv,               /* Physical drive number (0) */
-    BYTE *buff,              /* Pointer to the data buffer to store read data */
+    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
 )
 #endif
 {
-    uint8_t rattempt = READ_ATTEMPTS;           /* Read attempts */
+    uint8_t rattempt = READ_ATTEMPTS;               /* Read attempts */
     uint8_t resp = 0;
     BYTE cmd;
 
-    if (pdrv || !count) return RES_PARERR;      /* only single drive supported, and sector count can't be zero */
-    if (Stat & STA_NOINIT) return RES_NOTRDY;   /* drive must be initialised */
+    if (pdrv || !count) return RES_PARERR;          /* only single drive supported, and sector count can't be zero */
+    if (Stat & STA_NOINIT) return RES_NOTRDY;       /* drive must be initialised */
 
     do {
         select();
@@ -524,7 +525,7 @@ DRESULT disk_write_callee (
 ) __smallc __z88dk_callee
 #endif
 {
-    uint8_t wattempt = WRITE_ATTEMPTS;        /* Write attempts */
+    uint8_t wattempt = WRITE_ATTEMPTS;              /* Write attempts */
     uint8_t resp = 0;
 
     if (pdrv || !count) return RES_PARERR;
