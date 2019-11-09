@@ -321,6 +321,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     if ( cmd == CMD13 || cmd == ACMD13) {       /* Capture R2 response second byte from CMD13 (or ACMD13),*/
         resp |= sd_read_byte();                 /* collect a R2 second byte response*/
     }
+
     return resp;                                /* Return with the R1 (and R2) response value in uint16 (two bytes) */
 }
 
@@ -370,8 +371,7 @@ DSTATUS disk_initialize (
         }
     }
 
-    if ( resp == R1_IDLE_STATE)                             /* Entered Idle state */
-    {
+    if ( resp == R1_IDLE_STATE) {                           /* Entered Idle state */
         if ((resp = send_cmd(CMD8, 0x1AA)) == R1_IDLE_STATE ) {     /* SDv2? */
             ptr = buff;                                     /* Unusual grammar to optimise compiled code */
             *ptr++ =sd_read_byte();                         /* Get trailing return value of R7 resp */
@@ -385,7 +385,7 @@ DSTATUS disk_initialize (
                 /* Wait for leaving idle state (ACMD41 with HCS bit) */
                 for ( uint8_t n = 250; n && (send_cmd(ACMD41, HIGH_CAPACITY_SUPPORT) == R1_IDLE_STATE ); --n) {
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command, before trying again. */
-                    for (uint8_t n = 0; n; ++n);            /* short delay loop */
+                    for (uint16_t i = 0; i; ++i) ;          /* longer delay loop */
                 }
 
                 if ( send_cmd(CMD58, 0) == R1_READY_STATE ) {   /* Check CCS bit in the OCR */
@@ -401,14 +401,14 @@ DSTATUS disk_initialize (
         } else if ( resp == (R1_ILLEGAL_COMMAND | R1_IDLE_STATE) ) {    /* SDv1 or MMCv3 */
             for ( uint8_t n = 250; n && ((resp = send_cmd(ACMD41, 0x00)) == R1_IDLE_STATE ); --n) {   /* initialise for 2 seconds */
                 sd_write_byte(0xFF);                        /* Give SD Card 8 Clocks to complete command. */
-                for (uint8_t n = 0; n; ++n);                /* short delay loop */
+                for (uint16_t i = 0; i; ++i) ;              /* longer delay loop */
             }
             if (resp = 0x00) {                              /* SDv1 */
                 CardType = CT_SD1;
             } else {                                        /* MMCv3 ?? */
                 for ( uint8_t n = 250; n && ((resp = send_cmd(CMD1, 0x00)) == R1_IDLE_STATE ); --n) { /* initialise for 2 seconds */
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command. */
-                for (uint8_t n = 0; n; ++n);                /* short delay loop */
+                    for (uint16_t i = 0; i; ++i) ;          /* longer delay loop */
                 }
                 if (resp == 0x00)                           /* MMCv3 */
                     CardType = CT_MMC;
