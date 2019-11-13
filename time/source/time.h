@@ -106,7 +106,6 @@ extern "C" {
 #include <inttypes.h>
 #include <stdlib.h>
 
-
     /**
         time_t represents seconds elapsed from Midnight, Jan 1 2000 UTC (the Y2K 'epoch').
         Its range allows this implementation to represent time up to Tue Feb 7 06:28:15 2136 UTC.

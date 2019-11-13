@@ -107,10 +107,7 @@ extern "C" {
 #endif
 
 #include <stdlib.h>
-#include <sys/types.h>
-
-#include <time.h>
-#include <arch.h>
+#include <sys/time.h>
 
     /**
         time_t represents seconds elapsed from Midnight, Jan 1 2000 UTC (the Y2K 'epoch').
@@ -119,22 +116,11 @@ extern "C" {
     */
 
     /**
-    Locations of YAZ180 system tick for both ROM and NASCOM Basic versions
-    */
-
-    extern volatile uint32_t     _system_time;
-    extern volatile uint8_t      _system_time_fraction;
-
-    /**
     The time function returns the systems current time stamp.
     If timer is not a null pointer, the return value is also assigned to the object it points to.
     */
 //  time_t      time(time_t *timer);
 __OPROTO(,,time_t,,time,time_t *timer)
-
-#if (__CRTCFG != 0)
-#define time(a) time_basic(a)
-#endif
 
     /**
     The difftime function returns the difference between two binary time stamps,

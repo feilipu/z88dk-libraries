@@ -28,7 +28,6 @@
 ./set_dst.c
 ./set_position.c
 ./set_system_time.c
-./set_system_time_basic.c
 ./set_zone.c
 ./solar_declination.c
 ./solar_noon.c
@@ -36,7 +35,6 @@
 ./sun_rise.c
 ./sun_set.c
 ./time.c
-./time_basic.c
 ./tm_store.c
 ./utc_offset.c
 ./week_of_month.c

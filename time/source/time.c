@@ -34,28 +34,17 @@
 */
 
 #include <inttypes.h>
-
-#ifdef __YAZ180
-#include <arch/yaz180/system_time.h>
-#elif __SCZ180
-#include <arch/scz180/system_time.h>
-#else
-#error - Check whether you have a system tick available.
-#endif
-
-#include "time.h"
+#include <sys/time.h>
 
 time_t
 time(time_t * timer)
 {
-    time_t ret;
+    struct timespec ret;
 
-    __critical
-    {
-        ret = _system_time;
-    }
+    clock_gettime(CLOCK_MONOTONIC, &ret);
 
     if (timer)
-        *timer = ret;
-    return ret;
+        *timer = ret.tv_sec;
+
+    return ret.tv_sec;
 }

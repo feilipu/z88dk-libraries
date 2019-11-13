@@ -35,14 +35,16 @@
  * incremented at interrupt time.
  */
 
-#include "time.h"
-
-extern uint8_t _system_time_fraction;
-extern time_t _system_time;
+#include <inttypes.h>
+#include <sys/time.h>
 
 void
-set_system_time(time_t timestamp) __critical
+set_system_time(time_t timestamp)
 {
-    _system_time = timestamp;
-    _system_time_fraction = 0;
+    struct timespec set;
+
+    set.tv_sec = timestamp;
+    set.tv_nsec = 0;   
+
+    clock_settime(CLOCK_MONOTONIC, &set);
 }
