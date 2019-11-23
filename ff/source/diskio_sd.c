@@ -307,7 +307,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     if (cmd == CMD8) n = 0x87;                  /* Valid CRC for CMD8(0x1AA) */
     sd_write_byte(n);
 
-    sd_read_byte();                             /* Skip a stuff byte to avoid MISO pull-up problem */   
+    if ( cmd == CMD12 ) sd_read_byte();         /* Skip a stuff byte when stop reading */
 
     /* Receive command response */              /* Wait for a valid response within 8 attempts */     
     for ( uint8_t n = 8; ((resp = sd_read_byte()) & 0x80) && n; --n) ;
@@ -322,7 +322,8 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
         resp |= sd_read_byte();                 /* collect a R2 second byte response*/
     }
 
-    return resp;                                /* Return with the R1 (and R2) response value in uint16 (two bytes) */
+    return resp;                                /* Return with the R1 (and R2) response value */
+                                                /* in uint16 (two bytes) */
 }
 
 /*------------------------------------------------------------------------

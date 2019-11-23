@@ -9,8 +9,10 @@
 #if !FF_FS_READONLY && !FF_FS_NORTC /* FF_FS_NORTC switches timestamp */
 
 #if __YAZ180
+#include <time.h>
 #include <lib/yaz180/time.h> /* Declarations of YAZ180 time functions */
 #elif __SCZ180
+#include <time.h>
 #include <lib/scz180/time.h> /* Declarations of SCZ180 time functions */
 #else
 #error - No RTC time functions available for your target - Set FF_FS_NORTC = 1 in ffconf.h
