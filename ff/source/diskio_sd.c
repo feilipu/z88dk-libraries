@@ -339,7 +339,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
 #if __SDCC
 DSTATUS disk_initialize_fastcall (
     BYTE pdrv               /* Physical drive number (0) */
-) __preserves_regs(b,c,d,e,iyh,iyl) __z88dk_fastcall
+) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
 DSTATUS disk_initialize (
     BYTE pdrv               /* Physical drive number (0) */
@@ -443,7 +443,7 @@ DSTATUS disk_initialize (
 #if __SDCC
 DSTATUS disk_status_fastcall (
     BYTE pdrv               /* Drive number (always 0) */
-) __preserves_regs(d,e,iyh,iyl) __z88dk_fastcall
+) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
 DSTATUS disk_status_fastcall (
     BYTE pdrv               /* Drive number (always 0) */
@@ -572,7 +572,7 @@ DRESULT disk_ioctl (
     BYTE pdrv,              /* Physical drive number (0) */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
-) __preserves_regs(d,e,iyh,iyl)
+) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_ioctl_callee (
     BYTE pdrv,              /* Physical drive number (0) */
