@@ -107,7 +107,7 @@ DRESULT disk_read (
     if (count == 0 ) return RES_PARERR;     /* sector count can't be zero */
 
     do {
-        if ( hbios_a_dehl( BF_DIOSEEK<<8|pdrv, sector&LBA_ADDRESS ) == 0) {
+        if ( hbios_a_dehl( BF_DIOSEEK<<8|pdrv, sector|LBA_ADDRESS ) == 0) {
             resp = hbios_e_de_hl( BF_DIOREAD<<8|pdrv, count, buff );
             if ( resp == count ) resp = RES_OK;
         }
@@ -143,7 +143,7 @@ DRESULT disk_write_callee (
     if (count == 0 ) return RES_PARERR;     /* sector count can't be zero */
 
     do {
-        if ( hbios_a_dehl( BF_DIOSEEK<<8|pdrv, sector&LBA_ADDRESS ) == 0) {
+        if ( hbios_a_dehl( BF_DIOSEEK<<8|pdrv, sector|LBA_ADDRESS ) == 0) {
             resp = hbios_e_de_hl( BF_DIOWRITE<<8|pdrv, count, buff );
             if ( resp == count ) resp = RES_OK;
         }

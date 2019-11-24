@@ -193,12 +193,22 @@
 / Drive/Volume Configurations
 /---------------------------------------------------------------------------*/
 
+#if  __SCZ180
+#define FF_VOLUMES      5
+#else
 #define FF_VOLUMES      1
+#endif
 /* Number of volumes (logical drives) to be used. (1-10) */
 
 
-#define FF_STR_VOLUME_ID    0
-#define FF_VOLUME_STRS        "RAM","NAND","CF","SD","SD2","USB","USB2","USB3"
+#if  __SCZ180
+#define FF_STR_VOLUME_ID    1
+#define FF_VOLUME_STRS     "MD1","MD0","IDE0","SD0","SD1"
+#else
+#define FF_STR_VOLUME_ID    1
+#define FF_VOLUME_STRS     "IDE0"
+#endif
+
 /* FF_STR_VOLUME_ID switches support for volume ID in arbitrary strings.
 /  When FF_STR_VOLUME_ID is set to 1 or 2, arbitrary strings can be used as drive
 /  number in the path name. FF_VOLUME_STRS defines the volume ID strings for each
