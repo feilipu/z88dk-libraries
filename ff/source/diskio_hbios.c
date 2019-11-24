@@ -162,7 +162,7 @@ DRESULT disk_ioctl (
     BYTE pdrv,              /* Physical drive number */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
-) __preserves_regs(d,e,iyh,iyl)
+) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_ioctl_callee (
     BYTE pdrv,              /* Physical drive number */
