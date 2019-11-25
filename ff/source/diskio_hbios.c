@@ -15,8 +15,6 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#include "diskio.h"
-
 #if __RC2014
 #include <arch/hbios.h>         /* Declaration of HBIOS API */
 #include <lib/rc2014/ff.h>      /* Declarations of FatFs API */
@@ -26,6 +24,8 @@
 #else
 #error Do you have HBIOS?
 #endif
+
+#include "diskio.h"
 
 /*--------------------------------------------------------------------------
 

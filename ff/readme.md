@@ -64,7 +64,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 Once installed, the FatFs library can be linked against on the compile line by adding `-llib/target/ff` and the include file can be found with `#include <lib/target/ff.h>`.
 
-A simple usage example, for the `+yaz180` or `+rc2014` target.
+A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets.
 
 ```c
 /*----------------------------------------------------------------------*/
@@ -79,6 +79,9 @@ A simple usage example, for the `+yaz180` or `+rc2014` target.
 #if __RC2014
 #include <lib/rc2014/ff.h>     /* Declarations of FatFs API */
 
+#elif __SCZ180
+#include <lib/scz180/ff.h>     /* Declarations of FatFs API */
+
 #elif __YAZ180
 #include <lib/yaz180/ff.h>     /* Declarations of FatFs API */
 
@@ -86,17 +89,20 @@ A simple usage example, for the `+yaz180` or `+rc2014` target.
 
 // zcc +yaz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +yaz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/scz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+
+// zcc +rc2014 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
 
 static FATFS FatFs;		/* FatFs work area needed for each volume */
 static FIL Fil;			/* File object needed for each open file */
 
-int main (void)
+void main (void)
 {
 	UINT bw;
 
-	f_mount(&FatFs, "", 0);	            /* Give a work area to the default drive */
+	f_mount(&FatFs, "0:", 0);	        /* Give a work area to the default drive */
+//  f_mount(&FatFs, "3:", 0);	        /* Give a work area to the HBIOS SD0: drive */
 
 	if (f_open(&Fil, "newfile.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
 	{	/* Create a file */
@@ -107,8 +113,6 @@ int main (void)
 
 		printf("It works!\r\n");
 	}
-
-	return 0;
 }
 
 ```

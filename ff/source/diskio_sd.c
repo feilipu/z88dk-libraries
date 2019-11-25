@@ -15,13 +15,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#include "diskio.h"
-
 #if __SCZ180
 #include <lib/scz180/ff.h>       /* Declarations of FatFs API */
 #else
 #error Do you have SD FAT?
 #endif
+
+#include "diskio.h"
 
 /*--------------------------------------------------------------------------
 
