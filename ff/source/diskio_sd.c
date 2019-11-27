@@ -307,7 +307,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     if (cmd == CMD8) n = 0x87;                  /* Valid CRC for CMD8(0x1AA) */
     sd_write_byte(n);
 
-    if ( cmd == CMD0 || cmd == CMD12 ) sd_read_byte();  /* Skip a stuff byte, and avoid MISO pull-up problem */
+    sd_read_byte();                             /* Skip a stuff byte, and avoid MISO pull-up problem */
 
     /* Receive command response */              /* Wait for a valid response within 8 attempts */     
     for ( uint8_t n = 8; ((resp = sd_read_byte()) & 0x80) && n; --n) ;
