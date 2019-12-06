@@ -111,17 +111,48 @@ static BYTE CardType;   /* b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressing */
 
 #if __SDCC
 static inline void deselect (void);
-static inline void select (void);
+static inline void select (BYTE pdrv);
 #elif __SCCZ80
 static void deselect (void);
-static void select (void);
+static void select (BYTE pdrv);
 #endif
 
 static BYTE wait_ready (uint8_t want_ff);
-static BYTE sd_read_data (BYTE *buff, BYTE length);
-static BYTE sd_read_sector (BYTE *buff);
-static BYTE sd_write_sector (const BYTE *buff, BYTE token);
+static BYTE read_data (BYTE *buff, BYTE length);
+static BYTE read_sector (BYTE *buff);
+static BYTE write_sector (const BYTE *buff, BYTE token);
 static WORD send_cmd (BYTE cmd, DWORD arg);
+
+/*-----------------------------------------------------------------------*/
+/* Deselect the card and release SPI bus                                 */
+/*-----------------------------------------------------------------------*/
+
+#if __SDCC
+static
+inline void deselect (void)
+#elif __SCCZ80
+static
+void deselect (void)
+#endif
+{
+    sd_cs_raise();                              /* Set CS# high */
+    sd_write_byte(0xFF);
+}
+
+/*-----------------------------------------------------------------------*/
+/* Select the card and wait for ready                                    */
+/*-----------------------------------------------------------------------*/
+
+#if __SDCC
+static
+inline void select (BYTE pdrv)
+#elif __SCCZ80
+static
+void select (BYTE pdrv)
+#endif
+{
+    sd_cs_lower(pdrv);                          /* Set CS# low */
+}
 
 /*-----------------------------------------------------------------------*/
 /* Wait for card ready                                                   */
@@ -144,42 +175,11 @@ BYTE wait_ready (uint8_t want_ff)
 }
 
 /*-----------------------------------------------------------------------*/
-/* Deselect the card and release SPI bus                                 */
-/*-----------------------------------------------------------------------*/
-
-#if __SDCC
-static
-inline void deselect (void)
-#elif __SCCZ80
-static
-void deselect (void)
-#endif
-{
-    sd_cs_raise();                  /* Set CS# high */
-    sd_write_byte(0xFF);
-}
-
-/*-----------------------------------------------------------------------*/
-/* Select the card and wait for ready                                    */
-/*-----------------------------------------------------------------------*/
-
-#if __SDCC
-static
-inline void select (void)
-#elif __SCCZ80
-static
-void select (void)
-#endif
-{
-    sd_cs_lower();                  /* Set CS# low */
-}
-
-/*-----------------------------------------------------------------------*/
 /* Receive a data block from the card                                    */
 /*-----------------------------------------------------------------------*/
 
 static
-BYTE sd_read_data (     /* DATA_RES_ACCEPTED:OK, 0:Failed */
+BYTE read_data (        /* DATA_RES_ACCEPTED:OK, 0:Failed */
     BYTE *buff,         /* Data buffer to store received data */
     BYTE length         /* Length of data to read */
 )
@@ -208,7 +208,7 @@ BYTE sd_read_data (     /* DATA_RES_ACCEPTED:OK, 0:Failed */
 /*-----------------------------------------------------------------------*/
 
 static
-BYTE sd_read_sector (   /* DATA_RES_ACCEPTED:OK, 0:Failed */
+BYTE read_sector (      /* DATA_RES_ACCEPTED:OK, 0:Failed */
     BYTE *buff          /* Data buffer to store received data */
 )
 {
@@ -233,7 +233,7 @@ BYTE sd_read_sector (   /* DATA_RES_ACCEPTED:OK, 0:Failed */
 /*-----------------------------------------------------------------------*/
 
 static
-BYTE sd_write_sector (  /* DATA_RES_ACCEPTED:OK, 0:Failed */
+BYTE write_sector (     /* DATA_RES_ACCEPTED:OK, 0:Failed */
     const BYTE *buff,   /* 512 byte data block to be transmitted */
     BYTE token          /* Data/Stop token */
 )
@@ -338,11 +338,11 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
 
 #if __SDCC
 DSTATUS disk_initialize_fastcall (
-    BYTE pdrv               /* Physical drive number (0) */
+    BYTE pdrv               /* Physical drive number (1 or 2) */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
 DSTATUS disk_initialize (
-    BYTE pdrv               /* Physical drive number (0) */
+    BYTE pdrv               /* Physical drive number (1 or 2) */
 )
 #endif
 {
@@ -353,14 +353,13 @@ DSTATUS disk_initialize (
 
     Stat = STA_NOINIT;                                      /* Set uninitialised, initially */
 
-    if (pdrv)
-        return RES_NOTRDY;                                  /* Supports only single drive */
+    if (pdrv < 1 || pdrv > 2) return STA_NOINIT;            /* only drive 1 and 2 supported, and sector count can't be zero */
 
     sd_clock(__IO_CNTR_SS_DIV_160);                         /* Slow clock to between 100kHz and 400kHz (115kHz to 230kHz) */
 
     for ( uint8_t n = 10; n; --n ) sd_write_byte(0xFF);     /* 80 (minimum 74) dummy clocks on SPI bus; without SD card selected. */
 
-    select();                                               /* MISO will be low on CMD0 initially */
+    select(pdrv);                                           /* MISO will be low on CMD0 initially */
 
     for ( uint8_t n = 0; n < CMD0_RETRY; ++n) {             /* Don't give up easily trying to get to idle state */
         if ( (resp = send_cmd(CMD0, 0)) == R1_IDLE_STATE )
@@ -404,14 +403,14 @@ DSTATUS disk_initialize (
                 sd_write_byte(0xFF);                        /* Give SD Card 8 Clocks to complete command. */
                 for (uint16_t i = 0; i; ++i) ;              /* longer delay loop */
             }
-            if (resp = 0x00) {                              /* SDv1 */
+            if (resp = R1_READY_STATE) {                    /* SDv1 */
                 CardType = CT_SD1;
             } else {                                        /* MMCv3 ?? */
                 for ( uint8_t n = 250; n && ((resp = send_cmd(CMD1, 0x00)) == R1_IDLE_STATE ); --n) { /* initialise for 2 seconds */
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command. */
                     for (uint16_t i = 0; i; ++i) ;          /* longer delay loop */
                 }
-                if (resp == 0x00)                           /* MMCv3 */
+                if (resp == R1_READY_STATE)                 /* MMCv3 */
                     CardType = CT_MMC;
                 else
                     CardType = 0;
@@ -420,7 +419,7 @@ DSTATUS disk_initialize (
             CardType = 0;
         }
 
-        if ( CardType != 0 && CardType != CT_BLOCK )        /* If it is NOT a Block Address SD Version 2 device */
+        if ( (CardType != 0) && (CardType != CT_BLOCK) )        /* If it is NOT a Block Address SD Version 2 device */
             if ( send_cmd(CMD16, 512) != R1_READY_STATE )   /* Try to set R/W block length to 512 */
                 CardType = 0;
     }
@@ -450,10 +449,10 @@ DSTATUS disk_status_fastcall (
 ) __smallc __z88dk_fastcall
 #endif
 {
-    if (pdrv != 0)
-        return STA_NOINIT;
-    else
+    if (pdrv == 1 || pdrv == 2)
         return Stat;
+    else
+        return STA_NOINIT;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -462,14 +461,14 @@ DSTATUS disk_status_fastcall (
 
 #if __SDCC
 DRESULT disk_read(
-    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE pdrv,              /* Physical drive number (1 or 2) */
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_read (
-    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE pdrv,              /* Physical drive number (1 or 2) */
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
@@ -480,11 +479,11 @@ DRESULT disk_read (
     uint8_t resp = 0;
     BYTE cmd;
 
-    if (pdrv || !count) return RES_PARERR;          /* only single drive supported, and sector count can't be zero */
-    if (Stat & STA_NOINIT) return RES_NOTRDY;       /* drive must be initialised */
+    if (pdrv < 1 || pdrv > 2 || !count) return RES_PARERR;  /* only drive 1 and 2 supported, and sector count can't be zero */
+    if (Stat & STA_NOINIT) return RES_NOTRDY;               /* drive must be initialised */
 
     do {
-        select();
+        select(pdrv);
 
         if (!(CardType & CT_BLOCK)) sector *= 512;  /* Convert LBA to byte address if needed */
 
@@ -492,7 +491,7 @@ DRESULT disk_read (
 
         if (send_cmd(cmd, sector) == R1_READY_STATE) {
             do {
-                if ((resp = sd_read_sector(buff) ) != DATA_RES_ACCEPTED) break;
+                if ((resp = read_sector(buff) ) != DATA_RES_ACCEPTED) break;
                 buff += 512;
             } while (--count);
             if (cmd == CMD18) send_cmd(CMD12, 0x00);/* STOP_TRANSMISSION */
@@ -512,14 +511,14 @@ DRESULT disk_read (
 
 #if __SDCC
 DRESULT disk_write (
-    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE pdrv,              /* Physical drive number (1 or 2) */
     const BYTE *buff,       /* Pointer to the data to be written */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_write_callee (
-    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE pdrv,              /* Physical drive number (1 or 2 ) */
     const BYTE *buff,       /* Pointer to the data to be written */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
@@ -529,29 +528,30 @@ DRESULT disk_write_callee (
     uint8_t wattempt = WRITE_ATTEMPTS;              /* Write attempts */
     uint8_t resp = 0;
 
-    if (pdrv || !count) return RES_PARERR;
+    if (pdrv < 1 || pdrv > 2 || !count) return RES_PARERR;  /* only drive 1 and 2 supported, and sector count can't be zero */
     if (Stat & STA_NOINIT) return RES_NOTRDY;
     if (Stat & STA_PROTECT) return RES_WRPRT;
 
     do {
-        select();
+        select(pdrv);
 
         if (!(CardType & CT_BLOCK)) sector *= 512;  /* Convert LBA to byte address if needed */
 
         if (count == 1) {                           /* Single block write */
             if ((send_cmd(CMD24, sector) == R1_READY_STATE)) {  /* WRITE_BLOCK */
-                resp = sd_write_sector(buff, DATA_START_BLOCK);
+                resp = write_sector(buff, DATA_START_BLOCK);
                 count = 0;
             }
         } else {                                    /* Multiple block write */
-            if (CardType & CT_SDC) send_cmd(ACMD23, count);
+            if (CardType & CT_SDC)
+                send_cmd(ACMD23, count);
             if (send_cmd(CMD25, sector) == R1_READY_STATE) {    /* WRITE_MULTIPLE_BLOCK */
                 do {
-                    if ((resp = sd_write_sector(buff, WRITE_MULTIPLE_TOKEN)) != DATA_RES_ACCEPTED) break;
+                    if ((resp = write_sector(buff, WRITE_MULTIPLE_TOKEN)) != DATA_RES_ACCEPTED) break;
                     buff += 512;
                 } while (--count);
-                if ((CardType & CT_SDC) && resp == DATA_RES_ACCEPTED)
-                    sd_write_sector(0, STOP_TRAN_TOKEN);        /* Send STOP_TRAN token for SD cards. */
+                if ((CardType & CT_SDC) && (resp == DATA_RES_ACCEPTED))
+                    write_sector(0, STOP_TRAN_TOKEN);        /* Send STOP_TRAN token for SD cards. */
             }
         }
 
@@ -562,20 +562,19 @@ DRESULT disk_write_callee (
     return count ? RES_ERROR : RES_OK;
 }
 
-
 /*-----------------------------------------------------------------------*/
 /* Miscellaneous Functions                                               */
 /*-----------------------------------------------------------------------*/
 
 #if __SDCC
 DRESULT disk_ioctl (
-    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE pdrv,              /* Physical drive number (1 or 2) */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_ioctl_callee (
-    BYTE pdrv,              /* Physical drive number (0) */
+    BYTE pdrv,              /* Physical drive number (1 or 2) */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
 ) __smallc __z88dk_callee
@@ -593,17 +592,18 @@ DRESULT disk_ioctl_callee (
 
     if (disk_status(pdrv) & STA_NOINIT) return RES_NOTRDY;  /* Check if card is in the socket */
 
-    select();
+    select(pdrv);
 
     resp = RES_ERROR;
 
     switch (cmd) {
+
         case CTRL_SYNC :        /* Make sure that no pending write process */
-            if (select()) resp = RES_OK;
+            resp = RES_OK;
             break;
 
         case GET_SECTOR_COUNT :    /* Get number of sectors on the disk (DWORD) */
-            if ((send_cmd(CMD9, 0) == R1_READY_STATE) && sd_read_data(csd, 16)) {
+            if ((send_cmd(CMD9, 0) == R1_READY_STATE) && read_data(csd, 16)) {
                 if ((csd[0] >> 6) == 1) {    /* SDC ver 2.00 */
                     cs = csd[9] + ((WORD)csd[8] << 8) + ((DWORD)(csd[7] & 63) << 16) + 1;
                     *(LBA_t*)buff = cs << 10;
@@ -623,14 +623,14 @@ DRESULT disk_ioctl_callee (
 
         case GET_BLOCK_SIZE :    /* Get erase block size in unit of sector (DWORD) */
             if (CardType & CT_SD2) {    /* SDv2? */
-                if ((send_cmd(ACMD13, 0) == R1_READY_STATE) && sd_read_data(csd, 16))
+                if ((send_cmd(ACMD13, 0) == R1_READY_STATE) && read_data(csd, 16))
                 {                /* Read partial block */
                     for (n = 64 - 16; n; --n) sd_read_byte();       /* Purge trailing data */
                     *(uint32_t*)buff = 16UL << (csd[10] >> 4);
                     resp = RES_OK;
                 }
             } else {                    /* SDv1 or MMCv3 */
-                if ((send_cmd(CMD9, 0) == R1_READY_STATE) && sd_read_data(csd, 16))
+                if ((send_cmd(CMD9, 0) == R1_READY_STATE) && read_data(csd, 16))
                 {    /* Read CSD */
                     if (CardType & CT_SD1) {    /* SDv1 */
                         *(uint32_t*)buff = (((csd[10] & 63) << 1) + ((uint16_t)(csd[11] & 128) >> 7) + 1) << ((csd[13] >> 6) - 1);
@@ -648,12 +648,12 @@ DRESULT disk_ioctl_callee (
             break;
 
         case MMC_GET_CSD :        /* Receive CSD as a data block (16 bytes) */
-            if ((send_cmd(CMD9, 0) == R1_READY_STATE) && sd_read_data(ptr, 16))     /* READ_CSD */
+            if ((send_cmd(CMD9, 0) == R1_READY_STATE) && read_data(ptr, 16))     /* READ_CSD */
                 resp = RES_OK;
             break;
 
         case MMC_GET_CID :        /* Receive CID as a data block (16 bytes) */
-            if ((send_cmd(CMD10, 0) == R1_READY_STATE) && sd_read_data(ptr, 16))    /* READ_CID */
+            if ((send_cmd(CMD10, 0) == R1_READY_STATE) && read_data(ptr, 16))    /* READ_CID */
                 resp = RES_OK;
             break;
 
@@ -665,7 +665,7 @@ DRESULT disk_ioctl_callee (
             break;
 
         case MMC_GET_SDSTAT :    /* Receive SD status as a data block (64 bytes) */
-            if ((send_cmd(ACMD13, 0) == R1_READY_STATE) && sd_read_data(ptr, 64))   /* SD_STATUS */
+            if ((send_cmd(ACMD13, 0) == R1_READY_STATE) && read_data(ptr, 64))   /* SD_STATUS */
                 resp = RES_OK;
             break;
 
@@ -673,7 +673,6 @@ DRESULT disk_ioctl_callee (
             resp = RES_PARERR;
             break;
     }
-
     deselect();                 /* Give SD Card 8 Clocks to complete command. */
 
     return resp;
