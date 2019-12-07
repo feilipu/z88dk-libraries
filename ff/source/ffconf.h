@@ -200,10 +200,7 @@
 #endif
 /* Number of volumes (logical drives) to be used. (1-10) */
 
-#if __RC2014
-#define FF_STR_VOLUME_ID    1
-#define FF_VOLUME_STRS     "IDE0"
-#elif  __SCZ180
+#if  __SCZ180
 #define FF_STR_VOLUME_ID    1
 #define FF_VOLUME_STRS     "MD1","MD0","IDE0","SD0","SD1"
 #else
