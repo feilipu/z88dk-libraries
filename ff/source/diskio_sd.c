@@ -15,13 +15,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#if __SCZ180
-#include <lib/scz180/ff.h>       /* Declarations of FatFs API */
-#else
-#error Do you have SD FAT?
-#endif
+#include "ff.h"                     /* Declarations of FatFs API */
 
-#include "diskio.h"
+#if __SCZ180
+#include <arch/scz180/diskio.h>     /* Device I/O functions */
+#else
+#error You do not have a SD card!
+#endif
 
 /*--------------------------------------------------------------------------
 

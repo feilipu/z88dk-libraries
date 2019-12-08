@@ -1,6 +1,6 @@
 
 ;./diskio_sd.c
-;./diskio_hbios.c
+./diskio_hbios.c
 
 ./ffsystem.c
 ./ffunicode.c

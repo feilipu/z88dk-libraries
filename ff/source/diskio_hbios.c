@@ -15,17 +15,18 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#include "ff.h"                 /* Declarations of FatFs API */
+
 #if __RC2014
+#include <arch/rc2014/diskio.h>     /* Device I/O functions */
 #include <arch/hbios.h>         /* Declaration of HBIOS API */
-#include <lib/rc2014/ff.h>      /* Declarations of FatFs API */
 #elif __SCZ180
+#include <arch/scz180/diskio.h>     /* Device I/O functions */
 #include <arch/hbios.h>         /* Declaration of HBIOS API */
-#include <lib/scz180/ff.h>      /* Declarations of FatFs API */
 #else
 #error Do you have HBIOS?
 #endif
 
-#include "diskio.h"
 
 /*--------------------------------------------------------------------------
 

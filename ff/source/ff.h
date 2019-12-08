@@ -336,6 +336,7 @@ FRESULT f_mount (FATFS* fs, const TCHAR* path, BYTE opt);               /* Mount
 FRESULT f_mkfs (const TCHAR* path, const MKFS_PARM* opt, void* work, UINT len); /* Create a FAT volume */
 FRESULT f_fdisk (BYTE pdrv, const LBA_t ptbl[], void* work);            /* Divide a physical drive into some partitions */
 FRESULT f_setcp (WORD cp);                                              /* Set current code page */
+
 int f_putc (TCHAR c, FIL* fp);                                          /* Put a character to the file */
 int f_puts (const TCHAR* str, FIL* cp);                                 /* Put a string to the file */
 int f_printf (FIL* fp, const TCHAR* str, ...);                          /* Put a formatted string to the file */
