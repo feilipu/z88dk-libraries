@@ -56,7 +56,7 @@ DSTATUS disk_initialize_fastcall (
 #elif __SCCZ80
 DSTATUS disk_initialize (
     BYTE pdrv               /* Physical drive number */
-)
+) __smallc __z88dk_fastcall
 #endif
 {
     if ( hbios_a( BF_DIOSTATUS<<8|pdrv) == RES_OK )
@@ -74,7 +74,7 @@ DSTATUS disk_status_fastcall (
     BYTE pdrv               /* Drive number */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
-DSTATUS disk_status_fastcall (
+DSTATUS disk_status (
     BYTE pdrv               /* Drive number */
 ) __smallc __z88dk_fastcall
 #endif
@@ -87,7 +87,7 @@ DSTATUS disk_status_fastcall (
 /*-----------------------------------------------------------------------*/
 
 #if __SDCC
-DRESULT disk_read(
+DRESULT disk_read (
     BYTE pdrv,              /* Physical drive number */
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
@@ -99,7 +99,7 @@ DRESULT disk_read (
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
-)
+) __smallc
 #endif
 {
     uint8_t rattempt = READ_ATTEMPTS;       /* Read attempts */
@@ -130,12 +130,12 @@ DRESULT disk_write (
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
-DRESULT disk_write_callee (
+DRESULT disk_write (
     BYTE pdrv,              /* Physical drive number */
     const BYTE *buff,       /* Pointer to the data to be written */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
-) __smallc __z88dk_callee
+) __smallc
 #endif
 {
     uint8_t wattempt = WRITE_ATTEMPTS;      /* Write attempts */
@@ -165,11 +165,11 @@ DRESULT disk_ioctl (
     void *buff              /* Buffer to send/receive control data */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
-DRESULT disk_ioctl_callee (
+DRESULT disk_ioctl (
     BYTE pdrv,              /* Physical drive number */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
-) __smallc __z88dk_callee
+) __smallc
 #endif
 {
     pdrv;
