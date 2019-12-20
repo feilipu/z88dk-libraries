@@ -307,16 +307,9 @@ __OPROTO(,,void,,set_zone,int32_t)
         \endcode
 
     */
-   
-//  void        set_system_time_basic(time_t timestamp);
-__OPROTO(,,void,,set_system_time_basic,time_t timestamp)
 
 //  void        set_system_time(time_t timestamp);
 __OPROTO(,,void,,set_system_time,time_t timestamp)
-
-#if (__CRTCFG != 0)
-#define set_system_time(a) set_system_time_basic(a)
-#endif
 
     /**
         Maintain the system time by calling this function at a rate of 1 Hertz.
