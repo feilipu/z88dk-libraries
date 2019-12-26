@@ -35,7 +35,7 @@ The ff library can be compiled using the following command lines in Linux, with 
 `zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ff`
 `zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ff`
 
-`zcc +yaz180 -clib=new -x -SO3 --math32 --opt-code-size @ff.lst -o ff`
+`zcc +yaz180 -clib=new -x -SO3 --math32 @ff.lst -o ff`
 `zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ff`
 `zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ff`
 
