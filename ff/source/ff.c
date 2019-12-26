@@ -21,7 +21,9 @@
 
 #include "ff.h"            /* Declarations of FatFs API */
 
-#if __RC2014
+#if __HBIOS
+#include <arch/hbios/diskio.h>     /* Device I/O functions */
+#elif __RC2014
 #include <arch/rc2014/diskio.h>     /* Device I/O functions */
 #elif __YAZ180
 #include <arch/yaz180/diskio.h>     /* Device I/O functions */

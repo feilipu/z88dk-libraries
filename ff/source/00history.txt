@@ -108,7 +108,7 @@ R0.07 (April 01, 2009)
 
 R0.07a (April 14, 2009)
 
-  Septemberarated out OS dependent code on reentrant cfg.
+  Separated out OS dependent code on reentrant cfg.
   Added multiple sector size feature.
 
 
@@ -125,7 +125,7 @@ R0.07c (June 21, 2009)
 
 R0.07e (November 03, 2009)
 
-  Septemberarated out configuration options from ff.h to ffconf.h.
+  Separated out configuration options from ff.h to ffconf.h.
   Fixed f_unlink() fails to remove a sub-directory on _FS_RPATH.
   Fixed name matching error on the 13 character boundary.
   Added a configuration option, _LFN_UNICODE.

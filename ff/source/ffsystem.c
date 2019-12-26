@@ -8,6 +8,9 @@
 
 #if !FF_FS_READONLY && !FF_FS_NORTC /* FF_FS_NORTC switches timestamp */
 
+#elif __HBIOS
+#include <time.h>
+#include <lib/hbios/time.h> /* Declarations of HBIOS time functions */
 #if __YAZ180
 #include <time.h>
 #include <lib/yaz180/time.h> /* Declarations of YAZ180 time functions */
@@ -36,7 +39,7 @@ DWORD get_fattime (void)
 
 /*-----------------------------------------------------------------------*/
 /* Sample code of OS dependent controls for FatFs                        */
-/* (C)ChaN, 2017                                                         */
+/* (C)ChaN, 2019                                                         */
 /*-----------------------------------------------------------------------*/
 
 
