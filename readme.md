@@ -7,6 +7,12 @@ The implementation of `time.h` aspires to conform with ISO/IEC 9899 (C90). Howev
 ### FatFs
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
+### diskio_hbios
+FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. This is the disk I/O layer for hbios, using hbios calls as implemented in ROMWBW.
+
+### diskio_sd
+FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. This is the disk I/O layer for the SC126 and SC130, using SD interface as implemented in z88dk for the z180 CSIO.
+
 ### i2c_lcd
 This library is build for I2C_LCD12864 from Seeed Studio - Sparking. Please do not use this library on any other devices, that could cause unpredictable damage to an unknown device.
 

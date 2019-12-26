@@ -19,16 +19,16 @@
 /----------------------------------------------------------------------------*/
 
 
-#include "ff.h"            /* Declarations of FatFs API */
+#include "ff.h"                     /* Declarations of FatFs API */
 
 #if __HBIOS
-#include <arch/hbios/diskio.h>     /* Device I/O functions */
+#include <lib/hbios/diskio_hbios.h> /* Device I/O functions */
 #elif __RC2014
 #include <arch/rc2014/diskio.h>     /* Device I/O functions */
 #elif __YAZ180
 #include <arch/yaz180/diskio.h>     /* Device I/O functions */
 #elif __SCZ180
-#include <arch/scz180/diskio.h>     /* Device I/O functions */
+#include <lib/scz180/diskio_sd.h>   /* Device I/O functions */
 #else
 #error  - No diskio functions available for your target
 #endif

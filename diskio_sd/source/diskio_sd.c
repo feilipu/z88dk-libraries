@@ -342,7 +342,7 @@ DSTATUS disk_initialize_fastcall (
 #elif __SCCZ80
 DSTATUS disk_initialize (
     BYTE pdrv               /* Physical drive number (1 or 2) */
-)  __smallc __z88dk_fastcall
+) __smallc __z88dk_fastcall
 #endif
 {
     BYTE buff[4];
@@ -459,7 +459,7 @@ DSTATUS disk_status_fastcall (
 /*-----------------------------------------------------------------------*/
 
 #if __SDCC
-DRESULT disk_read(
+DRESULT disk_read (
     BYTE pdrv,              /* Physical drive number (1 or 2) */
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
@@ -516,7 +516,7 @@ DRESULT disk_write (
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
-DRESULT disk_write_callee (
+DRESULT disk_write (
     BYTE pdrv,              /* Physical drive number (1 or 2 ) */
     const BYTE *buff,       /* Pointer to the data to be written */
     LBA_t sector,           /* Start sector number (LBA) */
@@ -572,7 +572,7 @@ DRESULT disk_ioctl (
     void *buff              /* Buffer to send/receive control data */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
-DRESULT disk_ioctl_callee (
+DRESULT disk_ioctl (
     BYTE pdrv,              /* Physical drive number (1 or 2) */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
