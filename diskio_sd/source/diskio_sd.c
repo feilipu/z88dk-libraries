@@ -337,11 +337,11 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
 
 #if __SDCC
 DSTATUS disk_initialize_fastcall (
-    BYTE pdrv               /* Physical drive number (1 or 2) */
+    BYTE pdrv               /* Physical drive number (0 or 1) */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
 DSTATUS disk_initialize (
-    BYTE pdrv               /* Physical drive number (1 or 2) */
+    BYTE pdrv               /* Physical drive number (0 or 1) */
 ) __smallc __z88dk_fastcall
 #endif
 {
@@ -352,7 +352,7 @@ DSTATUS disk_initialize (
 
     Stat = STA_NOINIT;                                      /* Set uninitialised, initially */
 
-    if (pdrv < 1 || pdrv > 2) return STA_NOINIT;            /* only drive 1 and 2 supported, and sector count can't be zero */
+    if ( pdrv > 1) return STA_NOINIT;                       /* only drive 0 and 1 supported */
 
     sd_clock(__IO_CNTR_SS_DIV_160);                         /* Slow clock to between 100kHz and 400kHz (115kHz to 230kHz) */
 
@@ -440,15 +440,15 @@ DSTATUS disk_initialize (
 
 #if __SDCC
 DSTATUS disk_status_fastcall (
-    BYTE pdrv              /* Physical drive number (1 or 2) */
+    BYTE pdrv              /* Physical drive number (0 or 1) */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
 DSTATUS disk_status_fastcall (
-    BYTE pdrv              /* Physical drive number (1 or 2) */
+    BYTE pdrv              /* Physical drive number (0 or 1) */
 ) __smallc __z88dk_fastcall
 #endif
 {
-    if (pdrv == 1 || pdrv == 2)
+    if (pdrv == 0 || pdrv == 1)
         return Stat;
     else
         return STA_NOINIT;
@@ -460,14 +460,14 @@ DSTATUS disk_status_fastcall (
 
 #if __SDCC
 DRESULT disk_read (
-    BYTE pdrv,              /* Physical drive number (1 or 2) */
+    BYTE pdrv,              /* Physical drive number (0 or 1) */
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_read (
-    BYTE pdrv,              /* Physical drive number (1 or 2) */
+    BYTE pdrv,              /* Physical drive number (0 or 1) */
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
@@ -478,8 +478,8 @@ DRESULT disk_read (
     uint8_t resp = 0;
     BYTE cmd;
 
-    if (pdrv < 1 || pdrv > 2 || !count) return RES_PARERR;  /* only drive 1 and 2 supported, and sector count can't be zero */
-    if (Stat & STA_NOINIT) return RES_NOTRDY;               /* drive must be initialised */
+    if ( pdrv > 1 || !count) return RES_PARERR;     /* only drive 0 and 1 supported, and sector count can't be zero */
+    if (Stat & STA_NOINIT) return RES_NOTRDY;       /* drive must be initialised */
 
     do {
         select(pdrv);
@@ -510,14 +510,14 @@ DRESULT disk_read (
 
 #if __SDCC
 DRESULT disk_write (
-    BYTE pdrv,              /* Physical drive number (1 or 2) */
+    BYTE pdrv,              /* Physical drive number (0 or 1) */
     const BYTE *buff,       /* Pointer to the data to be written */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_write (
-    BYTE pdrv,              /* Physical drive number (1 or 2 ) */
+    BYTE pdrv,              /* Physical drive number (0 or 1 ) */
     const BYTE *buff,       /* Pointer to the data to be written */
     LBA_t sector,           /* Start sector number (LBA) */
     UINT count              /* Sector count (1..128) */
@@ -527,7 +527,7 @@ DRESULT disk_write (
     uint8_t wattempt = WRITE_ATTEMPTS;              /* Write attempts */
     uint8_t resp = 0;
 
-    if (pdrv < 1 || pdrv > 2 || !count) return RES_PARERR;  /* only drive 1 and 2 supported, and sector count can't be zero */
+    if (pdrv > 1 || !count) return RES_PARERR;      /* only drive 1 and 2 supported, and sector count can't be zero */
     if (Stat & STA_NOINIT) return RES_NOTRDY;
     if (Stat & STA_PROTECT) return RES_WRPRT;
 
@@ -567,13 +567,13 @@ DRESULT disk_write (
 
 #if __SDCC
 DRESULT disk_ioctl (
-    BYTE pdrv,              /* Physical drive number (1 or 2) */
+    BYTE pdrv,              /* Physical drive number (0 or 1) */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
 ) __preserves_regs(iyh,iyl)
 #elif __SCCZ80
 DRESULT disk_ioctl (
-    BYTE pdrv,              /* Physical drive number (1 or 2) */
+    BYTE pdrv,              /* Physical drive number (0 or 1) */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
 ) __smallc

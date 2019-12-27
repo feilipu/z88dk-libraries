@@ -86,8 +86,8 @@ void main (void)
 {
 	UINT bw;
 
-	f_mount(&FatFs, "0:", 0);	        /* Give a work area to the default drive */
-//  f_mount(&FatFs, "3:", 0);	        /* Give a work area to the HBIOS SD0: drive */
+	f_mount(&FatFs, "0:", 0);	        /* Give a work area to the SCZ180 default SD drive 0/1 */
+//  f_mount(&FatFs, "2:", 0);	        /* Give a work area to the HBIOS SD0 */
 
 	if (f_open(&Fil, "newfile.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
 	{	/* Create a file */
