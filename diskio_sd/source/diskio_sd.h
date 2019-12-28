@@ -86,9 +86,6 @@ typedef unsigned int        UINT;   /* int must be 16-bit or 32-bit */
 typedef unsigned short      WORD;   /* 16-bit unsigned integer */
 typedef unsigned short      WCHAR;  /* 16-bit unsigned integer */
 typedef unsigned long       DWORD;  /* 32-bit unsigned integer */
-#ifndef __SCCZ80
-typedef uint64_t            QWORD;  /* 64-bit unsigned integer */
-#endif
 #endif
 
 /* Status of Disk Functions */
@@ -105,7 +102,6 @@ typedef enum {
 
 /* FatFS for non exFAT file systems */
 typedef DWORD LBA_t;
-
 
 #if __SDCC
 DSTATUS disk_initialize_fastcall (

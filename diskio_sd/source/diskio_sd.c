@@ -97,7 +97,7 @@
 #define WRITE_ATTEMPTS          (3)        /* Attempts to write block. */
 
 /*-----------------------------------------------------------------------*/
-/*   Static variables                                                      */
+/* Static variables                                                      */
 /*-----------------------------------------------------------------------*/
 
 static volatile DSTATUS Stat;   /* Disk status */
@@ -105,7 +105,7 @@ static volatile DSTATUS Stat;   /* Disk status */
 static BYTE CardType;   /* b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressing */
 
 /*---------------------------------------------------------------------- */
-/*   Private Functions                                                   */
+/* Private Functions                                                   */
 /*-----------------------------------------------------------------------*/
 
 #if __SDCC
@@ -527,7 +527,7 @@ DRESULT disk_write (
     uint8_t wattempt = WRITE_ATTEMPTS;              /* Write attempts */
     uint8_t resp = 0;
 
-    if (pdrv > 1 || !count) return RES_PARERR;      /* only drive 1 and 2 supported, and sector count can't be zero */
+    if (pdrv > 1 || !count) return RES_PARERR;      /* only drive 0 and 1 supported, and sector count can't be zero */
     if (Stat & STA_NOINIT) return RES_NOTRDY;
     if (Stat & STA_PROTECT) return RES_WRPRT;
 

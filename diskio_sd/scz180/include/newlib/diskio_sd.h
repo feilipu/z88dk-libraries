@@ -94,4 +94,4 @@ __OPROTO(`iyh,iyl',`iyh,iyl',DRESULT,,disk_read,BYTE pdrv, BYTE* buff, LBA_t sec
 __OPROTO(`iyh,iyl',`iyh,iyl',DRESULT,,disk_write,BYTE pdrv, const BYTE* buff, LBA_t sector, UINT count)
 __OPROTO(`iyh,iyl',`iyh,iyl',DRESULT,,disk_ioctl,BYTE pdrv, BYTE cmd, void* buff)
 
-#endif
+#endif /* !__DISKIO_H__ */
