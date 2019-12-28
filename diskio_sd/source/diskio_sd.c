@@ -443,7 +443,7 @@ DSTATUS disk_status_fastcall (
     BYTE pdrv              /* Physical drive number (0 or 1) */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
-DSTATUS disk_status_fastcall (
+DSTATUS disk_status (
     BYTE pdrv              /* Physical drive number (0 or 1) */
 ) __smallc __z88dk_fastcall
 #endif
@@ -588,9 +588,12 @@ DRESULT disk_ioctl (
 
     ptr = (BYTE *)buff;
     erasePtr = (uint32_t *)buff;
-
+    
+#if __SDCC
     if (disk_status_fastcall(pdrv) & STA_NOINIT) return RES_NOTRDY;  /* Check if card is in the socket */
-
+#elif __SCCZ80
+    if (disk_status(pdrv) & STA_NOINIT) return RES_NOTRDY;  /* Check if card is in the socket */
+#endif
     select(pdrv);
 
     resp = RES_ERROR;
