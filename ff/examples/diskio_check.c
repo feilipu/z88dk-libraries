@@ -4,33 +4,50 @@
 / WARNING: The data on the target drive will be lost!
 */
 
-// zcc +yaz180 -subtype=basic_dcio -v --list -m -SO3 -clib=sdcc_iy --max-allocs-per-node100000 diskio_check.c -o diskio_check -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 diskio_check.c -o diskio_check -create-app
 
-// zcc +rc2014 -subtype=basic_dcio -v --list -m -SO3 -clib=sdcc_iy --max-allocs-per-node100000 diskio_check.c -o diskio_check -create-app
+// zcc +rc2014 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 diskio_check.c -o diskchk -create-app
+
+// zcc +rc2014 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list -llib/hbios/diskio_hbios --max-allocs-per-node100000 diskio_check.c -o diskchk -create-app
+
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list -llib/scz180/diskio_sd --max-allocs-per-node100000 diskio_check.c -o diskchk -create-app
+
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list -llib/hbios/diskio_hbios --max-allocs-per-node100000 diskio_check.c -o diskchk -create-app
+
+// zcc +hbios -clib=sdcc_iy -SO3 -v -m --list -llib/hbios/diskio_hbios --max-allocs-per-node100000 diskio_check.c -o diskchk -create-app
 
 #include <stdio.h>
 #include <string.h>
 
 #if __YAZ180
-#include <arch/yaz180/diskio.h> /* Declarations of device I/O functions */
+#include <lib/yaz180/ff.h>      /* Declarations of FatFs API */
+#include <arch/yaz180/diskio.h> /* Declarations of diskio & IDE functions */
 #elif __RC2014
-#include <arch/rc2014/diskio.h> /* Declarations of device I/O functions */
+#include <lib/rc2014/ff.h>      /* Declarations of FatFs API */
+#include <arch/rc2014/diskio.h> /* Declarations of diskio & IDE functions */
+//#elif __RC2014
+//#include <lib/hbios/ff.h>           /* Declarations of FatFs API */
+//#include <lib/hbios/diskio_hbios.h> /* Declarations of diskio functions */
+//#include <arch/hbios.h>             /* Declarations of HBIOS functions */
+#elif __SCZ180
+#include <lib/scz180/ff.h>          /* Declarations of FatFs API */
+#include <lib/scz180/diskio_sd.h>   /* Declarations of diskio functions */
+#include <arch/scz180.h>            /* Declarations of SD functions */
+//#elif __SCZ180
+//#include <lib/hbios/ff.h>           /* Declarations of FatFs API */
+//#include <lib/hbios/diskio_hbios.h> /* Declarations of diskio functions */
+//#include <arch/hbios.h>             /* Declarations of HBIOS functions */
+#elif __HBIOS
+#include <lib/hbios/ff.h>           /* Declarations of FatFs API */
+#include <lib/hbios/diskio_hbios.h> /* Declarations of diskio functions */
+#include <arch/hbios.h>             /* Declarations of HBIOS functions */
 #else
 #warning "no diskio.h functions available"
 #endif
 
-// #include "ffconf.h"     /* Declaration of sector size */
-#define FF_MIN_SS		512
-#define FF_MAX_SS		512
-/* This set of options configures the range of sector size to be supported. (512,
-/  1024, 2048 or 4096) Always set both 512 for most systems, generic memory card and
-/  harddisk. But a larger value may be required for on-board flash memory and some
-/  type of optical media. When FF_MAX_SS is larger than FF_MIN_SS, FatFs is configured
-/  for variable sector size mode and disk_ioctl() function needs to implement
-/  GET_SECTOR_SIZE command. */
+#include "ffconf.h"             /* Declaration of sector size */
 
-
-DWORD buffer[1024];  /* 4096 byte working buffer */
+DWORD buffer[1024];             /* 4096 byte working buffer */
 
 static
 DWORD pn (		/* Pseudo random number generator */
@@ -69,7 +86,7 @@ int test_diskio (
     DSTATUS ds;
     DRESULT dr;
 
-    printf("test_diskio(%u, %u, 0x%04X, 0x%04X)\n", pdrv, ncyc, (UINT)buff, sz_buff);
+    printf("\r\ntest_diskio(%u, %u, 0x%04X, 0x%04X)\n", pdrv, ncyc, (UINT)buff, sz_buff);
 
     if (sz_buff < FF_MAX_SS + 4) {
         printf("Insufficient work area to run program.\n");
