@@ -2,7 +2,7 @@
 /  Foolproof MMCv3/SDv1/SDv2 (in SPI mode) control module
 /-------------------------------------------------------------------------/
 /
-/  Copyright (C) 2019, ChaN, all right reserved.
+/  Copyright (C) 2019, feilipu, all right reserved.
 /
 / * This software is a free software and there is NO WARRANTY.
 / * No restriction on use. You can use, modify and redistribute it for
@@ -561,6 +561,7 @@ DRESULT disk_write (
     return count ? RES_ERROR : RES_OK;
 }
 
+
 /*-----------------------------------------------------------------------*/
 /* Miscellaneous Functions                                               */
 /*-----------------------------------------------------------------------*/
@@ -588,12 +589,13 @@ DRESULT disk_ioctl (
 
     ptr = (BYTE *)buff;
     erasePtr = (uint32_t *)buff;
-    
+
 #if __SDCC
     if (disk_status_fastcall(pdrv) & STA_NOINIT) return RES_NOTRDY;  /* Check if card is in the socket */
 #elif __SCCZ80
     if (disk_status(pdrv) & STA_NOINIT) return RES_NOTRDY;  /* Check if card is in the socket */
 #endif
+
     select(pdrv);
 
     resp = RES_ERROR;

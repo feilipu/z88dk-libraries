@@ -22,7 +22,6 @@
 #error Do you have HBIOS?
 #endif
 
-
 /*--------------------------------------------------------------------------
 
    Module Private Functions
@@ -66,11 +65,11 @@ DSTATUS disk_initialize (
 
 #if __SDCC
 DSTATUS disk_status_fastcall (
-    BYTE pdrv               /* Drive number */
+    BYTE pdrv              /* Physical drive number */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall
 #elif __SCCZ80
 DSTATUS disk_status (
-    BYTE pdrv               /* Drive number */
+    BYTE pdrv              /* Physical drive number */
 ) __smallc __z88dk_fastcall
 #endif
 {
@@ -167,8 +166,6 @@ DRESULT disk_ioctl (
 ) __smallc
 #endif
 {
-    pdrv;
-
     DRESULT resp = RES_ERROR;
 
     switch (cmd) {
