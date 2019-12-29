@@ -2,7 +2,7 @@ include(__link__.m4)
 
 /*------------------------------------------------------------------------/
 /
-/  Copyright (C) 2019, ChaN, all right reserved.
+/  Copyright (C) 2019, feilipu, all right reserved.
 /
 / * This software is a free software and there is NO WARRANTY.
 / * No restriction on use. You can use, modify and redistribute it for
@@ -13,9 +13,6 @@ include(__link__.m4)
 
 #ifndef __DISKIO_H__
 #define __DISKIO_H__
-
-#include <arch.h>
-#include <stdint.h>
 
 /*
  * Disk Status Bits DSTATUS (uint8_t)

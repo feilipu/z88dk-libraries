@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------/
-/  Foolproof MMCv3/SDv1/SDv2 (in SPI mode) control module
+/  MMCv3/SDv1/SDv2 (in SPI mode) control module
 /-------------------------------------------------------------------------/
 /
 /  Copyright (C) 2019, feilipu, all right reserved.
@@ -18,6 +18,7 @@
 
 #if __SCZ180
 #include <arch/scz180.h>        /* Device I/O functions */
+#include <arch/hbios.h>         /* HBIOS I/O functions for timers */
 #else
 #error I do not have a SD card driver, sorry!
 #endif
@@ -92,9 +93,8 @@
 #define CRC_OFF                 (0x00000000UL)
 #define CRC_INIT                (0x0000)
 
-#define CMD0_RETRY              (10)       /* Attempts to with CMD0 */
-#define READ_ATTEMPTS           (3)        /* Attempts to read block. */
-#define WRITE_ATTEMPTS          (3)        /* Attempts to write block. */
+#define READ_ATTEMPTS           (10)    /* Attempts to read block. */
+#define WRITE_ATTEMPTS          (10)    /* Attempts to write block. */
 
 /*-----------------------------------------------------------------------*/
 /* Static variables                                                      */
@@ -348,8 +348,10 @@ DSTATUS disk_initialize (
     BYTE buff[4];
     WORD resp;
     BYTE *ptr;
-    BYTE CardType = 0;                                      /* Set invalid SD card type, initially */
+    BYTE CardType;
+    uint32_t endTime, currentTime;
 
+    CardType = 0;                                           /* Set invalid SD card type, initially */
     Stat = STA_NOINIT;                                      /* Set uninitialised, initially */
 
     if ( pdrv > 1) return STA_NOINIT;                       /* only drive 0 and 1 supported */
@@ -360,15 +362,18 @@ DSTATUS disk_initialize (
 
     select(pdrv);                                           /* MISO will be low on CMD0 initially */
 
-    for ( uint8_t n = 0; n < CMD0_RETRY; ++n) {             /* Don't give up easily trying to get to idle state */
-        if ( (resp = send_cmd(CMD0, 0)) == R1_IDLE_STATE )
-            break;
+    endTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+    endTime += 200;                                         /* Try for 4 seconds; 4000ms/20ms ticks */
+    do{                                                     /* Don't give up easily trying to get to idle state, try for 4 seconds */
+        if ( (resp = send_cmd(CMD0, 0)) == R1_IDLE_STATE ) break;
 
         sd_write_byte(STOP_TRAN_TOKEN);                     /* stop interrupted multi-block write */
         for ( uint16_t i = 0; i < 520; ++i ) {              /* finish interrupted block transfer */
-          sd_read_byte();
+            sd_read_byte();
         }
-    }
+
+        currentTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+    } while ( endTime > currentTime );
 
     if ( resp == R1_IDLE_STATE) {                           /* Entered Idle state */
         if ((resp = send_cmd(CMD8, 0x1AA)) == R1_IDLE_STATE ) {     /* SDv2? */
@@ -381,35 +386,52 @@ DSTATUS disk_initialize (
             if ( buff[2] == 0x01 && buff[3] == 0xAA ) {     /* The card can work at vdd range of 2.7-3.6V */
                                                             /* And the echo bits were correctly replied */
 
-                /* Wait for leaving idle state (ACMD41 with HCS bit) */
-                for ( uint8_t n = 250; n && (send_cmd(ACMD41, HIGH_CAPACITY_SUPPORT) == R1_IDLE_STATE ); --n) {
+                endTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+                endTime += 50;                              /* Initialise for 1 second; 1000ms/20ms ticks */
+                do {                                        /* Wait for leaving idle state (ACMD41 with HCS bit) */
+                    if ((resp = send_cmd(ACMD41, HIGH_CAPACITY_SUPPORT)) == R1_READY_STATE ) break; /* Initialisation timeout of 1 second (High Capacity Support) Bit 30*/
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command, before trying again. */
-                    for (uint16_t i = 0; i; ++i) ;          /* longer delay loop */
-                }
 
-                if ( send_cmd(CMD58, 0) == R1_READY_STATE ) {   /* Check CCS bit in the OCR */
-                    ptr = buff;                             /* Unusual grammar to optimise compiled code */
-                    *ptr++ =sd_read_byte();
-                    *ptr++ =sd_read_byte();
-                    *ptr++ =sd_read_byte();
-                    *ptr   =sd_read_byte();
+                    currentTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+                } while ( endTime > currentTime );
 
-                    CardType = (buff[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;   /* SDv2 */
+                if (resp == R1_READY_STATE) {
+                    if ( send_cmd(CMD58, 0) ==  R1_READY_STATE) {   /* Check CCS bit in the OCR */
+                        ptr = buff;                         /* Unusual grammar to optimise compiled code */
+                        *ptr++ =sd_read_byte();             /* Get trailing return value of R3 resp */
+                        *ptr++ =sd_read_byte();
+                        *ptr++ =sd_read_byte();
+                        *ptr   =sd_read_byte();
+                         CardType = (buff[0] & 0x40) ? CT_SD2|CT_BLOCK : CT_SD2;    /* SDv2 */                   
+                    }
                 }
             }
-        } else if ( resp == (R1_ILLEGAL_COMMAND | R1_IDLE_STATE) ) {    /* SDv1 or MMCv3 */
-            for ( uint8_t n = 250; n && ((resp = send_cmd(ACMD41, 0x00)) == R1_IDLE_STATE ); --n) {   /* initialise for 2 seconds */
+        } else if ( resp == (R1_ILLEGAL_COMMAND | R1_IDLE_STATE) ) {                /* SDv1 or MMCv3 */
+
+            endTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+            endTime += 50;                                  /* Initialise for 1 second; 1000ms/20ms ticks */
+            do {
+                if((resp = send_cmd(ACMD41, 0x00)) == R1_READY_STATE ) break;
                 sd_write_byte(0xFF);                        /* Give SD Card 8 Clocks to complete command. */
-                for (uint16_t i = 0; i; ++i) ;              /* longer delay loop */
-            }
+
+                currentTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+            } while ( endTime > currentTime );
+
             if (resp = R1_READY_STATE) {                    /* SDv1 */
                 CardType = CT_SD1;
+
             } else {                                        /* MMCv3 ?? */
-                for ( uint8_t n = 250; n && ((resp = send_cmd(CMD1, 0x00)) == R1_IDLE_STATE ); --n) { /* initialise for 2 seconds */
+
+                endTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+                endTime += 50;                              /* Initialise for 1 second; 1000ms/20ms ticks */
+                do {
+                    if ((resp = send_cmd(CMD1, 0x00)) == R1_IDLE_STATE ) break; /* initialise for 1 second */
                     sd_write_byte(0xFF);                    /* Give SD Card 8 Clocks to complete command. */
-                    for (uint16_t i = 0; i; ++i) ;          /* longer delay loop */
-                }
-                if (resp == R1_READY_STATE)                 /* MMCv3 */
+
+                    currentTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
+                } while ( endTime > currentTime );
+
+                if (resp == R1_IDLE_STATE)                  /* MMCv3 */
                     CardType = CT_MMC;
                 else
                     CardType = 0;
@@ -418,14 +440,13 @@ DSTATUS disk_initialize (
             CardType = 0;
         }
 
-        if ( (CardType != 0) && (CardType != CT_BLOCK) )        /* If it is NOT a Block Address SD Version 2 device */
+        if ( (CardType != 0) && (CardType != CT_SD2|CT_BLOCK) )     /* If it is NOT a Block Address SD Version 2 device */
             if ( send_cmd(CMD16, 512) != R1_READY_STATE )   /* Try to set R/W block length to 512 */
                 CardType = 0;
     }
-    
-    deselect();                                             /* Give SD Card 8 Clocks to complete command. */
 
     sd_clock(__IO_CNTR_SS_DIV_20);                          /* Maximum clock is Phi/20 */
+    deselect();                                             /* Give SD Card 8 Clocks to complete command. */
 
     if (CardType) {                                         /* Initialisation succeeded */
         Stat &= ~STA_NOINIT;                                /* Clear STA_NOINIT */
