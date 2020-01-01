@@ -105,7 +105,7 @@ static volatile DSTATUS Stat;   /* Disk status */
 static BYTE CardType;   /* b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressing */
 
 /*---------------------------------------------------------------------- */
-/* Private Functions                                                   */
+/* Private Functions                                                     */
 /*-----------------------------------------------------------------------*/
 
 #if __SDCC
@@ -348,7 +348,6 @@ DSTATUS disk_initialize (
     BYTE buff[4];
     WORD resp;
     BYTE *ptr;
-    BYTE CardType;
     uint32_t endTime, currentTime;
 
     CardType = 0;                                           /* Set invalid SD card type, initially */
