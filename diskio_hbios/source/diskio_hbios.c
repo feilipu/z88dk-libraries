@@ -22,6 +22,12 @@
 #error Do you have HBIOS?
 #endif
 
+/*-----------------------------------------------------------------------*/
+/* Static variables                                                      */
+/*-----------------------------------------------------------------------*/
+
+static volatile DSTATUS Stat;   /* Disk status */
+
 /*--------------------------------------------------------------------------
 
    Module Private Functions
@@ -53,10 +59,13 @@ DSTATUS disk_initialize (
 ) __smallc __z88dk_fastcall
 #endif
 {
+    Stat = STA_NOINIT;                                  /* Set uninitialised, initially */
     if ( hbios_a( BF_DIOSTATUS<<8|pdrv) == RES_OK )
-        return RES_OK;
+        Stat &= ~STA_NOINIT;                            /* Clear STA_NOINIT */
     else
-        return hbios_a( BF_DIORESET<<8|pdrv);
+        if ( hbios_a( BF_DIORESET<<8|pdrv) == RES_OK )
+            Stat &= ~STA_NOINIT;                        /* Clear STA_NOINIT */
+    return Stat;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -73,7 +82,10 @@ DSTATUS disk_status (
 ) __smallc __z88dk_fastcall
 #endif
 {
-    return hbios_a( BF_DIOSTATUS<<8|pdrv);
+    if ( hbios_a( BF_DIOSTATUS<<8|pdrv) != RES_OK )
+        if ( hbios_a( BF_DIORESET<<8|pdrv) != RES_OK )
+            Stat = STA_NOINIT;                          /*  Set STA_NOINIT */
+    return Stat;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -96,10 +108,11 @@ DRESULT disk_read (
 ) __smallc
 #endif
 {
-    uint8_t rattempt = READ_ATTEMPTS;       /* Read attempts */
+    uint8_t rattempt = READ_ATTEMPTS;               /* Read attempts */
     uint8_t resp = 0;
 
-    if (count == 0 ) return RES_PARERR;     /* sector count can't be zero */
+    if (count == 0 ) return RES_PARERR;             /* sector count can't be zero */
+    if (Stat & STA_NOINIT) return RES_NOTRDY;       /* drive must be initialised */
 
     do {
         if ( hbios_a_dehl( BF_DIOSEEK<<8|pdrv, sector|LBA_ADDRESS ) == 0) {
@@ -132,10 +145,11 @@ DRESULT disk_write (
 ) __smallc
 #endif
 {
-    uint8_t wattempt = WRITE_ATTEMPTS;      /* Write attempts */
+    uint8_t wattempt = WRITE_ATTEMPTS;              /* Write attempts */
     uint8_t resp = 0;
 
-    if (count == 0 ) return RES_PARERR;     /* sector count can't be zero */
+    if (count == 0 ) return RES_PARERR;             /* sector count can't be zero */
+    if (Stat & STA_NOINIT) return RES_NOTRDY;       /* drive must be initialised */
 
     do {
         if ( hbios_a_dehl( BF_DIOSEEK<<8|pdrv, sector|LBA_ADDRESS ) == 0) {
@@ -166,6 +180,13 @@ DRESULT disk_ioctl (
 ) __smallc
 #endif
 {
+
+#if __SDCC
+    if (disk_status_fastcall(pdrv) & STA_NOINIT) return RES_NOTRDY;  /* Check if card is in the socket */
+#elif __SCCZ80
+    if (disk_status(pdrv) & STA_NOINIT) return RES_NOTRDY;  /* Check if card is in the socket */
+#endif
+
     DRESULT resp = RES_ERROR;
 
     switch (cmd) {

@@ -27,9 +27,9 @@ Compiled using zsdcc version 3.9.5 [r11502](https://sourceforge.net/p/sdcc/code/
 
 The diskio_hbios library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +hbios -clib=new -x -SO3 --math32 --opt-code-size @diskio_hbios.lst -o diskio_hbios`
-`zcc +hbios -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
-`zcc +hbios -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
+`zcc +hbios -clib=new -x -SO3 --math32 @diskio_hbios.lst -o diskio_hbios`
+`zcc +hbios -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
+`zcc +hbios -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
 
 `zcc +target -clib=new -x -SO3 --math32 @diskio_hbios.lst -o diskio_hbios`
 `zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
