@@ -288,6 +288,8 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
             deselect();                         /* raise CS */
             return (resp << 8);                 /* something bad happened so we didn't see R1 = 0x01 */
         }
+
+        sd_write_byte(0xFF);                   /* Insert a stuff byte. Needed allow precursor command processing */
     }
 
     /* Send command byte */
