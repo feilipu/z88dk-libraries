@@ -3,7 +3,7 @@ The library for I2C_LCD.
 
 Visit all support files and product documents [click here](https://github.com/SparkingStudio/I2C_LCD) please.
 
-Compiled using zsdcc version 3.9.5 [r11502](https://sourceforge.net/p/sdcc/code/11502/log/?path=/trunk/sdcc).
+Compiled using zsdcc version 4.0.0 [r11535](https://sourceforge.net/p/sdcc/code/11535/log/?path=/trunk/sdcc).
 
 ## Usage
     1.git clone this repository.
@@ -22,11 +22,11 @@ Compiled using zsdcc version 3.9.5 [r11502](https://sourceforge.net/p/sdcc/code/
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +yaz180 --math32 -x -SO3 -clib=new @i2c_lcd.lst -o i2c_lcd`
+`zcc +yaz180 --math32 -x -SO3 -clib=new @i2c_lcd.lst -o ../i2c_lcd`
 
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @i2c_lcd.lst -o i2c_lcd`
+`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @i2c_lcd.lst -o ../i2c_lcd`
 
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @i2c_lcd.lst -o i2c_lcd`
+`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @i2c_lcd.lst -o ../i2c_lcd`
 
 The resulting `i2c_lcd.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
