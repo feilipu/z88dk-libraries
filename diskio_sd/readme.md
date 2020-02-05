@@ -3,7 +3,7 @@
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
 Current source version status is: 0.14, October 14, 2019.<br>
-Compiled using zsdcc version 3.9.5 [r11502](https://sourceforge.net/p/sdcc/code/11502/log/?path=/trunk/sdcc).
+Compiled using zsdcc version 4.0.0 [r11535](https://sourceforge.net/p/sdcc/code/11535/log/?path=/trunk/sdcc).
 
 #### Features
 <ul>
@@ -27,13 +27,13 @@ Compiled using zsdcc version 3.9.5 [r11502](https://sourceforge.net/p/sdcc/code/
 
 The diskio_sd library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +scz180 -clib=new -x -SO3 --math32 @diskio_sd.lst -o diskio_sd`
-`zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o diskio_sd`
-`zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o diskio_sd`
+`zcc +scz180 -clib=new -x -SO3 --math32 @diskio_sd.lst -o ../diskio_sd`
+`zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node1200000 @diskio_sd.lst -o ../diskio_sd`
+`zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node1200000 @diskio_sd.lst -o ../diskio_sd`
 
-`zcc +target -clib=new -x -SO3 --math32 @diskio_sd.lst -o diskio_sd`
-`zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o diskio_sd`
-`zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o diskio_sd`
+`zcc +target -clib=new -x -SO3 --math32 @diskio_sd.lst -o ../diskio_sd`
+`zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node1200000 @diskio_sd.lst -o ../diskio_sd`
+`zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node1200000 @diskio_sd.lst -o ../diskio_sd`
 
 The resulting `diskio_sd.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
