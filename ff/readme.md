@@ -39,9 +39,9 @@ The ff library can be compiled using the following command lines in Linux, with 
 `zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
 `zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
 
-`zcc +scz180 -clib=new -x -SO3 --math32 @ff.lst -o ../ff`
-`zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
-`zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
+`zcc +target -clib=new -x -SO3 --math32 @ff.lst -o ../ff`
+`zcc +target -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
+`zcc +target -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
 
 The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
