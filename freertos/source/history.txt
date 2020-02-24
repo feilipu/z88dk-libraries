@@ -95,7 +95,7 @@ Changes between FreeRTOS V10.1.1 and FreeRTOS V10.2.0 released February 25 2019:
 	  uxTaskGetStackHighWaterMark() returns a UBaseType_t as always,
 	  uxTaskGetStackHighWaterMark2() returns configSTACK_DEPTH_TYPE to allow the
 	  user to determine the return type.
-	+ miniAVRfreeRTOS - above uxTaskGetStackHighWaterMark2() not implemented.
+	+ Z80freeRTOS - above uxTaskGetStackHighWaterMark2() not implemented.
 	+ Fixed issues in memory protected ports related to different combinations
 	  of static memory only and dynamic memory only builds.  As a result the
 	  definition of tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE became more
@@ -121,7 +121,7 @@ Changes between FreeRTOS V10.1.0 and FreeRTOS V10.1.1 released 7 September 2018
 	+ Fixed some formatting in the FreeRTOS+TCP TCP/IP stack code.
 	+ Reverted moving some variables from file to function scope as doing so
 	  broke debug scenarios that require the static qualifier to be removed.
-	+ miniAVRfreeRTOS - above reversions not implemented.
+	+ Z80freeRTOS - above reversions not implemented.
 
 Changes between FreeRTOS V10.0.1 and FreeRTOS V10.1.0 released 22 August 2018
 

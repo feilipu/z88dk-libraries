@@ -333,15 +333,11 @@ typedef struct TaskControlBlock_t
         int iTaskErrno;
     #endif
 
-} tskTCB;
-
-/* The old tskTCB name is maintained above then typedefed to the new TCB_t name
-below to enable the use of older kernel aware debuggers. */
-typedef tskTCB TCB_t;
+} TCB_t;
 
 /*lint -save -e956 A manual analysis and inspection has been used to determine
 which static variables must be declared volatile. */
-PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB __attribute__((used)) = NULL;
+PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
 
 /* Lists for ready and blocked tasks. --------------------
 xDelayedTaskList1 and xDelayedTaskList2 could be move to function scople but
@@ -1484,7 +1480,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
     UBaseType_t uxTaskPriorityGet( const TaskHandle_t xTask )
     {
-    TCB_t const *pxTCB;
+    const TCB_t *pxTCB;
     UBaseType_t uxReturn;
 
         taskENTER_CRITICAL();
@@ -1506,7 +1502,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
     UBaseType_t uxTaskPriorityGetFromISR( const TaskHandle_t xTask )
     {
-    TCB_t const *pxTCB;
+    const TCB_t *pxTCB;
     UBaseType_t uxReturn, uxSavedInterruptState;
 
         /* RTOS ports that support interrupt nesting have the concept of a

@@ -36,15 +36,6 @@
 #include "include/sccz80/task.h"
 #endif
 
-/*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the Z80 port.
- *----------------------------------------------------------*/
-
-/* Start tasks with interrupts enabled. */
-#define portFLAGS_INT_ENABLED           ( (StackType_t) 0x80 )
-
-#define    portSCHEDULER_ISR               WDT_vect
-
 /*-----------------------------------------------------------*/
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
@@ -53,13 +44,13 @@ typedef void TCB_t;
 extern volatile TCB_t * volatile pxCurrentTCB;
 
 /*-----------------------------------------------------------*/
+
 /*
- * Perform hardware setup to enable ticks from Watchdog Timer.
+ * Perform hardware setup to enable ticks from Timer.
  */
-static void prvSetupTimerInterrupt( void );
+static void prvSetupTimerInterrupt( void ) __preserves_regs(b,c,iyh,iyl);
 
 /*-----------------------------------------------------------*/
-
 
 /*
  * See header file for description.
@@ -93,7 +84,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
     /* Setup the relevant timer hardware to generate the tick. */
     prvSetupTimerInterrupt();
@@ -106,7 +97,7 @@ BaseType_t xPortStartScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortEndScheduler( void )
+void vPortEndScheduler( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
     /* It is unlikely that the Z80 port will get stopped.
      * If required simply
@@ -119,7 +110,7 @@ void vPortEndScheduler( void )
  * Manual context switch.  The first thing we do is save the registers so we
  * can use a naked attribute.
  */
-void vPortYield( void )
+void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
     portSAVE_CONTEXT();
     vTaskSwitchContext();
@@ -133,7 +124,7 @@ void vPortYield( void )
  * difference from vPortYield() is the tick count is incremented as the
  * call comes from the tick ISR.
  */
-void vPortYieldFromTick( void )
+void vPortYieldFromTick( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
     portSAVE_CONTEXT_IN_ISR();
 
@@ -146,19 +137,62 @@ void vPortYieldFromTick( void )
 }
 /*-----------------------------------------------------------*/
 
-//initialize watchdog
+/*
+ * Initialize Timer (PRT1 for YAZ180, first implementation).
+ */
 void prvSetupTimerInterrupt( void )
 {
-    //reset watchdog
-    wdt_reset();
+    do{
+#ifdef __SCCZ80
+        asm(                                                                \
+            "EXTERN RLDR1L, RLDR1H                                      \n" \
+            "EXTERN TCR, TCR_TIE1, TCR_TDE1                             \n" \
+            "; address of ISR                                           \n" \
+            "ld de,_timer_isr                                           \n" \
+            "; address of PRT1 Jump Address                             \n" \
+            "ld hl,$FFE6                                                \n" \
+            "ld (hl),e                                                  \n" \
+            "inc hl                                                     \n" \
+            "ld (hl),d                                                  \n" \
+            "; we do 256 ticks per second                               \n" \
+            "ld hl,7200-1                                               \n" \
+            "out0(RLDR1L),l                                             \n" \
+            "out0(RLDR1H),h                                             \n" \
+            "; enable down counting and interrupts for PRT1             \n" \
+            "in0 a,(TCR)                                                \n" \
+            "or TCR_TIE1|TCR_TDE1                                       \n" \
+            "out0 (TCR),a                                               \n" \
+            );
+#endif
 
-    //set up WDT Interrupt (rather than the WDT Reset).
-    wdt_interrupt_enable( portUSE_WDTO );
+#ifdef __SDCC
+        __asm
+            EXTERN RLDR1L, RLDR1H
+            EXTERN TCR, TCR_TIE1, TCR_TDE1
+            ; address of ISR
+            ld de,_timer_isr
+            ; address of PRT1 Jump Address
+            ld hl,$FFE6
+            ld (hl),e
+            inc hl
+            ld (hl),d
+            ; we do 256 ticks per second
+            ld hl,7200-1 
+            out0(RLDR1L),l
+            out0(RLDR1H),h
+            ; enable down counting and interrupts for PRT1
+            in0 a,(TCR)
+            or TCR_TIE1|TCR_TDE1
+            out0 (TCR),a
+        __endasm;
+#endif
+    }while(0);
 }
+
 
 /*-----------------------------------------------------------*/
 
-void timer_isr(void) __naked
+void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {	
 #if configUSE_PREEMPTION == 1
 	/*
@@ -167,7 +201,7 @@ void timer_isr(void) __naked
 	 * count is incremented after the context is saved.
 	 */
     portSAVE_CONTEXT_IN_ISR();
-    vTaskIncrementTick();
+    xTaskIncrementTick();
     vTaskSwitchContext();
     portRESTORE_CONTEXT_IN_ISR();
 #else
@@ -177,7 +211,7 @@ void timer_isr(void) __naked
 	 * manual calls to taskYIELD();
 	 */
     portSAVE_CONTEXT_IN_ISR();
-  	vTaskIncrementTick();
+  	xTaskIncrementTick();
     portRESTORE_CONTEXT_IN_ISR();
 #endif
 } // configUSE_PREEMPTION
