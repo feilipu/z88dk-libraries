@@ -347,7 +347,7 @@ List_t * const pxConstList = ( pxList );                                        
  * \ingroup LinkedList
  */
 //  void vListInitialise( List_t * const pxList ) PRIVILEGED_FUNCTION;
-void vListInitialise(List_t * const pxList) __preserves_regs(iyh,iyl);
+void vListInitialise(List_t * const pxList);
 
 
 /*
@@ -360,7 +360,7 @@ void vListInitialise(List_t * const pxList) __preserves_regs(iyh,iyl);
  * \ingroup LinkedList
  */
 // void vListInitialiseItem( ListItem_t * const pxItem ) PRIVILEGED_FUNCTION;
-void vListInitialiseItem(ListItem_t * const pxItem) __preserves_regs(iyh,iyl);
+void vListInitialiseItem(ListItem_t * const pxItem);
 
 
 /*
@@ -375,7 +375,7 @@ void vListInitialiseItem(ListItem_t * const pxItem) __preserves_regs(iyh,iyl);
  * \ingroup LinkedList
  */
 //  void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem ) PRIVILEGED_FUNCTION;
-void vListInsert(List_t * const pxList,ListItem_t * const pxNewListItem) __preserves_regs(iyh,iyl);
+void vListInsert(List_t * const pxList,ListItem_t * const pxNewListItem);
 
 
 /*
@@ -398,7 +398,7 @@ void vListInsert(List_t * const pxList,ListItem_t * const pxNewListItem) __prese
  * \ingroup LinkedList
  */
 //  void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem ) PRIVILEGED_FUNCTION;
-void vListInsertEnd(List_t * const pxList,ListItem_t * const pxNewListItem) __preserves_regs(iyh,iyl);
+void vListInsertEnd(List_t * const pxList,ListItem_t * const pxNewListItem);
 
 
 /*
@@ -415,7 +415,7 @@ void vListInsertEnd(List_t * const pxList,ListItem_t * const pxNewListItem) __pr
  * \ingroup LinkedList
  */
 //  UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove ) PRIVILEGED_FUNCTION;
-UBaseType_t uxListRemove(ListItem_t * const pxItemToRemove) __preserves_regs(iyh,iyl);
+UBaseType_t uxListRemove(ListItem_t * const pxItemToRemove);
 
 
 #ifdef __cplusplus

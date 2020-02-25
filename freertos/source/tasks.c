@@ -556,7 +556,7 @@ static void prvInitialiseNewTask(   TaskFunction_t pxTaskCode,
                                     const configSTACK_DEPTH_TYPE ulStackDepth,
                                     void * const pvParameters,
                                     UBaseType_t uxPriority,
-                                    TaskHandle_t * const pxCreatedTask,
+                                    TaskHandle_t * pxCreatedTask,
                                     TCB_t *pxNewTCB,
                                     const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION;
 
@@ -738,7 +738,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
                             const configSTACK_DEPTH_TYPE usStackDepth,
                             void * const pvParameters,
                             UBaseType_t uxPriority,
-                            TaskHandle_t * const pxCreatedTask )
+                            TaskHandle_t * pxCreatedTask )
     {
     TCB_t *pxNewTCB;
     BaseType_t xReturn;
@@ -829,7 +829,7 @@ static void prvInitialiseNewTask(   TaskFunction_t pxTaskCode,
                                     const configSTACK_DEPTH_TYPE ulStackDepth,
                                     void * const pvParameters,
                                     UBaseType_t uxPriority,
-                                    TaskHandle_t * const pxCreatedTask,
+                                    TaskHandle_t * pxCreatedTask,
                                     TCB_t *pxNewTCB,
                                     const MemoryRegion_t * const xRegions )
 {
@@ -1480,7 +1480,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
     UBaseType_t uxTaskPriorityGet( const TaskHandle_t xTask )
     {
-    const TCB_t *pxTCB;
+    TCB_t *pxTCB;
     UBaseType_t uxReturn;
 
         taskENTER_CRITICAL();
@@ -1502,7 +1502,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
     UBaseType_t uxTaskPriorityGetFromISR( const TaskHandle_t xTask )
     {
-    const TCB_t *pxTCB;
+    TCB_t *pxTCB;
     UBaseType_t uxReturn, uxSavedInterruptState;
 
         /* RTOS ports that support interrupt nesting have the concept of a
@@ -2118,7 +2118,7 @@ void vTaskSuspendAll( void )
     post in the FreeRTOS support forum before reporting this as a bug! -
     http://goo.gl/wu4acr */
 
-    /* portSOFRWARE_BARRIER() is only implemented for emulated/simulated ports that
+    /* portSOFTWARE_BARRIER() is only implemented for emulated/simulated ports that
     do not otherwise exhibit real time behaviour. */
     portSOFTWARE_BARRIER();
 

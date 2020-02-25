@@ -8,9 +8,9 @@
 
 The FreeRTOS library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +scz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos`
-`zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
-`zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
+`zcc +yaz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos`
+`zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
+`zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
 
 `zcc +target -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos`
 `zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
@@ -43,7 +43,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 Once installed, the FreeRTOS library can be linked against on the compile line by adding `-llib/target/freertos` and the include file can be found with `#include <lib/target/freertos.h>`.
 
-A simple usage example, for the `+scz180` target.
+A simple usage example, for the `+yaz180` target.
 
 
 ## Documentation

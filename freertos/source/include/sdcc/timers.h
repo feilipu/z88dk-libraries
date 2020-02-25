@@ -234,7 +234,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
                                 void * const pvTimerID,
                                 TimerCallbackFunction_t pxCallbackFunction ) PRIVILEGED_FUNCTION;
 */
-TimerHandle_t xTimerCreate(const char * const pcTimerName,const TickType_t xTimerPeriodInTicks,const UBaseType_t uxAutoReload,void * const pvTimerID,TimerCallbackFunction_t pxCallbackFunction) __preserves_regs(iyh,iyl);
+TimerHandle_t xTimerCreate(const char * const pcTimerName,const TickType_t xTimerPeriodInTicks,const UBaseType_t uxAutoReload,void * const pvTimerID,TimerCallbackFunction_t pxCallbackFunction);
 
 #endif
 
@@ -368,7 +368,7 @@ TimerHandle_t xTimerCreate(const char * const pcTimerName,const TickType_t xTime
                                         TimerCallbackFunction_t pxCallbackFunction,
                                         StaticTimer_t *pxTimerBuffer ) PRIVILEGED_FUNCTION;
 */
-TimerHandle_t xTimerCreate(const char * const pcTimerName,const TickType_t xTimerPeriodInTicks,const UBaseType_t uxAutoReload,void * const pvTimerID,TimerCallbackFunction_t pxCallbackFunction,StaticTimer_t *pxTimerBuffer) __preserves_regs(iyh,iyl);
+TimerHandle_t xTimerCreate(const char * const pcTimerName,const TickType_t xTimerPeriodInTicks,const UBaseType_t uxAutoReload,void * const pvTimerID,TimerCallbackFunction_t pxCallbackFunction,StaticTimer_t *pxTimerBuffer);
 
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 
@@ -393,7 +393,7 @@ TimerHandle_t xTimerCreate(const char * const pcTimerName,const TickType_t xTime
  * See the xTimerCreate() API function example usage scenario.
  */
 //  void *pvTimerGetTimerID( const TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
-void *pvTimerGetTimerID(const TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
+void *pvTimerGetTimerID(const TimerHandle_t xTimer);
 
 
 /**
@@ -416,7 +416,7 @@ void *pvTimerGetTimerID(const TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
  * See the xTimerCreate() API function example usage scenario.
  */
 //  void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID ) PRIVILEGED_FUNCTION;
-void vTimerSetTimerID(TimerHandle_t xTimer,void *pvNewID) __preserves_regs(iyh,iyl);
+void vTimerSetTimerID(TimerHandle_t xTimer,void *pvNewID);
 
 
 /**
@@ -455,7 +455,7 @@ void vTimerSetTimerID(TimerHandle_t xTimer,void *pvNewID) __preserves_regs(iyh,i
  * @endverbatim
  */
 //  BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
-BaseType_t xTimerIsTimerActive(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
+BaseType_t xTimerIsTimerActive(TimerHandle_t xTimer);
 
 
 /**
@@ -465,7 +465,7 @@ BaseType_t xTimerIsTimerActive(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
  * to call xTimerGetTimerDaemonTaskHandle() before the scheduler has been started.
  */
 //  TaskHandle_t xTimerGetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
-TaskHandle_t xTimerGetTimerDaemonTaskHandle(void) __preserves_regs(iyh,iyl);
+TaskHandle_t xTimerGetTimerDaemonTaskHandle(void);
 
 
 /**
@@ -1202,7 +1202,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle(void) __preserves_regs(iyh,iyl);
  * @endverbatim
  */
 //  BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
-BaseType_t xTimerPendFunctionCallFromISR(PendedFunction_t xFunctionToPend,void *pvParameter1,uint32_t ulParameter2,BaseType_t *pxHigherPriorityTaskWoken) __preserves_regs(iyh,iyl);
+BaseType_t xTimerPendFunctionCallFromISR(PendedFunction_t xFunctionToPend,void *pvParameter1,uint32_t ulParameter2,BaseType_t *pxHigherPriorityTaskWoken);
 
 
  /**
@@ -1238,7 +1238,7 @@ BaseType_t xTimerPendFunctionCallFromISR(PendedFunction_t xFunctionToPend,void *
   *
   */
 //  BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
-BaseType_t xTimerPendFunctionCall(PendedFunction_t xFunctionToPend,void *pvParameter1,uint32_t ulParameter2,TickType_t xTicksToWait) __preserves_regs(iyh,iyl);
+BaseType_t xTimerPendFunctionCall(PendedFunction_t xFunctionToPend,void *pvParameter1,uint32_t ulParameter2,TickType_t xTicksToWait);
 
 
 /**
@@ -1251,7 +1251,7 @@ BaseType_t xTimerPendFunctionCall(PendedFunction_t xFunctionToPend,void *pvParam
  * @return The name assigned to the timer specified by the xTimer parameter.
  */
 //  const char * pcTimerGetName( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-const char *pcTimerGetName(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
+const char *pcTimerGetName(TimerHandle_t xTimer);
 
 
 /**
@@ -1270,7 +1270,7 @@ const char *pcTimerGetName(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
  * enter the dormant state after it expires.
  */
 //  void vTimerSetReloadMode( TimerHandle_t xTimer, const UBaseType_t uxAutoReload ) PRIVILEGED_FUNCTION;
-void vTimerSetReloadMode(TimerHandle_t xTimer,const UBaseType_t uxAutoReload) __preserves_regs(iyh,iyl);
+void vTimerSetReloadMode(TimerHandle_t xTimer,const UBaseType_t uxAutoReload);
 
 
 /**
@@ -1286,7 +1286,7 @@ void vTimerSetReloadMode(TimerHandle_t xTimer,const UBaseType_t uxAutoReload) __
 * pdFALSE is returned.
 */
 //  UBaseType_t uxTimerGetReloadMode( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
-UBaseType_t uxTimerGetReloadMode(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
+UBaseType_t uxTimerGetReloadMode(TimerHandle_t xTimer);
 
 
 /**
@@ -1299,7 +1299,7 @@ UBaseType_t uxTimerGetReloadMode(TimerHandle_t xTimer) __preserves_regs(iyh,iyl)
  * @return The period of the timer in ticks.
  */
 //  TickType_t xTimerGetPeriod( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
-TickType_t xTimerGetPeriod(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
+TickType_t xTimerGetPeriod(TimerHandle_t xTimer);
 
 
 /**
@@ -1316,7 +1316,7 @@ TickType_t xTimerGetPeriod(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
 * value is undefined.
 */
 //  TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
-TickType_t xTimerGetExpiryTime(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
+TickType_t xTimerGetExpiryTime(TimerHandle_t xTimer);
 
 
 /*
@@ -1324,19 +1324,19 @@ TickType_t xTimerGetExpiryTime(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
  * for use by the kernel only.
  */
 //  BaseType_t xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
-BaseType_t xTimerCreateTimerTask(void) __preserves_regs(iyh,iyl);
+BaseType_t xTimerCreateTimerTask(void);
 
 
 //  BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
-BaseType_t xTimerGenericCommand(TimerHandle_t xTimer,const BaseType_t xCommandID,const TickType_t xOptionalValue,BaseType_t * const pxHigherPriorityTaskWoken,const TickType_t xTicksToWait) __preserves_regs(iyh,iyl);
+BaseType_t xTimerGenericCommand(TimerHandle_t xTimer,const BaseType_t xCommandID,const TickType_t xOptionalValue,BaseType_t * const pxHigherPriorityTaskWoken,const TickType_t xTicksToWait);
 
 
 #if( configUSE_TRACE_FACILITY == 1 )
 //  void vTimerSetTimerNumber( TimerHandle_t xTimer, UBaseType_t uxTimerNumber ) PRIVILEGED_FUNCTION;
-    void vTimerSetTimerNumber(TimerHandle_t xTimer,UBaseType_t uxTimerNumber) __preserves_regs(iyh,iyl);
+    void vTimerSetTimerNumber(TimerHandle_t xTimer,UBaseType_t uxTimerNumber);
 
 //  UBaseType_t uxTimerGetTimerNumber( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
-    UBaseType_t uxTimerGetTimerNumber(TimerHandle_t xTimer) __preserves_regs(iyh,iyl);
+    UBaseType_t uxTimerGetTimerNumber(TimerHandle_t xTimer);
 
 #endif
 

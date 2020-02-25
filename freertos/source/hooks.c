@@ -37,6 +37,9 @@
 
 #include "include/stack_macros.h"
 
+__sfr __banked __at 0x4001 io_pio_port_b;
+__sfr __banked __at 0x4003 io_pio_control;
+
 /*-----------------------------------------------------------*/
 #if ( configUSE_IDLE_HOOK == 1 )
 
@@ -44,7 +47,7 @@ void vApplicationIdleHook( void );
 
 void vApplicationIdleHook( void )
 {
-
+    return;
 }
 
 #endif /* configUSE_IDLE_HOOK == 1 */
@@ -57,12 +60,7 @@ void vApplicationMallocFailedHook( void );
 
 void vApplicationMallocFailedHook( void )
 {
-
-
-    for(;;)
-    {
-
-    }
+    io_pio_port_b = 0xF0;
 }
 
 #endif /* configUSE_MALLOC_FAILED_HOOK == 1 */
@@ -75,11 +73,7 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName );
 
 void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName)
 {
-
-    for(;;)
-    {
-
-    }
+    io_pio_port_b = 0x0F;
 }
 
 #endif /* configCHECK_FOR_STACK_OVERFLOW >= 1 */

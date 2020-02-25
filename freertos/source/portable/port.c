@@ -127,12 +127,10 @@ void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 void vPortYieldFromTick( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
     portSAVE_CONTEXT_IN_ISR();
-
     if( xTaskIncrementTick() != pdFALSE )
     {
         vTaskSwitchContext();
     }
-
     portRESTORE_CONTEXT_IN_ISR();
 }
 /*-----------------------------------------------------------*/
@@ -140,7 +138,7 @@ void vPortYieldFromTick( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 /*
  * Initialize Timer (PRT1 for YAZ180, first implementation).
  */
-void prvSetupTimerInterrupt( void )
+void prvSetupTimerInterrupt( void ) __preserves_regs(b,c,iyh,iyl)
 {
     do{
 #ifdef __SCCZ80
@@ -150,7 +148,7 @@ void prvSetupTimerInterrupt( void )
             "; address of ISR                                           \n" \
             "ld de,_timer_isr                                           \n" \
             "; address of PRT1 Jump Address                             \n" \
-            "ld hl,$FFE6                                                \n" \
+            "ld hl,0xFFE6           ; YAZ180 PRT1 address               \n" \
             "ld (hl),e                                                  \n" \
             "inc hl                                                     \n" \
             "ld (hl),d                                                  \n" \
@@ -172,7 +170,7 @@ void prvSetupTimerInterrupt( void )
             ; address of ISR
             ld de,_timer_isr
             ; address of PRT1 Jump Address
-            ld hl,$FFE6
+            ld hl,0xFFE6            ; YAZ180 PRT1 address
             ld (hl),e
             inc hl
             ld (hl),d

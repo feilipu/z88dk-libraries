@@ -128,11 +128,11 @@ extern "C" {
  */
 #if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
 //  StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, StackType_t *pxEndOfStack, TaskFunction_t pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
-    StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack,StackType_t *pxEndOfStack,TaskFunction_t pxCode,void *pvParameters) __preserves_regs(iyh,iyl);
+    StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack,StackType_t *pxEndOfStack,TaskFunction_t pxCode,void *pvParameters);
 
 #else
 //  StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
-    StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack,TaskFunction_t pxCode,void *pvParameters) __preserves_regs(iyh,iyl);
+    StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack,TaskFunction_t pxCode,void *pvParameters);
 
 #endif
 
@@ -169,7 +169,7 @@ typedef struct xHeapStats
  * with the lowest start address must appear first in the array.
  */
 //  void vPortDefineHeapRegions( const HeapRegion_t * const pxHeapRegions ) PRIVILEGED_FUNCTION;
-void vPortDefineHeapRegions(const HeapRegion_t * const pxHeapRegions) __preserves_regs(iyh,iyl);
+void vPortDefineHeapRegions(const HeapRegion_t * const pxHeapRegions);
 
 
 /*
@@ -177,30 +177,30 @@ void vPortDefineHeapRegions(const HeapRegion_t * const pxHeapRegions) __preserve
  * heap state.
  */
 //  void vPortGetHeapStats( HeapStats_t *pxHeapStats );
-void vPortGetHeapStats(HeapStats_t *pxHeapStats) __preserves_regs(iyh,iyl);
+void vPortGetHeapStats(HeapStats_t *pxHeapStats);
 
 
 /*
  * Map to the memory management routines required for the port.
  */
 //  void *pvPortMalloc( size_t xSize ) PRIVILEGED_FUNCTION;
-void *pvPortMalloc(size_t xSize) __preserves_regs(iyh,iyl);
+void *pvPortMalloc(size_t xSize);
 
 
 //  void vPortFree( void *pv ) PRIVILEGED_FUNCTION;
-void vPortFree(void *pv) __preserves_regs(iyh,iyl);
+void vPortFree(void *pv);
 
 
 //  void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION;
-void vPortInitialiseBlocks(void) __preserves_regs(iyh,iyl);
+void vPortInitialiseBlocks(void);
 
 
 //  size_t xPortGetFreeHeapSize( void ) PRIVILEGED_FUNCTION;
-size_t xPortGetFreeHeapSize(void) __preserves_regs(iyh,iyl);
+size_t xPortGetFreeHeapSize(void);
 
 
 //  size_t xPortGetMinimumEverFreeHeapSize( void ) PRIVILEGED_FUNCTION;
-size_t xPortGetMinimumEverFreeHeapSize(void) __preserves_regs(iyh,iyl);
+size_t xPortGetMinimumEverFreeHeapSize(void);
 
 
 /*
@@ -208,7 +208,7 @@ size_t xPortGetMinimumEverFreeHeapSize(void) __preserves_regs(iyh,iyl);
  * sets up a tick interrupt and sets timers for the correct tick frequency.
  */
 //  BaseType_t xPortStartScheduler( void ) PRIVILEGED_FUNCTION;
-BaseType_t xPortStartScheduler(void) __preserves_regs(iyh,iyl);
+BaseType_t xPortStartScheduler(void);
 
 
 /*
@@ -217,7 +217,7 @@ BaseType_t xPortStartScheduler(void) __preserves_regs(iyh,iyl);
  * executing.
  */
 //  void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
-void vPortEndScheduler(void) __preserves_regs(iyh,iyl);
+void vPortEndScheduler(void);
 
 
 #ifdef __cplusplus
