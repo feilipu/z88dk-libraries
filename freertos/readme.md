@@ -46,7 +46,6 @@ Once installed, the FreeRTOS library can be linked against on the compile line b
 A simple usage example, for the `+yaz180` target.
 
 ``` c
-
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 ////    main.c
@@ -69,34 +68,30 @@ A simple usage example, for the `+yaz180` target.
 /*-----------------------------------------------------------*/
 
 static void TaskBlinkRedLED(void *pvParameters);
-
 static void TaskBlinkGreenLED(void *pvParameters);
-/*-----------------------------------------------------------*/
-
 
 /*-----------------------------------------------------------*/
-
 
 static void TaskBlinkRedLED(void *pvParameters) 
 {
     (void) pvParameters;
     TickType_t xLastWakeTime;
-	/* The xLastWakeTime variable needs to be initialised with the current tick
-	count.  Note that this is the only time we access this variable.  From this
-	point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
-	API function. */
-	xLastWakeTime = xTaskGetTickCount();
+    /* The xLastWakeTime variable needs to be initialised with the current tick
+    count.  Note that this is the only time we access this variable.  From this
+    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    API function. */
+    xLastWakeTime = xTaskGetTickCount();
 
     for(;;)
     {
 
-    	io_pio_port_b |= 0x20;
-		vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+        io_pio_port_b |= 0x20;
+        vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
 
-    	io_pio_port_b &= 0x0F;
-		vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+        io_pio_port_b &= 0x0F;
+        vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
 
- 		printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
+        printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
 
 }
@@ -106,22 +101,22 @@ static void TaskBlinkGreenLED(void *pvParameters)
 {
     (void) pvParameters;
     TickType_t xLastWakeTime;
-	/* The xLastWakeTime variable needs to be initialised with the current tick
-	count.  Note that this is the only time we access this variable.  From this
-	point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
-	API function. */
-	xLastWakeTime = xTaskGetTickCount();
+    /* The xLastWakeTime variable needs to be initialised with the current tick
+    count.  Note that this is the only time we access this variable.  From this
+    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    API function. */
+    xLastWakeTime = xTaskGetTickCount();
 
     for(;;)
     {
-    	io_pio_port_b |= 0x05;
-		vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+        io_pio_port_b |= 0x05;
+        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
 
-    	io_pio_port_b &= 0xF0;
-		vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
+        io_pio_port_b &= 0xF0;
+        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
 
-		printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
- 		printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
+        printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
+        printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
 }
 
@@ -134,29 +129,31 @@ int main(void)
     io_pio_port_b = 0x00;
 
     xTaskCreate(
-		TaskBlinkRedLED
-		,  "RedLED"
-		,  256
-		,  NULL
-		,  3
-		,  NULL ); // 
+        TaskBlinkRedLED
+        ,  "RedLED"
+        ,  256
+        ,  NULL
+        ,  3
+        ,  NULL ); // 
 
     xTaskCreate(
-		TaskBlinkGreenLED
-		,  "GreenLED"
-		,  256
-		,  NULL
-		,  3
-		,  NULL ); //
+        TaskBlinkGreenLED
+        ,  "GreenLED"
+        ,  256
+        ,  NULL
+        ,  3
+        ,  NULL ); //
 
-	vTaskStartScheduler();
+    vTaskStartScheduler();
 }
-
 ```
-
 
 ## Documentation
 
+The canonical source for information is the [FreeRTOS Web Site](https://www.freertos.org/).
+Within this site, the [Getting Started](https://www.freertos.org/FreeRTOS-quick-start-guide.html) page is very useful.
+
+This AVRfreeRTOS Repository has plenty of examples, ranging from [Blink](https://github.com/feilipu/avrfreertos/blob/master/MegaBlink/main.c) through to a [Synthesiser](https://github.com/feilipu/avrfreertos/tree/master/GA_Synth) for the Goldilocks Analogue.
 
 ## Licence
 
