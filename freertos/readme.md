@@ -1,25 +1,22 @@
 ## Introduction to the FreeRTOS functions
 
-
-#### Features
-
+Developed in partnership with the world’s leading chip companies over a 15 year period, FreeRTOS is a market-leading real–time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS includes a kernel and a growing set of libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability, accessibility, and ease of use. 
 
 ## Preparation
 
 The FreeRTOS library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +yaz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos`
+```sh
+zcc +yaz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+```
 
-`zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
-
-`zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
-
-
-`zcc +target -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos`
-
-`zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
-
-`zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
+```sh
+zcc +target -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
+zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+```
 
 The resulting `freertos.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
@@ -46,7 +43,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Usage
 
-Once installed, the FreeRTOS library can be linked against on the compile line by adding `-llib/target/freertos` and the include file can be found with `#include <lib/target/freertos.h>`.
+Once installed, the FreeRTOS library can be linked against on the compile line by adding `-llib/target/freertos` and the include files can be found with `#include "freertos/FreeRTOS.h"`, for example.
 
 A simple usage example, for the `+yaz180` target.
 
@@ -169,7 +166,7 @@ The FreeRTOS kernel is released under the MIT open source license, the text of w
 This license covers the FreeRTOS kernel source files, which are located in the /FreeRTOS/Source directory of the official FreeRTOS kernel download.  It also covers most of the source files in the demo application projects, which are located in the /FreeRTOS/Demo directory of the official FreeRTOS download.  The demo projects may also include third party software that is not part of FreeRTOS and is licensed separately to FreeRTOS.  Examples of third party software includes header files provided by chip or tools vendors, linker scripts, peripheral drivers, etc.  All the software in subdirectories of the /FreeRTOS directory is either open source or distributed with permission, and is free for use.  For the avoidance of doubt, refer to the comments at the top of each source file.
 
 
-###License text:
+### License text
 
 Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
