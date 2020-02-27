@@ -1,6 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Phillip Stevens  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,11 +18,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
- *
  * 1 tab == 4 spaces!
-*/
+ *
+ * This file is NOT part of the FreeRTOS distribution.
+ *
+ */
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
@@ -138,7 +137,7 @@ typedef uint8_t UBaseType_t;
             "push iy            \n" \
             "ld hl,0            \n" \
             "add hl,sp          \n" \
-            "ld de,(_pxCurrentTCB)\n"\
+            "ld de,(_pxCurrentTCB)  \n"\
             "ex de,hl           \n" \
             "ld (hl),e          \n" \
             "inc hl             \n" \
@@ -285,7 +284,7 @@ typedef uint8_t UBaseType_t;
 /*
  * Macros to save all the registers, and save the stack pointer into the TCB.
  */
- 
+
 #define portSAVE_CONTEXT()          \
     do{                             \
         __asm                       \

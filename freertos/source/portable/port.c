@@ -1,6 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Phillip Stevens  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +18,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
- *
  * 1 tab == 4 spaces!
+ *
+ * This file is NOT part of the FreeRTOS distribution.
+ *
  */
 
 
@@ -62,7 +61,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 
     /* Place the task return address on stack. Not used */
     *pxTopOfStack-- = ( StackType_t ) 0;
-	
+
     /* The start of the task code will be popped off the stack last, so place
     it on first. */
     *pxTopOfStack-- = ( StackType_t ) pxCode;
@@ -70,15 +69,15 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
     /* Now the registers. */
     *pxTopOfStack-- = ( StackType_t ) 0xAFAF;   /* AF  */
     *pxTopOfStack-- = ( StackType_t ) 0x0404;   /* IF  */
-	*pxTopOfStack-- = ( StackType_t ) 0xBCBC;   /* BC  */
+    *pxTopOfStack-- = ( StackType_t ) 0xBCBC;   /* BC  */
     *pxTopOfStack-- = ( StackType_t ) 0xDEDE;   /* DE  */
     *pxTopOfStack-- = ( StackType_t ) 0xEFEF;   /* HL  */
     *pxTopOfStack-- = ( StackType_t ) 0xFAFA;   /* AF' */
     *pxTopOfStack-- = ( StackType_t ) 0xCBCB;   /* BC' */
     *pxTopOfStack-- = ( StackType_t ) 0xEDED;   /* DE' */
     *pxTopOfStack-- = ( StackType_t ) 0xFEFE;   /* HL' */
-	*pxTopOfStack-- = ( StackType_t ) 0xCEFA;   /* IX  */
-	*pxTopOfStack   = ( StackType_t ) 0xADDE;   /* IY  */
+    *pxTopOfStack-- = ( StackType_t ) 0xCEFA;   /* IX  */
+    *pxTopOfStack   = ( StackType_t ) 0xADDE;   /* IY  */
 
     return pxTopOfStack;
 }
@@ -145,65 +144,19 @@ void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
  */
 void prvSetupTimerInterrupt( void ) __preserves_regs(b,c,iyh,iyl)
 {
-    do{
-#ifdef __SCCZ80
-        asm(                                                                \
-            "EXTERN __CPU_CLOCK                                         \n" \
-            "EXTERN RLDR1L, RLDR1H                                      \n" \
-            "EXTERN TCR, TCR_TIE1, TCR_TDE1                             \n" \
-            "; address of ISR                                           \n" \
-            "ld de,_timer_isr                                           \n" \
-            "; address of PRT1 Jump Address                             \n" \
-            "ld hl,0xFFE6           ; YAZ180 PRT1 address               \n" \
-            "ld (hl),e                                                  \n" \
-            "inc hl                                                     \n" \
-            "ld (hl),d                                                  \n" \
-            "; we do 256 ticks per second                               \n" \
-            "ld hl,__CPU_CLOCK/20/256-1                                 \n" \
-            "out0(RLDR1L),l                                             \n" \
-            "out0(RLDR1H),h                                             \n" \
-            "; enable down counting and interrupts for PRT1             \n" \
-            "in0 a,(TCR)                                                \n" \
-            "or TCR_TIE1|TCR_TDE1                                       \n" \
-            "out0 (TCR),a                                               \n" \
-            );
-#endif
-
-#ifdef __SDCC
-        __asm
-            EXTERN __CPU_CLOCK
-            EXTERN RLDR1L, RLDR1H
-            EXTERN TCR, TCR_TIE1, TCR_TDE1
-            ; address of ISR
-            ld de,_timer_isr
-            ; address of PRT1 Jump Address
-            ld hl,0xFFE6            ; YAZ180 PRT1 address
-            ld (hl),e
-            inc hl
-            ld (hl),d
-            ; we do 256 ticks per second
-            ld hl,__CPU_CLOCK/20/256-1 
-            out0(RLDR1L),l
-            out0(RLDR1H),h
-            ; enable down counting and interrupts for PRT1
-            in0 a,(TCR)
-            or TCR_TIE1|TCR_TDE1
-            out0 (TCR),a
-        __endasm;
-#endif
-    }while(0);
+    configSETUP_TIMER_INTERRUPT();
 }
 
 
 /*-----------------------------------------------------------*/
 
-void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
-{	
+__at (0xFE00) void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
+{
 #if configUSE_PREEMPTION == 1
-	/*
- 	 * Tick ISR for preemptive scheduler.  We can use a naked attribute as
-	 * the context is saved at the start of timer_isr().  The tick
-	 * count is incremented after the context is saved.
+    /*
+     * Tick ISR for preemptive scheduler.  We can use a naked attribute as
+     * the context is saved at the start of timer_isr().  The tick
+     * count is incremented after the context is saved.
      *
      * Context switch function used by the tick.  This must be identical to
      * vPortYield() from the call to vTaskSwitchContext() onwards.  The only
@@ -211,19 +164,19 @@ void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
      * call comes from the tick ISR.
      */
     portSAVE_CONTEXT_IN_ISR();
-    portRESET_TIMER_INTERRUPT();
+    configRESET_TIMER_INTERRUPT();
     xTaskIncrementTick();
-    vTaskSwitchContext();
+    configSWITCH_CONTEXT();
     portRESTORE_CONTEXT_IN_ISR();
 #else
-	/*
-	 * Tick ISR for the cooperative scheduler.  All this does is increment the
-	 * tick count.  We don't need to switch context, this can only be done by
-	 * manual calls to taskYIELD();
-	 */
+    /*
+     * Tick ISR for the cooperative scheduler.  All this does is increment the
+     * tick count.  We don't need to switch context, this can only be done by
+     * manual calls to taskYIELD();
+     */
     portSAVE_CONTEXT_IN_ISR();
-    portRESET_TIMER_INTERRUPT();
-  	xTaskIncrementTick();
+    configRESET_TIMER_INTERRUPT();
+    xTaskIncrementTick();
     portRESTORE_CONTEXT_IN_ISR();
 #endif
 } // configUSE_PREEMPTION

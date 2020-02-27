@@ -9,11 +9,16 @@
 The FreeRTOS library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 `zcc +yaz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos`
+
 `zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
+
 `zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
 
+
 `zcc +target -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos`
+
 `zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
+
 `zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos`
 
 The resulting `freertos.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
@@ -53,6 +58,8 @@ A simple usage example, for the `+yaz180` target.
 ////////////////////////////////////////////////////////
 
 // zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos main.c -o blink -create-app
+
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos main.c -o blink -create-app
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -153,7 +160,7 @@ int main(void)
 The canonical source for information is the [FreeRTOS Web Site](https://www.freertos.org/).
 Within this site, the [Getting Started](https://www.freertos.org/FreeRTOS-quick-start-guide.html) page is very useful.
 
-This AVRfreeRTOS Repository has plenty of examples, ranging from [Blink](https://github.com/feilipu/avrfreertos/blob/master/MegaBlink/main.c) through to a [Synthesiser](https://github.com/feilipu/avrfreertos/tree/master/GA_Synth) for the Goldilocks Analogue.
+The AVRfreeRTOS Repository has plenty of examples, ranging from [Blink](https://github.com/feilipu/avrfreertos/blob/master/MegaBlink/main.c) through to a [Synthesiser](https://github.com/feilipu/avrfreertos/tree/master/GA_Synth) for the Goldilocks Analogue.
 
 ## Licence
 
@@ -162,8 +169,7 @@ The FreeRTOS kernel is released under the MIT open source license, the text of w
 This license covers the FreeRTOS kernel source files, which are located in the /FreeRTOS/Source directory of the official FreeRTOS kernel download.  It also covers most of the source files in the demo application projects, which are located in the /FreeRTOS/Demo directory of the official FreeRTOS download.  The demo projects may also include third party software that is not part of FreeRTOS and is licensed separately to FreeRTOS.  Examples of third party software includes header files provided by chip or tools vendors, linker scripts, peripheral drivers, etc.  All the software in subdirectories of the /FreeRTOS directory is either open source or distributed with permission, and is free for use.  For the avoidance of doubt, refer to the comments at the top of each source file.
 
 
-License text:
--------------
+###License text:
 
 Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 

@@ -1291,7 +1291,7 @@ typedef StaticStreamBuffer_t StaticMessageBuffer_t;
 }
 #endif
 
-/* Board (AVR) specific configuration options. */
+/* Board specific configuration options. */
 #include "include/FreeRTOSBoardDefs.h"
 
 #endif /* INC_FREERTOS_H */
