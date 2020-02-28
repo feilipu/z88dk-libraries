@@ -47,7 +47,7 @@ extern volatile TCB_t * volatile pxCurrentTCB;
 /*
  * Perform hardware setup to enable ticks from Timer.
  */
-static void prvSetupTimerInterrupt( void ) __preserves_regs(b,c,iyh,iyl);
+static void prvSetupTimerInterrupt( void ) __preserves_regs(iyh,iyl);
 
 /*-----------------------------------------------------------*/
 
@@ -96,33 +96,13 @@ BaseType_t xPortStartScheduler( void ) __preserves_regs(a,b,c,d,e,iyh,iyl) __nak
 }
 /*-----------------------------------------------------------*/
 
-void vPortEndScheduler( void ) __preserves_regs(b,c,d,e,h,l,iyh,iyl) __naked
+void vPortEndScheduler( void ) __preserves_regs(b,c,d,e,h,l,iyh,iyl)
 {
     /* It is unlikely that the Z80 port will get stopped.
      * If required simply
      * disable the tick interrupt here.
      */
-    do{
-#ifdef __SCCZ80
-        asm(                                                                \
-            "EXTERN TCR, TCR_TIE1, TCR_TDE1                             \n" \
-            "; disable down counting and interrupts for PRT1            \n" \
-            "in0 a,(TCR)                                                \n" \
-            "xor TCR_TIE1|TCR_TDE1                                      \n" \
-            "out0 (TCR),a                                               \n" \
-            );
-#endif
-
-#ifdef __SDCC
-        __asm
-            EXTERN TCR, TCR_TIE1, TCR_TDE1
-            ; disable down counting and interrupts for PRT1
-            in0 a,(TCR)
-            xor TCR_TIE1|TCR_TDE1
-            out0 (TCR),a
-        __endasm;
-#endif
-    }while(0);
+    configSTOP_TIMER_INTERRUPT();
 }
 
 /*-----------------------------------------------------------*/
@@ -142,7 +122,7 @@ void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 /*
  * Initialize Timer (PRT1 for YAZ180, first implementation).
  */
-void prvSetupTimerInterrupt( void ) __preserves_regs(b,c,iyh,iyl)
+void prvSetupTimerInterrupt( void ) __preserves_regs(iyh,iyl)
 {
     configSETUP_TIMER_INTERRUPT();
 }
@@ -150,7 +130,7 @@ void prvSetupTimerInterrupt( void ) __preserves_regs(b,c,iyh,iyl)
 
 /*-----------------------------------------------------------*/
 
-__at (0xFE00) void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
+void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
 #if configUSE_PREEMPTION == 1
     /*

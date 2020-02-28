@@ -63,11 +63,15 @@ A simple usage example, for the `+yaz180` target.
 #include <string.h>
 #include <stdio.h>
 
+#if __YAZ180
 #include <arch/yaz180.h>
+#elif __SCZ180
+#include <arch/scz180.h>
+#endif
 
 /* Scheduler include files. */
-#include "freertos/FreeRTOS.h"
-#include "freertos/timers.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/timers.h>
 
 /*-----------------------------------------------------------*/
 
