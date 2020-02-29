@@ -153,8 +153,8 @@ extern "C" {
         asm(                                                    \
             "EXTERN BBR                                     \n" \
             "in0 a,(BBR)                                    \n" \
-            "and 0x1F                                       \n" \
-            "call NZ,vTaskSwitchContext                     \n" \
+            "xor 0xF0           ; BBR for TPA               \n" \
+            "call Z,vTaskSwitchContext                      \n" \
             );                                                  \
     }while(0)
 
@@ -211,8 +211,8 @@ extern "C" {
         __asm                                                   \
             EXTERN BBR                                          \
             in0 a,(BBR)                                         \
-            and 0x1F                                            \
-            call NZ,_vTaskSwitchContext                         \
+            xor 0xF0            ; BBR for TPA                   \
+            call Z,_vTaskSwitchContext                          \
         __endasm;                                               \
     }while(0)
 
