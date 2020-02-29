@@ -23,7 +23,7 @@ This library is build for FT801 EVE display, using I2C. Hardware tested is 4D Sy
 This is a multifunctional sensor that gives you temperature and relative humidity information at the same time. It utilizes a TH02 sensor that can meet measurement needs of general purposes. It provides reliable readings when environment humidity condition inbetween 0-80% RH, and temperature condition inbetween 0-70°C, covering needs in most home and daily applications that don't contain extreme conditions.
 
 ### z88dk-FreeRTOS
-TBA
+Developed in partnership with the world’s leading chip companies over a 15 year period, FreeRTOS is a market-leading real–time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS is built with an emphasis on reliability, accessibility, and ease of use. 
 
 ## Preparation
 The libraries can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine, from the relevant library sub-directory. e.g. for any `library`.

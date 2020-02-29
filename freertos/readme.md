@@ -43,9 +43,9 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Usage
 
-Once installed, the FreeRTOS library can be linked against on the compile line by adding `-llib/target/freertos` and the include files can be found with `#include "freertos/FreeRTOS.h"`, for example.
+Once installed, the FreeRTOS library can be linked against on the compile line by adding `-llib/target/freertos` and the include files can be found with `#include <freertos/FreeRTOS.h>`, for example.
 
-A simple usage example, for the `+yaz180` target.
+A simple usage example, for the `+scz180` target.
 
 ``` c
 ////////////////////////////////////////////////////////
@@ -93,10 +93,10 @@ static void TaskBlinkRedLED(void *pvParameters)
     for(;;)
     {
 
-        io_pio_port_b |= 0x20;
+//      io_pio_port_b |= 0x20;
         vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
 
-        io_pio_port_b &= 0x0F;
+//      io_pio_port_b &= 0x0F;
         vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
 
         printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
@@ -117,10 +117,10 @@ static void TaskBlinkGreenLED(void *pvParameters)
 
     for(;;)
     {
-        io_pio_port_b |= 0x05;
+//      io_pio_port_b |= 0x05;
         vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
 
-        io_pio_port_b &= 0xF0;
+//      io_pio_port_b &= 0xF0;
         vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
 
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
@@ -133,8 +133,8 @@ static void TaskBlinkGreenLED(void *pvParameters)
 int main(void)
 {
 
-    io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
-    io_pio_port_b = 0x00;
+//  io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
+//  io_pio_port_b = 0x00;
 
     xTaskCreate(
         TaskBlinkRedLED
@@ -168,7 +168,6 @@ The AVRfreeRTOS Repository has plenty of examples, ranging from [Blink](https://
 The FreeRTOS kernel is released under the MIT open source license, the text of which is provided below.
 
 This license covers the FreeRTOS kernel source files, which are located in the /FreeRTOS/Source directory of the official FreeRTOS kernel download.  It also covers most of the source files in the demo application projects, which are located in the /FreeRTOS/Demo directory of the official FreeRTOS download.  The demo projects may also include third party software that is not part of FreeRTOS and is licensed separately to FreeRTOS.  Examples of third party software includes header files provided by chip or tools vendors, linker scripts, peripheral drivers, etc.  All the software in subdirectories of the /FreeRTOS directory is either open source or distributed with permission, and is free for use.  For the avoidance of doubt, refer to the comments at the top of each source file.
-
 
 ### License text
 
