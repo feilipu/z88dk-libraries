@@ -13,9 +13,9 @@ zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos
 ```
 
 ```sh
-zcc +target -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
-zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
-zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +scz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
+zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
 ```
 
 The resulting `freertos.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.

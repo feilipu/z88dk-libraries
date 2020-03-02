@@ -177,7 +177,9 @@ typedef uint8_t UBaseType_t;
 #define portSAVE_CONTEXT_IN_ISR()   \
     do{                             \
         asm(                        \
+            "PHASE configISR_ORG    \n" \
             "EXTERN _pxCurrentTCB   \n" \
+            "_timer_isr_start:  \n" \
             "push af            \n" \
             "ld a,0x7F          \n" \
             "inc a  ; set P/V   \n" \
@@ -229,6 +231,8 @@ typedef uint8_t UBaseType_t;
             "ei                 \n" \
             "pop af             \n" \
             "reti               \n" \
+            "_timer_isr_end:    \n" \
+            "DEPHASE            \n" \
             );                      \
     }while(0)
 
@@ -346,7 +350,9 @@ typedef uint8_t UBaseType_t;
 #define portSAVE_CONTEXT_IN_ISR()   \
     do{                             \
         __asm                       \
+            PHASE configISR_ORG     \
             EXTERN _pxCurrentTCB    \
+            _timer_isr_start:       \
             push af                 \
             ld a,0x7F               \
             inc a       ; set P/V   \
@@ -398,6 +404,8 @@ typedef uint8_t UBaseType_t;
             ei                      \
             pop af                  \
             reti                    \
+            _timer_isr_end:         \
+            DEPHASE                 \
         __endasm;                   \
     }while(0)
 

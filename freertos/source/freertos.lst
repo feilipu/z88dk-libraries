@@ -1,3 +1,5 @@
+./MemMang/heap_3.c
+./portable/port.c
 ./croutine.c
 ;./event_groups.c
 ./hooks.c
@@ -6,5 +8,3 @@
 ./stream_buffer.c
 ./tasks.c
 ./timers.c
-./MemMang/heap_3.c
-./portable/port.c

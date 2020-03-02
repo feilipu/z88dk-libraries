@@ -37,10 +37,14 @@
 
 /*-----------------------------------------------------------*/
 
+/* Make unitialised in BSS for RomWBW HBIOS (to ensure above 0x8000) */
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
 typedef void TCB_t;
 extern volatile TCB_t * volatile pxCurrentTCB;
+
+/* Make unitialised in BSS for RomWBW HBIOS (to ensure above 0x8000) */
+extern volatile TickType_t xPendedTicks;                                       
 
 /*-----------------------------------------------------------*/
 
@@ -109,7 +113,8 @@ void vPortEndScheduler( void ) __preserves_regs(b,c,d,e,h,l,iyh,iyl)
 
 /*
  * Manual context switch.  The first thing we do is save the registers so we
- * can use a naked attribute.
+ * can use a naked attribute. This is called by the application, so we don't have
+ * to check which bank is loaded.
  */
 void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
@@ -120,7 +125,7 @@ void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 /*-----------------------------------------------------------*/
 
 /*
- * Initialize Timer (PRT1 for YAZ180, first implementation).
+ * Initialize Timer (PRT1 for YAZ180, and SCZ180 HBIOS).
  */
 void prvSetupTimerInterrupt( void ) __preserves_regs(iyh,iyl)
 {
@@ -145,7 +150,7 @@ void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
      */
     portSAVE_CONTEXT_IN_ISR();
     configRESET_TIMER_INTERRUPT();
-    xTaskIncrementTick();
+    configINCREMENT_TICK();
     configSWITCH_CONTEXT();
     portRESTORE_CONTEXT_IN_ISR();
 #else
@@ -156,7 +161,7 @@ void timer_isr(void) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
      */
     portSAVE_CONTEXT_IN_ISR();
     configRESET_TIMER_INTERRUPT();
-    xTaskIncrementTick();
+    configINCREMENT_TICK();
     portRESTORE_CONTEXT_IN_ISR();
 #endif
 } // configUSE_PREEMPTION
