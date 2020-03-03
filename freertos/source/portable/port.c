@@ -37,14 +37,11 @@
 
 /*-----------------------------------------------------------*/
 
-/* Make unitialised in BSS for RomWBW HBIOS (to ensure above 0x8000) */
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
+/* Make unitialised in BSS for RomWBW HBIOS (to ensure above 0x8000) */
 typedef void TCB_t;
 extern volatile TCB_t * volatile pxCurrentTCB;
-
-/* Make unitialised in BSS for RomWBW HBIOS (to ensure above 0x8000) */
-extern volatile TickType_t xPendedTicks;                                       
 
 /*-----------------------------------------------------------*/
 
@@ -102,9 +99,9 @@ BaseType_t xPortStartScheduler( void ) __preserves_regs(a,b,c,d,e,iyh,iyl) __nak
 
 void vPortEndScheduler( void ) __preserves_regs(b,c,d,e,h,l,iyh,iyl)
 {
-    /* It is unlikely that the Z80 port will get stopped.
-     * If required simply
-     * disable the tick interrupt here.
+    /* 
+     * It is unlikely that the Z80 port will get stopped.
+     * If required simply disable the tick interrupt here.
      */
     configSTOP_TIMER_INTERRUPT();
 }

@@ -35,7 +35,7 @@ extern "C" {
  * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
- * given hardware and compiler.
+ * given Z80 (Z180, Z80N) hardware and SCCZ80 or SDCC compiler.
  *
  * These settings should not be altered.
  *-----------------------------------------------------------
@@ -55,7 +55,12 @@ typedef uint8_t UBaseType_t;
     #define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 
+/*-----------------------------------------------------------*/
 
+/* General purpose stringify macros. */
+
+#define string(a) __string(a)
+#define __string(a) #a
 
 /*-----------------------------------------------------------*/
 
@@ -177,7 +182,7 @@ typedef uint8_t UBaseType_t;
 #define portSAVE_CONTEXT_IN_ISR()   \
     do{                             \
         asm(                        \
-            "PHASE configISR_ORG    \n" \
+            "PHASE "string(configISR_ORG)"  \n" \
             "EXTERN _pxCurrentTCB   \n" \
             "_timer_isr_start:  \n" \
             "push af            \n" \
