@@ -43,6 +43,9 @@ any details of its type. */
 typedef void TCB_t;
 extern volatile TCB_t * volatile pxCurrentTCB;
 
+/* Make unitialised in BSS for RomWBW HBIOS (to ensure above 0x8000) */
+extern volatile TickType_t xPendedTicks; 
+
 /*-----------------------------------------------------------*/
 
 /*

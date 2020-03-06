@@ -374,7 +374,7 @@ PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks  = ( UBaseTyp
 PRIVILEGED_DATA static volatile TickType_t xTickCount               = ( TickType_t ) configINITIAL_TICK_COUNT;
 PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority      = tskIDLE_PRIORITY;
 PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning        = pdFALSE;
-PRIVILEGED_DATA static volatile TickType_t xPendedTicks             = ( TickType_t ) 0U;
+PRIVILEGED_DATA        volatile TickType_t xPendedTicks;                                    /* Make unitialised global in BSS for RomWBW HBIOS (to ensure above 0x8000) */
 PRIVILEGED_DATA static volatile BaseType_t xYieldPending            = pdFALSE;
 PRIVILEGED_DATA static volatile BaseType_t xNumOfOverflows          = ( BaseType_t ) 0;
 PRIVILEGED_DATA static UBaseType_t uxTaskNumber                     = ( UBaseType_t ) 0U;
