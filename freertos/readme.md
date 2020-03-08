@@ -1,6 +1,6 @@
 ## Introduction to the FreeRTOS functions
 
-Developed in partnership with the world’s leading chip companies over a 15 year period, FreeRTOS is a market-leading real–time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS includes a kernel and a growing set of libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability, accessibility, and ease of use. 
+Developed in partnership with the world’s leading chip companies over a 15 year period, FreeRTOS is a market-leading real–time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS includes a kernel and a growing set of libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability, accessibility, and ease of use.
 
 ## Preparation
 
@@ -56,7 +56,7 @@ A simple usage example, for the `+scz180` target.
 
 // zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos main.c -o blink -create-app
 
-// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos main.c -o blink -create-app
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/scz180/freertos main.c -o blink -create-app
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -80,7 +80,7 @@ static void TaskBlinkGreenLED(void *pvParameters);
 
 /*-----------------------------------------------------------*/
 
-static void TaskBlinkRedLED(void *pvParameters) 
+static void TaskBlinkRedLED(void *pvParameters)
 {
     (void) pvParameters;
     TickType_t xLastWakeTime;
@@ -93,11 +93,11 @@ static void TaskBlinkRedLED(void *pvParameters)
     for(;;)
     {
 
-//      io_pio_port_b |= 0x20;
-        vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+//      io_pio_port_b |= 0x20;              // YAZ180 TIL311
+        vTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
 
-//      io_pio_port_b &= 0x0F;
-        vTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+//      io_pio_port_b &= 0x0F;              // YAZ180 TIL311
+        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
 
         printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
@@ -117,10 +117,10 @@ static void TaskBlinkGreenLED(void *pvParameters)
 
     for(;;)
     {
-//      io_pio_port_b |= 0x05;
-        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+//      io_pio_port_b |= 0x05;              // YAZ180 TIL311
+        vTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
 
-//      io_pio_port_b &= 0xF0;
+//      io_pio_port_b &= 0xF0;              // YAZ180 TIL311
         vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
 
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
@@ -134,25 +134,27 @@ int main(void)
 {
 
 //  io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
-//  io_pio_port_b = 0x00;
+//  io_pio_port_b = 0x00;                   // on YAZ180 TIL311
 
     xTaskCreate(
         TaskBlinkRedLED
         ,  "RedLED"
-        ,  256
+        ,  128
         ,  NULL
         ,  3
-        ,  NULL ); // 
+        ,  NULL ); //
 
     xTaskCreate(
         TaskBlinkGreenLED
         ,  "GreenLED"
-        ,  256
+        ,  128
         ,  NULL
         ,  3
         ,  NULL ); //
 
     vTaskStartScheduler();
+
+    return 0;
 }
 ```
 
@@ -178,5 +180,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-

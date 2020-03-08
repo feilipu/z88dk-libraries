@@ -26,13 +26,9 @@
 /*-----------------------------------------------------------*/
 
 static void TaskBlinkRedLED(void *pvParameters);
-
 static void TaskBlinkGreenLED(void *pvParameters);
-/*-----------------------------------------------------------*/
-
 
 /*-----------------------------------------------------------*/
-
 
 static void TaskBlinkRedLED(void *pvParameters) 
 {

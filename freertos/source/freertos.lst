@@ -1,6 +1,6 @@
 ./MemMang/heap_3.c
 ./portable/port.c
-;./event_groups.c
+./event_groups.c
 ./hooks.c
 ./list.c
 ./queue.c

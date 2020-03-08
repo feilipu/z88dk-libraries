@@ -242,7 +242,7 @@ typedef struct xLIST
  * \page listGET_END_MARKER listGET_END_MARKER
  * \ingroup LinkedList
  */
-#define listGET_END_MARKER( pxList )                    ( ( ListItem_t const * ) ( &( ( pxList )->xListEnd ) ) )
+#define listGET_END_MARKER( pxList )                    ( ( ListItem_t * ) ( &( ( pxList )->xListEnd ) ) )
 
 /*
  * Access macro to determine if a list contains any items.  The macro will
@@ -428,4 +428,3 @@ UBaseType_t __LIB__ uxListRemove(ListItem_t * const pxItemToRemove) __smallc;
 #endif
 
 #endif
-

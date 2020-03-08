@@ -510,7 +510,7 @@ EventBits_t uxReturn;
 EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
 {
 UBaseType_t uxSavedInterruptStatus;
-EventGroup_t const * const pxEventBits = xEventGroup;
+EventGroup_t * pxEventBits = xEventGroup;
 EventBits_t uxReturn;
 
     uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
@@ -526,8 +526,8 @@ EventBits_t uxReturn;
 EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
 {
 ListItem_t *pxListItem, *pxNext;
-ListItem_t const *pxListEnd;
-List_t const * pxList;
+ListItem_t *pxListEnd;
+List_t *pxList;
 EventBits_t uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits;
 EventGroup_t *pxEventBits = xEventGroup;
 BaseType_t xMatchFound = pdFALSE;
@@ -756,5 +756,3 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 #endif /* configUSE_TRACE_FACILITY */
 /*-----------------------------------------------------------*/
-
-
