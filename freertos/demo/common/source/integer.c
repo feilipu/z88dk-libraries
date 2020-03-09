@@ -50,8 +50,8 @@
 
 #define intgSTACK_SIZE			configMINIMAL_STACK_SIZE
 
-/* As this is the minimal version, we will only create one task. */
-#define intgNUMBER_OF_TASKS		( 1 )
+/* As this is not the minimal version, we will create four tasks. */
+#define intgNUMBER_OF_TASKS		( 4 )
 
 /* The task function.  Repeatedly performs a 32 bit calculation, checking the
 result against the expected result.  If the result is incorrect then the
