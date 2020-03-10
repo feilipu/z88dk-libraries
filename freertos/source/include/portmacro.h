@@ -90,7 +90,7 @@ typedef uint8_t UBaseType_t;
     do{                             \
         asm(                        \
             "pop af             \n" \
-            "di                 \n" \
+            "; di    ; unneeded \n" \
             "jp PO,ASMPC+4      \n" \
             "ei                 \n" \
             );                      \
@@ -120,15 +120,14 @@ typedef uint8_t UBaseType_t;
 /*
  * Macros to save all the registers, and save the stack pointer into the TCB.
  */
- 
+
 #define portSAVE_CONTEXT()          \
     do{                             \
         asm(                        \
-            "EXTERN _pxCurrentTCB   \n" \
             "push af            \n" \
             "ld a,i             \n" \
             "di                 \n" \
-            "push af    ; if    \n" \
+            "push af ; iff1:iff2\n" \
             "push bc            \n" \
             "push de            \n" \
             "push hl            \n" \
@@ -153,7 +152,6 @@ typedef uint8_t UBaseType_t;
 #define portRESTORE_CONTEXT()       \
     do{                             \
         asm(                        \
-            "EXTERN _pxCurrentTCB   \n" \
             "ld hl,(_pxCurrentTCB)  \n" \
             "ld e,(hl)          \n" \
             "inc hl             \n" \
@@ -171,7 +169,8 @@ typedef uint8_t UBaseType_t;
             "pop hl             \n" \
             "pop de             \n" \
             "pop bc             \n" \
-            "pop af      ; if   \n" \
+            "pop af  ; iff1:iff2\n" \
+            "; di    ; unneeded \n" \
             "jp PO,ASMPC+4      \n" \
             "ei                 \n" \
             "pop af             \n" \
@@ -183,12 +182,11 @@ typedef uint8_t UBaseType_t;
     do{                             \
         asm(                        \
             "PHASE "string(configISR_ORG)"  \n" \
-            "EXTERN _pxCurrentTCB   \n" \
-            "_timer_isr_start:  \n" \
+            "._timer_isr_start  \n" \
             "push af            \n" \
             "ld a,0x7F          \n" \
-            "inc a  ; set P/V   \n" \
-            "push af     ; if   \n" \
+            "inc a   ; set PE   \n" \
+            "push af ; iff1:iff2\n" \
             "push bc            \n" \
             "push de            \n" \
             "push hl            \n" \
@@ -213,7 +211,6 @@ typedef uint8_t UBaseType_t;
 #define portRESTORE_CONTEXT_IN_ISR()\
     do{                             \
         asm(                        \
-            "EXTERN _pxCurrentTCB   \n" \
             "ld hl,(_pxCurrentTCB)  \n" \
             "ld e,(hl)          \n" \
             "inc hl             \n" \
@@ -231,12 +228,13 @@ typedef uint8_t UBaseType_t;
             "pop hl             \n" \
             "pop de             \n" \
             "pop bc             \n" \
-            "pop af      ; if   \n" \
+            "pop af  ; iff1:iff2\n" \
+            "; di    ; unneeded \n" \
             "jp PO,ASMPC+4      \n" \
             "ei                 \n" \
             "pop af             \n" \
             "reti               \n" \
-            "_timer_isr_end:    \n" \
+            "._timer_isr_end    \n" \
             "DEPHASE            \n" \
             );                      \
     }while(0)
@@ -263,7 +261,7 @@ typedef uint8_t UBaseType_t;
     do{                             \
         __asm                       \
             pop af                  \
-            di                      \
+            ; di    ; unneeded      \
             jp PO,ASMPC+4           \
             ei                      \
         __endasm;                   \
@@ -297,11 +295,10 @@ typedef uint8_t UBaseType_t;
 #define portSAVE_CONTEXT()          \
     do{                             \
         __asm                       \
-            EXTERN _pxCurrentTCB    \
             push af                 \
             ld a,i                  \
             di                      \
-            push af     ; if        \
+            push af ; iff1:iff2     \
             push bc                 \
             push de                 \
             push hl                 \
@@ -326,7 +323,6 @@ typedef uint8_t UBaseType_t;
 #define portRESTORE_CONTEXT()       \
     do{                             \
         __asm                       \
-            EXTERN _pxCurrentTCB    \
             ld hl,(_pxCurrentTCB)   \
             ld e,(hl)               \
             inc hl                  \
@@ -344,7 +340,8 @@ typedef uint8_t UBaseType_t;
             pop hl                  \
             pop de                  \
             pop bc                  \
-            pop af      ; if        \
+            pop af  ; iff1:iff2     \
+            ; di    ; unneeded      \
             jp PO,ASMPC+4           \
             ei                      \
             pop af                  \
@@ -356,12 +353,11 @@ typedef uint8_t UBaseType_t;
     do{                             \
         __asm                       \
             PHASE configISR_ORG     \
-            EXTERN _pxCurrentTCB    \
             _timer_isr_start:       \
             push af                 \
             ld a,0x7F               \
-            inc a       ; set P/V   \
-            push af     ; if        \
+            inc a   ; set PE        \
+            push af ; iff1:iff2     \
             push bc                 \
             push de                 \
             push hl                 \
@@ -386,7 +382,6 @@ typedef uint8_t UBaseType_t;
 #define portRESTORE_CONTEXT_IN_ISR()\
     do{                             \
         __asm                       \
-            EXTERN _pxCurrentTCB    \
             ld hl,(_pxCurrentTCB)   \
             ld e,(hl)               \
             inc hl                  \
@@ -404,7 +399,8 @@ typedef uint8_t UBaseType_t;
             pop hl                  \
             pop de                  \
             pop bc                  \
-            pop af      ; if        \
+            pop af  ; iff1:iff2     \
+            ; di    ; unneeded      \
             jp PO,ASMPC+4           \
             ei                      \
             pop af                  \
@@ -433,4 +429,3 @@ extern void vPortYield( void );
 #endif
 
 #endif /* PORTMACRO_H */
-
