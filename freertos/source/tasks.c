@@ -556,7 +556,7 @@ static void prvInitialiseNewTask(   TaskFunction_t pxTaskCode,
                                     const configSTACK_DEPTH_TYPE ulStackDepth,
                                     void * const pvParameters,
                                     UBaseType_t uxPriority,
-                                    TaskHandle_t * pxCreatedTask,
+                                    TaskHandle_t * const pxCreatedTask,
                                     TCB_t *pxNewTCB,
                                     const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION;
 
@@ -738,7 +738,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
                             const configSTACK_DEPTH_TYPE usStackDepth,
                             void * const pvParameters,
                             UBaseType_t uxPriority,
-                            TaskHandle_t * pxCreatedTask )
+                            TaskHandle_t * const pxCreatedTask )
     {
     TCB_t *pxNewTCB;
     BaseType_t xReturn;
@@ -829,7 +829,7 @@ static void prvInitialiseNewTask(   TaskFunction_t pxTaskCode,
                                     const configSTACK_DEPTH_TYPE ulStackDepth,
                                     void * const pvParameters,
                                     UBaseType_t uxPriority,
-                                    TaskHandle_t * pxCreatedTask,
+                                    TaskHandle_t * const pxCreatedTask,
                                     TCB_t *pxNewTCB,
                                     const MemoryRegion_t * const xRegions )
 {
@@ -5305,5 +5305,3 @@ when performing module tests). */
     #endif
 
 #endif
-
-

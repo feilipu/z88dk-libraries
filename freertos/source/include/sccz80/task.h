@@ -335,9 +335,9 @@ is used in assert() statements. */
                             const configSTACK_DEPTH_TYPE usStackDepth,
                             void * const pvParameters,
                             UBaseType_t uxPriority,
-                            TaskHandle_t * pxCreatedTask ) PRIVILEGED_FUNCTION;
+                            TaskHandle_t * const pxCreatedTask ) PRIVILEGED_FUNCTION;
 */
-    BaseType_t __LIB__ xTaskCreate(TaskFunction_t pxTaskCode,const char * const pcName,const configSTACK_DEPTH_TYPE usStackDepth,void * const pvParameters,UBaseType_t uxPriority,TaskHandle_t * pxCreatedTask) __smallc;
+    BaseType_t __LIB__ xTaskCreate(TaskFunction_t pxTaskCode,const char * const pcName,const configSTACK_DEPTH_TYPE usStackDepth,void * const pvParameters,UBaseType_t uxPriority,TaskHandle_t * const pxCreatedTask) __smallc;
 
 
 #endif
@@ -2726,6 +2726,3 @@ void __LIB__ vTaskInternalSetTimeOutState(TimeOut_t * const pxTimeOut) __smallc;
 }
 #endif
 #endif /* INC_TASK_H */
-
-
-
