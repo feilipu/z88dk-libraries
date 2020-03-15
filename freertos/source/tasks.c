@@ -1480,7 +1480,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
     UBaseType_t uxTaskPriorityGet( const TaskHandle_t xTask )
     {
-    TCB_t *pxTCB;
+    TCB_t const *pxTCB;
     UBaseType_t uxReturn;
 
         taskENTER_CRITICAL();
@@ -1502,7 +1502,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
     UBaseType_t uxTaskPriorityGetFromISR( const TaskHandle_t xTask )
     {
-    TCB_t *pxTCB;
+    TCB_t const *pxTCB;
     UBaseType_t uxReturn, uxSavedInterruptState;
 
         /* RTOS ports that support interrupt nesting have the concept of a
