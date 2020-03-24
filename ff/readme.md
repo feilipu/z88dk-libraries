@@ -23,27 +23,7 @@ Compiled using zsdcc version 4.0.0 [r11535](https://sourceforge.net/p/sdcc/code/
  </li>
 </ul>
 
-## Preparation
-
-Please check that your diskio layer is working correctly, using the example program in `examples/diskio_check.c'.
-
-Then configure the library to suit your requirements by adjusting the `source/ffconf.h` file to provide the functions you need. You will then use this `ffconf.h` file to provide the options you included. This is a current limitation of z88dk, whereby it can only provide one third party library header file.
-
-The ff library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
-
-`zcc +rc2014 -clib=new -x -SO3 --math32 @ff.lst -o ../ff`
-`zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
-`zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
-
-`zcc +yaz180 -clib=new -x -SO3 --math32 @ff.lst -o ../ff`
-`zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
-`zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
-
-`zcc +target -clib=new -x -SO3 --math32 @ff.lst -o ../ff`
-`zcc +target -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
-`zcc +target -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff`
-
-The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+## Installation
 
 The `z88dk-lib` function is used to install for the desired target. e.g.
 
@@ -122,6 +102,33 @@ void main (void)
 }
 
 ```
+
+## Preparation
+
+Please check that your diskio layer is working correctly, using the example program in `examples/diskio_check.c'.
+
+Then configure the library to suit your requirements by adjusting the `source/ffconf.h` file to provide the functions you need. You will then use this `ffconf.h` file to provide the options you included. This is a current limitation of z88dk, whereby it can only provide one third party library header file.
+
+The ff library can be compiled from the `ff/source` directory using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
+
+```
+zcc +rc2014 -clib=new -x -SO3 --math32 @ff.lst -o ../ff
+zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+```
+```
+zcc +yaz180 -clib=new -x -SO3 --math32 @ff.lst -o ../ff
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+```
+For any supported target.
+```
+zcc +target -clib=new -x -SO3 --math32 @ff.lst -o ../ff
+zcc +target -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +target -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+```
+The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+
 ## Documentation
 
 ChaN's documentation is copied verbatim here, for easy reference.
@@ -129,7 +136,7 @@ Please use his [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html) as the
 
 ## Licence
 
-Copyright (C) 2019, ChaN, all right reserved.
+Copyright (C) 2020, ChaN, all right reserved.
 
 FatFs module is an open source software. Redistribution and use of FatFs in source and binary forms, with or without modification, are permitted provided that the following condition is met:
 
