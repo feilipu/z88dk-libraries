@@ -105,7 +105,7 @@ void main (void)
 
 ## Preparation
 
-Please check that your diskio layer is working correctly, using the example program in `examples/diskio_check.c'.
+Please check that your diskio layer is working correctly, using the example program in `examples/diskio_check.c`. This will destroy the contents of the drive, so back up any data prior to using it.
 
 Then configure the library to suit your requirements by adjusting the `source/ffconf.h` file to provide the functions you need. You will then use this `ffconf.h` file to provide the options you included. This is a current limitation of z88dk, whereby it can only provide one third party library header file.
 
