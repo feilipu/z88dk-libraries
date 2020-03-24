@@ -73,11 +73,11 @@ A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets.
 
 #endif
 
-// zcc +yaz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +yaz180 -subtype=app -v --list -m -SO3 -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +scz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/scz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -v --list -m -SO3 -clib=sdcc_iy -llib/scz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +rc2014 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +rc2014 -subtype=app -v --list -m -SO3 -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
 
 static FATFS FatFs;		/* FatFs work area needed for each volume */
