@@ -33,15 +33,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef EDOM
 #undef ERANGE
 
-#ifdef ESP8266
-///@brief make sure we use our strerror_r function
-#undef strerror_r
-#endif
-
 // =============================================
 ///@brief Standard POSIX typedefs.
 ///
-/// - Using these makes code portable accross many acrchitectures
+/// - Using these makes code portable across many architectures
 typedef uint32_t dev_t;     /*< dev_t for this architecture */
 typedef uint32_t ino_t;     /*< ino_t for this architecture */
 typedef uint32_t mode_t;    /*< mode_t for this architecture */
@@ -303,90 +298,148 @@ extern FILE *__iob[MAX_FILES];
 
 
 /* posix.c */
-MEMSPACE int isatty ( int fileno );
-MEMSPACE int fgetc ( FILE *stream );
-MEMSPACE int fputc ( int c , FILE *stream );
+int isatty ( int fileno );
+int fgetc ( FILE *stream );
+int fputc ( int c , FILE *stream );
 #ifndef IO_MACROS
-MEMSPACE int getchar ( void );
-MEMSPACE int putchar ( int c );
+int getchar ( void );
+int putchar ( int c );
 #endif
-MEMSPACE int ungetc ( int c , FILE *stream );
+int ungetc ( int c , FILE *stream );
 #ifndef IO_MACROS
-MEMSPACE int putc ( int c , FILE *stream );
+int putc ( int c , FILE *stream );
 #endif
-MEMSPACE char *fgets ( char *str , int size , FILE *stream );
-MEMSPACE int fputs ( const char *str , FILE *stream );
+char *fgets ( char *str , int size , FILE *stream );
+int fputs ( const char *str , FILE *stream );
 #ifndef IO_MACROS
-MEMSPACE int puts ( const char *str );
+int puts ( const char *str );
 #endif
-MEMSPACE int feof ( FILE *stream );
-MEMSPACE int fgetpos ( FILE *stream , size_t *pos );
-MEMSPACE int fseek ( FILE *stream , long offset , int whence );
-MEMSPACE int fsetpos ( FILE *stream , size_t *pos );
-MEMSPACE long ftell ( FILE *stream );
-MEMSPACE off_t lseek ( int fileno , off_t position , int whence );
-MEMSPACE void rewind ( FILE *stream );
-MEMSPACE int close ( int fileno );
-MEMSPACE int fileno ( FILE *stream );
-MEMSPACE FILE *fileno_to_stream ( int fileno );
-MEMSPACE FILE *fopen ( const char *path , const char *mode );
-MEMSPACE size_t fread ( void *ptr , size_t size , size_t nmemb , FILE *stream );
-MEMSPACE int ftruncate ( int fd , off_t length );
-MEMSPACE size_t fwrite ( const void *ptr , size_t size , size_t nmemb , FILE *stream );
-MEMSPACE int open ( const char *pathname , int flags );
-MEMSPACE ssize_t read ( int fd , const void *buf , size_t count );
-MEMSPACE void sync ( void );
-MEMSPACE int syncfs ( int fd );
-MEMSPACE int truncate ( const char *path , off_t length );
-MEMSPACE ssize_t write ( int fd , const void *buf , size_t count );
-MEMSPACE int fclose ( FILE *stream );
-MEMSPACE void dump_stat ( struct stat *sp );
+int feof ( FILE *stream );
+int fgetpos ( FILE *stream , size_t *pos );
+int fseek ( FILE *stream , long offset , int whence );
+int fsetpos ( FILE *stream , size_t *pos );
+long ftell ( FILE *stream );
+off_t lseek ( int fileno , off_t position , int whence );
+void rewind ( FILE *stream );
+int close ( int fileno );
+int fileno ( FILE *stream );
+FILE *fileno_to_stream ( int fileno );
+FILE *fopen ( const char *path , const char *mode );
+size_t fread ( void *ptr , size_t size , size_t nmemb , FILE *stream );
+int ftruncate ( int fd , off_t length );
+size_t fwrite ( const void *ptr , size_t size , size_t nmemb , FILE *stream );
+int open ( const char *pathname , int flags );
+ssize_t read ( int fd , const void *buf , size_t count );
+void sync ( void );
+int syncfs ( int fd );
+int truncate ( const char *path , off_t length );
+ssize_t write ( int fd , const void *buf , size_t count );
+int fclose ( FILE *stream );
+void dump_stat ( struct stat *sp );
 
 #if 0
-MEMSPACE int fstat ( int fd , struct stat *buf );
+int fstat ( int fd , struct stat *buf );
 #endif
 
-MEMSPACE char *mctime ( time_t timev );
-MEMSPACE int stat ( char *name , struct stat *buf );
-MEMSPACE char *basename ( char *str );
-MEMSPACE char *baseext ( char *str );
-MEMSPACE int chdir ( const char *pathname );
-MEMSPACE int chmod ( const char *pathname , mode_t mode );
-MEMSPACE int dirname ( char *str );
-MEMSPACE int utime(const char *filename, const struct utimbuf *times);
+char *mctime ( time_t timev );
+int stat ( char *name , struct stat *buf );
+char *basename ( char *str );
+char *baseext ( char *str );
+int chdir ( const char *pathname );
+int chmod ( const char *pathname , mode_t mode );
+int dirname ( char *str );
+int utime(const char *filename, const struct utimbuf *times);
 
 #if 0
-MEMSPACE int fchmod ( int fd , mode_t mode );
+int fchmod ( int fd , mode_t mode );
 #endif
 
-MEMSPACE char *getcwd ( char *pathname , int len );
-MEMSPACE int mkdir ( const char *pathname , mode_t mode );
-MEMSPACE int rename ( const char *oldpath , const char *newpath );
-MEMSPACE int rmdir ( const char *pathname );
-MEMSPACE int unlink ( const char *pathname );
+char *getcwd ( char *pathname , int len );
+int mkdir ( const char *pathname , mode_t mode );
+int rename ( const char *oldpath , const char *newpath );
+int rmdir ( const char *pathname );
+int unlink ( const char *pathname );
 int closedir ( DIR *dirp );
 DIR *opendir ( const char *pathdir );
 struct dirent *readdir ( DIR *dirp );
-MEMSPACE void clrerror ( FILE *stream );
-MEMSPACE int ferror ( FILE *stream );
-MEMSPACE void perror ( const char *s );
-MEMSPACE char WEAK_ATR *strerror ( int errnum );
-MEMSPACE char *strerror_r ( int errnum , char *buf , size_t buflen );
-MEMSPACE FILE *fdevopen ( int (*put )(char ,FILE *), int (*get )(FILE *));
-MEMSPACE int mkfs(char *name );
-MEMSPACE int fatfs_getc ( FILE *stream );
-MEMSPACE int fatfs_putc ( char c , FILE *stream );
-MEMSPACE int fatfs_to_errno ( FRESULT Result );
-MEMSPACE int fatfs_to_fileno ( FIL *fh );
-MEMSPACE time_t fat_time_to_unix ( uint16_t date , uint16_t time );
-MEMSPACE void unix_time_to_fat(time_t epoch, uint16_t *date, uint16_t *time);
-MEMSPACE FIL *fileno_to_fatfs ( int fileno );
-MEMSPACE int free_file_descriptor ( int fileno );
-MEMSPACE int new_file_descriptor ( void );
-MEMSPACE int posix_fopen_modes_to_open ( const char *mode );
+void clrerror ( FILE *stream );
+int ferror ( FILE *stream );
+void perror ( const char *s );
+char *strerror ( int errnum );
+char *strerror_r ( int errnum , char *buf , size_t buflen );
+FILE *fdevopen ( int (*put )(char ,FILE *), int (*get )(FILE *));
+int mkfs(char *name );
+int fatfs_getc ( FILE *stream );
+int fatfs_putc ( char c , FILE *stream );
+int fatfs_to_errno ( FRESULT Result );
+int fatfs_to_fileno ( FIL *fh );
+time_t fat_time_to_unix ( uint16_t date , uint16_t time );
+void unix_time_to_fat(time_t epoch, uint16_t *date, uint16_t *time);
+FIL *fileno_to_fatfs ( int fileno );
+int free_file_descriptor ( int fileno );
+int new_file_descriptor ( void );
+int posix_fopen_modes_to_open ( const char *mode );
 
-MEMSPACE int fprintf(FILE *fp, const char *format, ...);
+int fprintf(FILE *fp, const char *format, ...);
 
 
 // =============================================
-#endif                                            //_POSIX_H_
+#endif  //_POSIX_H_
+
+/**
+ z88dk-libraries can only have one header file, so to support that the buffer.h
+ file has been added to posix.h
+ **/
+
+#ifndef _BUFFER_H_
+#define _BUFFER_H_
+
+/**
+ @file buffer.h
+
+@brief character read buffering wrappers for FatFS 
+       Character at a time operation is FatFS are VERY slow
+
+ @par Copyright &copy; 2014-2017 Mike Gore, All rights reserved. GPL  License
+ @see http://github.com/magore/hp85disk
+ @see http://github.com/magore/hp85disk/COPYRIGHT.md for specific Copyright details
+
+ @par You are free to use this code under the terms of GPL
+   please retain a copy of this notice in any code you use it in.
+
+This is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This software is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+typedef struct 
+{
+    FILE *fp;
+    int ind;
+    int size;
+    int len;
+    int ungetf;
+    int ungetc;
+    uint8_t *buf;
+} buffer_t;
+
+/* buffer.c */
+buffer_t *buffer_read_open ( char *name , uint8_t *buf , int size );
+void buffer_read_close ( buffer_t *p );
+void buffer_ungetc ( buffer_t *p , int c );
+int buffer_getc ( buffer_t *p );
+uint8_t *buffer_gets ( uint8_t *str, int size , buffer_t *p );
+
+
+#endif // _BUFFER_H
+

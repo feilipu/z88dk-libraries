@@ -26,11 +26,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
 
-#include "user_config.h"
-#include "fatfs.h"
+
+#if __RC2014
+#include <lib/rc2014/ff.h>          /* Declarations of FatFs API */
+
+#elif __SCZ180
+#include <lib/scz180/ff.h>          /* Declarations of FatFs API */
+
+#elif __YAZ180
+#include <lib/yaz180/ff.h>          /* Declarations of FatFs API */
+
+#endif
+
 #include "posix.h"
-#include "buffer.h"
 
 ///@brief FatFS does not have a f_fgetc() function
 /// Using f_read() of just 1 byte is VERY VERY SLOW

@@ -111,7 +111,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "fatfs.h"
+#include <stddef.h>
+#include <stdint.h>
+#includ
+
+#if __RC2014
+#include <lib/rc2014/ff.h>          /* Declarations of FatFs API */
+
+#elif __SCZ180
+#include <lib/scz180/ff.h>          /* Declarations of FatFs API */
+
+#elif __YAZ180
+#include <lib/yaz180/ff.h>          /* Declarations of FatFs API */
+
+#endif
+
 
 #include "posix.h"
 
@@ -189,7 +203,7 @@ void put_rc (FRESULT rc);
 ///
 /// @return 1 if fileno is a serial TTY/Console (uart in avr-libc terms).
 /// @return 0 if POSIX fileno is NOT a Serial TTY.
-MEMSPACE
+
 int isatty(int fileno)
 {
 /// @todo  Perhaps we should verify console functions have been added ?
@@ -208,7 +222,7 @@ int isatty(int fileno)
 ///
 /// @return character.
 /// @return EOF on error with errno set.
-MEMSPACE
+
 int
 fgetc(FILE *stream)
 {
@@ -265,7 +279,7 @@ fgetc(FILE *stream)
 /// @param[in] stream: POSIX stream pointer.
 ///
 /// @return character.
-MEMSPACE
+
 int
 fputc(int c, FILE *stream)
 {
@@ -318,7 +332,7 @@ fputc(int c, FILE *stream)
 /// @param[in] stream: POSIX stream pointer.
 ///
 /// @return character.
-MEMSPACE
+
 int
 getchar()
 {
@@ -333,7 +347,7 @@ getchar()
 /// @param[in] stream: POSIX stream pointer.
 ///
 /// @return character.
-MEMSPACE
+
 int
 putchar(int c)
 {
@@ -350,7 +364,7 @@ putchar(int c)
 ///
 /// @return character.
 /// @return EOF on error with errno set.
-MEMSPACE
+
 int
 ungetc(int c, FILE *stream)
 {
@@ -383,7 +397,7 @@ ungetc(int c, FILE *stream)
 ///
 /// @param[in] stream: POSIX stream pointer.
 ///
-MEMSPACE
+
 int
 putc(int c, FILE *stream)
 {
@@ -402,7 +416,7 @@ putc(int c, FILE *stream)
 /// @param[in] stream: POSIX stream pointer.
 ///
 /// @return character.
-MEMSPACE
+
 char *
 fgets(char *str, int size, FILE *stream)
 {
@@ -439,7 +453,7 @@ fgets(char *str, int size, FILE *stream)
 /// @param[in] stream: POSIX stream pointer.
 ///
 /// @return character.
-MEMSPACE
+
 int
 fputs(const char *str, FILE *stream)
 {
@@ -462,7 +476,7 @@ fputs(const char *str, FILE *stream)
 /// @param[in] stream: POSIX stream pointer.
 ///
 /// @return character.
-MEMSPACE
+
 int
 puts(const char *str)
 {
@@ -488,7 +502,7 @@ puts(const char *str)
 ///
 /// @param[in] stream: POSIX stream pointer.
 /// @return 1 if EOF set, 0 otherwise.
-MEMSPACE
+
 int feof(FILE *stream)
 {
     if(stream->flags & __SEOF)
@@ -505,7 +519,7 @@ int feof(FILE *stream)
 ///
 /// @return 0 on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int fgetpos(FILE *stream, size_t *pos)
 {
     long offset = ftell(stream);
@@ -528,7 +542,7 @@ int fgetpos(FILE *stream, size_t *pos)
 ///
 /// @return file position on sucess.
 /// @return -1 on error.
-MEMSPACE
+
 int fseek(FILE *stream, long offset, int whence)
 {
     long ret;
@@ -554,7 +568,7 @@ int fseek(FILE *stream, long offset, int whence)
 ///
 /// @return 0 with *pos set to position on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int fsetpos(FILE *stream, size_t *pos)
 {
     return (fseek(stream, (size_t) *pos, SEEK_SET) );
@@ -568,7 +582,7 @@ int fsetpos(FILE *stream, size_t *pos)
 ///
 /// @return file position on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 long ftell(FILE *stream)
 {
     errno = 0;
@@ -600,7 +614,7 @@ long ftell(FILE *stream)
 ///
 /// @return file position on sucess.
 /// @return -1 on error.
-MEMSPACE
+
 off_t lseek(int fileno, off_t position, int whence)
 {
     FRESULT res;
@@ -649,7 +663,7 @@ off_t lseek(int fileno, off_t position, int whence)
 /// @param[in] stream: POSIX file stream.
 ///
 /// @return  void.
-MEMSPACE
+
 void rewind( FILE *stream)
 {
     fseek(stream, 0L, SEEK_SET);
@@ -668,7 +682,7 @@ void rewind( FILE *stream)
 ///
 /// @return 0 on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int close(int fileno)
 {
     FILE *stream;
@@ -707,7 +721,7 @@ int close(int fileno)
 ///
 /// @return  int fileno on success
 /// @return -1 with errno = EBAFD if stream is NULL or not found
-MEMSPACE
+
 int fileno(FILE *stream)
 {
     int fileno;
@@ -737,7 +751,7 @@ int fileno(FILE *stream)
 /// @see fileno()
 /// @return FILE * on success
 /// @return NULL on error with errno set,  NULL if fileno out of bounds
-MEMSPACE
+
 FILE *fileno_to_stream(int fileno)
 {
     FILE *stream;
@@ -765,7 +779,7 @@ FILE *fileno_to_stream(int fileno)
 ///
 /// @return stream * on success.
 /// @return NULL on error with errno set.
-MEMSPACE
+
 FILE *fopen(const char *path, const char *mode)
 {
     int flags = posix_fopen_modes_to_open(mode);
@@ -786,7 +800,7 @@ FILE *fopen(const char *path, const char *mode)
 ///
 /// @return count on sucess.
 /// @return 0 or < size on error with errno set.
-MEMSPACE
+
 size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
     size_t count = size * nmemb;
@@ -810,7 +824,7 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream)
 ///
 /// @return 0 on success.
 /// @return -1 on fail.
-MEMSPACE
+
 int ftruncate(int fd, off_t length)
 {
     errno = 0;
@@ -851,7 +865,7 @@ int ftruncate(int fd, off_t length)
 ///
 /// @return count written on sucess.
 /// @return 0 or < size on error with errno set.
-MEMSPACE
+
 size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
     size_t count = size * nmemb;
@@ -878,7 +892,7 @@ size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)
 ///
 /// @return fileno on success.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int open(const char *pathname, int flags)
 {
     int fileno;
@@ -989,7 +1003,7 @@ int open(const char *pathname, int flags)
 ///
 /// @return count on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 ssize_t read(int fd, const void *buf, size_t count)
 {
     UINT size;
@@ -1052,7 +1066,7 @@ ssize_t read(int fd, const void *buf, size_t count)
 /// - man page sync (2).
 ///
 /// @return  void.
-MEMSPACE
+
 void sync(void)
 {
     FIL *fh;
@@ -1079,7 +1093,7 @@ void sync(void)
 /// @param[in] fd: POSIX fileno to sync.
 /// @return 0.
 /// @return -1 on error witrh errno set.
-MEMSPACE
+
 int syncfs(int fd)
 {
     FIL *fh;
@@ -1125,7 +1139,7 @@ int syncfs(int fd)
 ///
 /// @return 0 on sucess.
 /// @return -1 n fail.
-MEMSPACE
+
 int truncate(const char *path, off_t length)
 {
     errno = 0;
@@ -1163,7 +1177,7 @@ int truncate(const char *path, off_t length)
 /// @param[in] count: number of bytes to write.
 /// @return count on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 ssize_t write(int fd, const void *buf, size_t count)
 {
     UINT size;
@@ -1222,7 +1236,7 @@ ssize_t write(int fd, const void *buf, size_t count)
 
 /// @return  0 on sucess.
 /// @return  -1 on error witrh errno set.
-MEMSPACE
+
 int fclose(FILE *stream)
 {
     int fn = fileno(stream);
@@ -1243,7 +1257,7 @@ int fclose(FILE *stream)
 /// @param[in] sp: struct stat pointer.
 ///
 /// @return  void.
-MEMSPACE
+
 void dump_stat(struct stat *sp)
 {
     mode_t mode = sp->st_mode;
@@ -1282,7 +1296,7 @@ void dump_stat(struct stat *sp)
 /// @todo needs fileno to filename lookup in order to work.
 /// - We may be able to work out the directory pointer from the FatFS data?
 /// - or - cache the filename on open ???
-MEMSPACE
+
 int fstat(int fd, struct stat *buf)
 {
     FIL *fh;
@@ -1306,7 +1320,7 @@ int fstat(int fd, struct stat *buf)
 /// @param[in] timev: epoch time in seconds
 /// @return  ascii string pointer of POSIX ctime()
 /// @see ctime()
-MEMSPACE
+
 char *mctime(time_t timev)
 {
     errno = 0;
@@ -1327,7 +1341,7 @@ char *mctime(time_t timev)
 ///
 /// @return 0 on success.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int stat(char *name, struct stat *buf)
 {
     FILINFO info;
@@ -1390,7 +1404,7 @@ int stat(char *name, struct stat *buf)
 ///@param[in] filename: file name
 ///@param[in *times:  access and modication utimbuf structure, if NULL use current time
 ///@return 0 if ok, -1 on error
-MEMSPACE
+
 int utime(const char *filename, const struct utimbuf *times)
 {
 
@@ -1429,7 +1443,7 @@ int utime(const char *filename, const struct utimbuf *times)
 /// @param[in] str: string to find basename in.
 ///
 /// @return pointer to basename of string.
-MEMSPACE
+
 char *basename(char *str)
 {
     char *base = str;
@@ -1449,7 +1463,7 @@ char *basename(char *str)
 /// @param[in] str: string to find extension in.
 ///
 /// @return  pointer to basename extension.
-MEMSPACE
+
 char *baseext(char *str)
 {
     char *ext = "";
@@ -1471,7 +1485,7 @@ char *baseext(char *str)
 ///
 /// @return 0 on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int chdir(const char *pathname)
 {
     errno = 0;
@@ -1496,7 +1510,7 @@ int chdir(const char *pathname)
 /// @param[in] mode: POSIX chmod modes.
 ///
 /// @return fileno on success.
-MEMSPACE
+
 int chmod(const char *pathname, mode_t mode)
 {
     int rc;
@@ -1534,7 +1548,7 @@ int chmod(const char *pathname, mode_t mode)
 /// @return  0 if no directory part.
 /// @return index of last '/' character.
 ///
-MEMSPACE
+
 int dirname(char *str)
 {
     int end = 0;
@@ -1563,7 +1577,7 @@ int dirname(char *str)
 /// @param[in] mode: POSIX chmod modes.
 ///
 /// @return fileno on success.
-MEMSPACE
+
 int fchmod(int fd, mode_t mode)
 {
     //FIXME TODO
@@ -1579,7 +1593,7 @@ int fchmod(int fd, mode_t mode)
 ///
 /// @return 0 on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 char *getcwd(char *pathname, int len)
 {
     int res;
@@ -1602,7 +1616,7 @@ char *getcwd(char *pathname, int len)
 ///
 /// @return 0 on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int mkdir(const char *pathname, mode_t mode)
 {
     errno = 0;
@@ -1631,7 +1645,7 @@ int mkdir(const char *pathname, mode_t mode)
 ///
 /// @return 0 on success.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int rename(const char *oldpath, const char *newpath)
 {
 /* Rename an object */
@@ -1654,7 +1668,7 @@ int rename(const char *oldpath, const char *newpath)
 ///
 /// @return 0 on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int rmdir(const char *pathname)
 {
     errno = 0;
@@ -1676,7 +1690,7 @@ int rmdir(const char *pathname)
 ///
 /// @return 0 on sucess.
 /// @return -1 on error with errno set.
-MEMSPACE
+
 int unlink(const char *pathname)
 {
     errno = 0;
@@ -1769,7 +1783,7 @@ dirent_t * readdir(DIR *dirp)
 ///
 /// @param[in] stream: POSIX stream pointer.
 /// @return EOF on error with errno set.
-MEMSPACE
+
 void clrerror(FILE *stream)
 {
     stream->flags &= ~__SEOF;
@@ -1781,7 +1795,7 @@ void clrerror(FILE *stream)
 ///
 /// @param[in] stream: POSIX stream pointer.
 /// @return 1 if EOF set, 0 otherwise.
-MEMSPACE
+
 int ferror(FILE *stream)
 {
     if(stream->flags & __SERR)
@@ -1797,7 +1811,7 @@ int ferror(FILE *stream)
 ///
 /// @see sys_errlist[].
 /// @return  void.
-MEMSPACE
+
 void perror(const char *s)
 {
     const char *ptr = NULL;
@@ -1822,7 +1836,7 @@ void perror(const char *s)
 ///
 /// @see sys_errlist[].
 /// @return  char *
-MEMSPACE
+
 char 
 WEAK_ATR *strerror(int errnum)
 {
@@ -1840,7 +1854,7 @@ WEAK_ATR *strerror(int errnum)
 ///
 /// @see sys_errlist[].
 /// @return  char *
-MEMSPACE
+
 char *strerror_r(int errnum, char *buf, size_t buflen)
 {
         strncpy(buf, sys_errlist[errnum], buflen);
@@ -1858,7 +1872,7 @@ char *strerror_r(int errnum, char *buf, size_t buflen)
 ///
 /// @param[in] *put: putc function pointer
 /// @param[in] *get: gutc function pointer
-MEMSPACE
+
 FILE *
 fdevopen(int (*put)(char, FILE *), int (*get)(FILE *))
 {
@@ -1967,7 +1981,7 @@ int mkfs(char *name)
 ///
 /// @return character.
 /// @return EOF on error with errno set.
-MEMSPACE
+
 int  fatfs_getc(FILE *stream)
 {
     FIL *fh;
@@ -2057,7 +2071,7 @@ int  fatfs_getc(FILE *stream)
 ///
 /// @return character 
 /// @return EOF on error with errno set.
-MEMSPACE
+
 int fatfs_putc(char c, FILE *stream)
 {
     int res;
@@ -2097,7 +2111,7 @@ int fatfs_putc(char c, FILE *stream)
 ///
 /// @return POSIX errno.
 /// @return EBADMSG if no conversion possible.
-MEMSPACE
+
 int fatfs_to_errno( FRESULT Result )
 {
     switch( Result )
@@ -2173,7 +2187,7 @@ int fatfs_to_errno( FRESULT Result )
 ///
 /// @return fileno on success.
 /// @return -1 on error with errno set to EBADF.
-MEMSPACE
+
 int fatfs_to_fileno(FIL *fh)
 {
     int i;
@@ -2210,7 +2224,7 @@ int fatfs_to_fileno(FIL *fh)
 /// @see timegm()
 ///
 /// @return epoch seconds 
-MEMSPACE
+
 time_t fat_time_to_unix(uint16_t date, uint16_t time)
 {
     struct tm tp;
@@ -2235,7 +2249,7 @@ time_t fat_time_to_unix(uint16_t date, uint16_t time)
 /// @param[in] *date: fat32 date
 /// @param[in] *time: fat32 time
 /// @return  void
-MEMSPACE
+
 void unix_time_to_fat(time_t epoch, uint16_t *date, uint16_t *time)
 {
     tm_t *t = gmtime((time_t *) &epoch);
@@ -2259,7 +2273,7 @@ void unix_time_to_fat(time_t epoch, uint16_t *date, uint16_t *time)
 ///
 /// @return FIL * FatFS file handle on success.
 /// @return NULL if POSIX fileno is invalid NULL 
-MEMSPACE
+
 FIL *fileno_to_fatfs(int fileno)
 {
     FILE *stream;
@@ -2294,7 +2308,7 @@ FIL *fileno_to_fatfs(int fileno)
 ///
 /// @return fileno on success.
 /// @return -1 on failure.
-MEMSPACE
+
 int free_file_descriptor(int fileno)
 {
     FILE *stream;
@@ -2338,7 +2352,7 @@ int free_file_descriptor(int fileno)
 ///
 /// @return fileno on success.
 /// @return -1 on failure with errno set.
-MEMSPACE
+
 int new_file_descriptor( void )
 {
     int i;
@@ -2401,7 +2415,7 @@ int new_file_descriptor( void )
 /// @return open mode flags.
 /// @return -1 on error.
 /// @warning read and write BOTH share the same stream buffer and buffer index pointers.
-MEMSPACE
+
 int posix_fopen_modes_to_open(const char *mode)
 {
     int flag = 0;
@@ -2451,7 +2465,7 @@ int posix_fopen_modes_to_open(const char *mode)
 /// @param[in] *p: printf user buffer
 /// @param[in] ch: character
 /// TODO if fputc fails we might want to also set an error in the *p structure - error in the stream will already be set
-MEMSPACE
+
 static void _fprintf_putc(struct _printf_t *p, char ch)
 {
         p->sent++;
@@ -2466,7 +2480,7 @@ static void _fprintf_putc(struct _printf_t *p, char ch)
 /// @param[in] fmt: printf forat string
 /// @param[in] ...: vararg list or arguments
 /// @return size of printed result
-MEMSPACE
+
 int
 fprintf(FILE *fp, const char *format, ...)
 {
