@@ -6,6 +6,7 @@ Current source version status is: 0.14, October 14, 2019.<br>
 Compiled using zsdcc version 4.0.0 [r11535](https://sourceforge.net/p/sdcc/code/11535/log/?path=/trunk/sdcc).
 
 #### Features
+
 <ul>
  <li>DOS/Windows compatible FAT/exFAT filesystem.</li>
  <li>Platform independent. Easy to port.</li>
@@ -136,7 +137,7 @@ Please use his [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html) as the
 
 ## Licence
 
-Copyright (C) 2020, ChaN, all right reserved.
+Copyright (C) 2019, ChaN, all right reserved.
 
 FatFs module is an open source software. Redistribution and use of FatFs in source and binary forms, with or without modification, are permitted provided that the following condition is met:
 

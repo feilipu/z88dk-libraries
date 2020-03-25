@@ -10,6 +10,31 @@ This is a multifunctional sensor that gives you temperature and relative humidit
 
 Compiled using zsdcc version 4.0.0 [r11535](https://sourceforge.net/p/sdcc/code/11535/log/?path=/trunk/sdcc).
 
+## Installation
+
+The `z88dk-lib` function is used to install for the desired target. e.g.
+
+```bash
+cd ..
+z88dk-lib +target th02
+```
+
+Some further examples of `z88dk-lib` usage.
+
+list help
+```bash
+z88dk-lib
+```
+
+list 3rd party libraries already installed for the zx target
+```bash
+z88dk-lib +zx
+```
+remove the `libname1` `libname2` ... libraries from the zx target, -f for no nagging about deleting files.
+```bash
+z88dk-lib +zx -r -f libname1 libname2 ...
+```
+
 ## Usage
     1.git clone this repository.
     2.use `z88dk-lib` to import into z88k
@@ -34,29 +59,6 @@ The library can be compiled using the following command lines in Linux, with the
 `zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @th02.lst -o ../th02`
 
 The resulting `th02.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
-
-The `z88dk-lib` function is used to install for the desired target. e.g.
-
-```bash
-cd ..
-z88dk-lib +target th02
-```
-
-Some further examples of `z88dk-lib` usage.
-
-list help
-```bash
-z88dk-lib
-```
-
-list 3rd party libraries already installed for the zx target
-```bash
-z88dk-lib +zx
-```
-remove the `libname1` `libname2` ... libraries from the zx target, -f for no nagging about deleting files.
-```bash
-z88dk-lib +zx -r -f libname1 libname2 ...
-```
 
 ## License
 

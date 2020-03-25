@@ -6,6 +6,7 @@ Current source version status is: 0.14, October 14, 2019.<br>
 Compiled using zsdcc version 4.0.0 [r11535](https://sourceforge.net/p/sdcc/code/11535/log/?path=/trunk/sdcc).
 
 #### Features
+
 <ul>
  <li>DOS/Windows compatible FAT/exFAT filesystem.</li>
  <li>Platform independent. Easy to port.</li>
@@ -23,19 +24,7 @@ Compiled using zsdcc version 4.0.0 [r11535](https://sourceforge.net/p/sdcc/code/
  </li>
 </ul>
 
-## Preparation
-
-The diskio_hbios library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
-
-`zcc +hbios -clib=new -x -SO3 --math32 @diskio_hbios.lst -o ../diskio_hbios`
-`zcc +hbios -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios`
-`zcc +hbios -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios`
-
-`zcc +target -clib=new -x -SO3 --math32 @diskio_hbios.lst -o diskio_hbios`
-`zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
-`zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
-
-The resulting `diskio_hbios.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+## Installation
 
 The `z88dk-lib` function is used to install for the desired target. e.g.
 
@@ -102,6 +91,21 @@ void main (void)
 }
 
 ```
+
+## Preparation
+
+The diskio_hbios library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
+
+`zcc +hbios -clib=new -x -SO3 --math32 @diskio_hbios.lst -o ../diskio_hbios`
+`zcc +hbios -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios`
+`zcc +hbios -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios`
+
+`zcc +target -clib=new -x -SO3 --math32 @diskio_hbios.lst -o diskio_hbios`
+`zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
+`zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
+
+The resulting `diskio_hbios.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+
 ## Documentation
 
 ChaN's documentation here [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html), as the point of reference.

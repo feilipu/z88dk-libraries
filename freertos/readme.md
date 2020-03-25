@@ -5,23 +5,7 @@ Developed in partnership with the world’s leading chip companies over a 15 yea
 Current source version status is: 10.3.0 (source identical to 10.3.1).
 Compiled using zsdcc version 4.0.0 [r11556](https://sourceforge.net/p/sdcc/code/11556/log/?path=/trunk/sdcc).
 
-## Preparation
-
-The FreeRTOS library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
-
-```sh
-zcc +yaz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
-zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
-zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
-```
-
-```sh
-zcc +scz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
-zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
-zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
-```
-
-The resulting `freertos.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+## Installation
 
 The `z88dk-lib` function is used to install for the desired target. e.g.
 
@@ -160,6 +144,24 @@ int main(void)
     return 0;
 }
 ```
+
+## Preparation
+
+The FreeRTOS library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
+
+```sh
+zcc +yaz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+```
+
+```sh
+zcc +scz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
+zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+```
+
+The resulting `freertos.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
 ## Documentation
 
