@@ -95,14 +95,16 @@ void main (void)
 ## Preparation
 
 The diskio_hbios library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
-
-`zcc +hbios -clib=new -x -SO3 --math32 @diskio_hbios.lst -o ../diskio_hbios`
-`zcc +hbios -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios`
-`zcc +hbios -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios`
-
-`zcc +target -clib=new -x -SO3 --math32 @diskio_hbios.lst -o diskio_hbios`
-`zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
-`zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios`
+```
+zcc +hbios -clib=new -x -SO3 --math32 @diskio_hbios.lst -o ../diskio_hbios
+zcc +hbios -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios
+zcc +hbios -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o ../diskio_hbios
+```
+```
+zcc +target -clib=new -x -SO3 --math32 @diskio_hbios.lst -o diskio_hbios
+zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios
+zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_hbios.lst -o diskio_hbios
+```
 
 The resulting `diskio_hbios.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 

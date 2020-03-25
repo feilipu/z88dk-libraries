@@ -93,14 +93,16 @@ void main (void)
 
 The diskio_sd library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +scz180 -clib=new -x -SO3 --math32 @diskio_sd.lst -o ../diskio_sd`
-`zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd`
-`zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd`
-
-`zcc +target -clib=new -x -SO3 --math32 @diskio_sd.lst -o ../diskio_sd`
-`zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd`
-`zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd`
-
+```
+zcc +scz180 -clib=new -x -SO3 --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
+zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
+```
+```
+zcc +target -clib=new -x -SO3 --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
+zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
+```
 The resulting `diskio_sd.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
 ## Documentation

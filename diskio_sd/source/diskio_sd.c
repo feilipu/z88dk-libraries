@@ -603,7 +603,7 @@ DRESULT disk_ioctl (
 #endif
 {
     DRESULT resp;
-    DWORD cs;
+    DWORD *dp, st, ed, cs;
     BYTE n, csd[16];
 
     BYTE *ptr;          /*  8 bit integers for normal addresses */
@@ -668,29 +668,43 @@ DRESULT disk_ioctl (
             }
             break;
 
-        case MMC_GET_TYPE :        /* Get card type flags (1 byte) */
+        case CTRL_TRIM:     /* Erase a block of sectors (used when _USE_TRIM in ffconf.h is 1) */
+            if (!(CardType & CT_SDC)) break;                /* Check if the card is SDC */
+            if (disk_ioctl(pdrv, MMC_GET_CSD, csd)) break;  /* Get CSD */
+            if (!(csd[0] >> 6) && !(csd[10] & 0x40)) break; /* Check if sector erase can be applied to the card */
+            dp = buff; st = dp[0]; ed = dp[1];              /* Load sector block */
+            if (!(CardType & CT_BLOCK)) {
+                st *= 512; ed *= 512;
+            }
+            if (send_cmd(CMD32, st) == 0 && send_cmd(CMD33, ed) == 0 && send_cmd(CMD38, 0) == 0 && wait_ready(true))   /* Erase sector block */
+                resp = RES_OK;  /* FatFs does not check result of this command */
+            break;
+
+    /* Following commands are never used by FatFs module */
+
+        case MMC_GET_TYPE :     /* Get card type flags (1 byte) */
             *ptr = CardType;
             resp = RES_OK;
             break;
 
-        case MMC_GET_CSD :        /* Receive CSD as a data block (16 bytes) */
+        case MMC_GET_CSD :      /* Receive CSD as a data block (16 bytes) */
             if ((send_cmd(CMD9, 0) == R1_READY_STATE) && read_data(ptr, 16))     /* READ_CSD */
                 resp = RES_OK;
             break;
 
-        case MMC_GET_CID :        /* Receive CID as a data block (16 bytes) */
+        case MMC_GET_CID :      /* Receive CID as a data block (16 bytes) */
             if ((send_cmd(CMD10, 0) == R1_READY_STATE) && read_data(ptr, 16))    /* READ_CID */
                 resp = RES_OK;
             break;
 
-        case MMC_GET_OCR :        /* Receive OCR as an R3 response (4 bytes) */
+        case MMC_GET_OCR :      /* Receive OCR as an R3 response (4 bytes) */
             if (send_cmd(CMD58, 0) == R1_READY_STATE) {    /* READ_OCR */
                 for (n = 4; n; --n) *ptr++ = sd_read_byte();
                 resp = RES_OK;
             }
             break;
 
-        case MMC_GET_SDSTAT :    /* Receive SD status as a data block (64 bytes) */
+        case MMC_GET_SDSTAT :   /* Receive SD status as a data block (64 bytes) */
             if ((send_cmd(ACMD13, 0) == R1_READY_STATE) && read_data(ptr, 64))   /* SD_STATUS */
                 resp = RES_OK;
             break;

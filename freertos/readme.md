@@ -149,13 +149,13 @@ int main(void)
 
 The FreeRTOS library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-```sh
+```
 zcc +yaz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
 ```
 
-```sh
+```
 zcc +scz180 -clib=new -x -SO3 --math32 @freertos.lst -o ../freertos
 zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
 zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
