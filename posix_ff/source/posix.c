@@ -111,17 +111,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "user_config.h"
-
-#include "stringsup.h"
 #include "fatfs.h"
 
 #include "posix.h"
-
-#ifdef ESP8266
-// FIXME ESP8266 library conflict
-#undef strerror_r
-#endif
 
 ///  Note: fdevopen assigns stdin,stdout,stderr
 
@@ -182,6 +174,11 @@ const char *sys_errlist[] =
     NULL
 };
 
+/// @brief Helper messages for each FatFS error value.
+///
+static
+void put_rc (FRESULT rc); 
+
 // =============================================
 /// - POSIX character I/O functions
 /// @brief  Test POSIX fileno if it is a Serial Console/TTY.
@@ -222,11 +219,6 @@ fgetc(FILE *stream)
         errno = EBADF;                            // Bad File Number
         return(EOF);
     }
-
-#ifdef ESP8266
-    optimistic_yield(1000);
-    wdt_reset();
-#endif
 
     if ((stream->flags & __SRD) == 0)
         return EOF;
@@ -285,11 +277,6 @@ fputc(int c, FILE *stream)
         errno = EBADF;                            // Bad File Number
         return(EOF);
     }
-
-#ifdef ESP8266
-    optimistic_yield(1000);
-    wdt_reset();
-#endif
 
     if(stream != stdout && stream != stderr)
     {
@@ -2496,4 +2483,32 @@ fprintf(FILE *fp, const char *format, ...)
 
     return ((int)fn.sent);
 }
+
+
+// =============================================
+// =============================================
+/// - helper function
+// =============================================
+// =============================================
+
+static
+void put_rc (FRESULT rc)
+{
+    const char *str =
+        "OK\0" "DISK_ERR\0" "INT_ERR\0" "NOT_READY\0" "NO_FILE\0" "NO_PATH\0"
+        "INVALID_NAME\0" "DENIED\0" "EXIST\0" "INVALID_OBJECT\0" "WRITE_PROTECTED\0"
+        "INVALID_DRIVE\0" "NOT_ENABLED\0" "NO_FILE_SYSTEM\0" "MKFS_ABORTED\0" "TIMEOUT\0"
+        "LOCKED\0" "NOT_ENOUGH_CORE\0" "TOO_MANY_OPEN_FILES\0" "INVALID_PARAMETER\0";
+
+    FRESULT i;
+    uint8_t res;
+
+    res = (uint8_t)rc;
+
+    for (i = 0; i != res && *str; ++i) {
+        while (*str++) ;
+    }
+    fprintf(error,"\r\nrc=%u FR_%s\r\n", res, str);
+}
+
 

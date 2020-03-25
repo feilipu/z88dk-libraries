@@ -197,7 +197,7 @@ Please use his [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html) as the
 
 ## Licence
 
-Copyright (C) 2019, Mike Gore, all right reserved.
+Copyright (C) 2014-2017, Mike Gore, all right reserved.
 
 Copyright (C) 2019, ChaN, all right reserved.
 
