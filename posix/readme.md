@@ -1,5 +1,7 @@
 ## Introduction to the posix wrappers for FatFS functions
 
+__NOTE__ This library is work in progress and is not functioning.
+
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. These functions are posix wrappers to enable standard posix function calling for FatFs.
 
 Compiled using zsdcc version 4.0.0 [r11556](https://sourceforge.net/p/sdcc/code/11556/log/?path=/trunk/sdcc).
