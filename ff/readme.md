@@ -114,19 +114,19 @@ The ff library can be compiled from the `ff/source` directory using the followin
 
 ```
 zcc +rc2014 -clib=new -x -SO3 --math32 @ff.lst -o ../ff
-zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 ```
 zcc +yaz180 -clib=new -x -SO3 --math32 @ff.lst -o ../ff
-zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 For any supported target.
 ```
 zcc +target -clib=new -x -SO3 --math32 @ff.lst -o ../ff
-zcc +target -clib=sdcc_ix -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +target -clib=sdcc_iy -x -SO3 --math32 --opt-code-size --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
