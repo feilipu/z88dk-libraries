@@ -1,6 +1,15 @@
-
 #ifndef _GPU_H_
 #define _GPU_H_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+#include <time.h>       // included to get a random seed for srandom(time(NULL)); and random();
+#include <sys/time.h>
+
+#include "DataTypes.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -451,7 +460,8 @@ typedef struct GPU_Fonts
     #define DispVSync0    0L
     #define DispVSync1    10L
     #define DispPCLK      5
-    #define DispSwizzle   0
+    #define DispSwizzle   0         // xxx Swizzle 4DSystems FT843
+//  #define DispSwizzle = 3         // xxx Swizzle for Gameduino2
     #define DispPCLKPol   1
     #define DispCSpread   1
     #define DispDither    1

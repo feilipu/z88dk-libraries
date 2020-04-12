@@ -12,7 +12,6 @@
  *    Application shall access FT800 or EVE resources over these APIs,regardless of I2C or SPI protocol.
  *    I2C and SPI is selected by compiler switch "I2C_MODE"  and "SPI_MODE". In addition, there are
  *    some helper functions defined for FT800 co-processor engine as well as host commands.
- * Revision History:
  */
 #ifndef _GPU_HAL_H_
 #define _GPU_HAL_H_
@@ -44,6 +43,7 @@ typedef enum {
     GPU_INTERNAL_OSC = 0x48,         //default
     GPU_EXTERNAL_OSC = 0x44
 }GPU_PLL_SOURCE_T;
+
 typedef enum {
     GPU_PLL_48M = 0x62,              //default
     GPU_PLL_36M = 0x61,
@@ -75,9 +75,9 @@ typedef struct {
 }GPU_App_Transfer_t;
 
 typedef struct {
-    GPU_HAL_STATUS_E     status;
-    ft_uint16_t             ft_cmd_fifo_wp;     // co-processor fifo write pointer
-    GPU_App_Context_t    app_header;         // prototype for application uses
+    GPU_HAL_STATUS_E    status;
+    ft_uint16_t         ft_cmd_fifo_wp;     // co-processor fifo write pointer
+    GPU_App_Context_t   app_header;         // prototype for application uses
 }GPU_HAL_Context_t;
 
 

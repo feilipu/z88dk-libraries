@@ -1,5 +1,7 @@
+/* Sample HAL for the FTDI FT80x EVE */
 
-#include "Platform.h"
+#include "GPU.h"
+#include "HAL.h"
 
 /* Global used for HAL management */
 GPU_HAL_Context_t host;
@@ -8,10 +10,10 @@ GPU_HAL_Context_t *phost;
 /* API to initialise the SPI interface and enable the Pin 2 Interrupt */
 ft_bool_t  GPU_HAL_Open(GPU_HAL_Context_t *host)
 {
-    spiBegin(Gameduino2);                    // enable the Gameduino V2 SPI interface
-    spiSetClockDivider(SPI_CLOCK_DIV8);        // SPI at 1/8 SYSCLK speed (3072kHz on Goldilocks, 2000kHz on Uno)
+    spiBegin(Gameduino2);                   // enable the Gameduino V2 SPI interface
+    spiSetClockDivider(SPI_CLOCK_DIV8);     // SPI at 1/8 SYSCLK speed (3072kHz on Goldilocks, 2000kHz on Uno)
     spiSetBitOrder(SPI_MSBFIRST);
-    spiSetDataMode(SPI_MODE0);                // Enable SPI function in mode 0, CPOL=0 CPHA=0
+    spiSetDataMode(SPI_MODE0);              // Enable SPI function in mode 0, CPOL=0 CPHA=0
 
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega644PA__)
     DDRD &= ~_BV(DDD2);                     // Set PD2 (Arduino 2) as an input. Same pin on Goldilocks as in Uno.
@@ -20,9 +22,9 @@ ft_bool_t  GPU_HAL_Open(GPU_HAL_Context_t *host)
     EIMSK |= _BV(INT0);                     // enable interrupt INT0
 
     // Semaphores are useful to stop a thread proceeding, where it should be stopped because it is waiting for an interrupt.
-    if( host->xINT0Semaphore == NULL )                     // Check to see if the INT0 semaphore has not been created.
+    if( host->xINT0Semaphore == NULL )                  // Check to see if the INT0 semaphore has not been created.
     {
-        host->xINT0Semaphore = xSemaphoreCreateMutex();    // mutex semaphore for INTO. The ISR(INT0) will "give" the semaphore as needed.
+        host->xINT0Semaphore = xSemaphoreCreateMutex(); // mutex semaphore for INTO. The ISR(INT0) will "give" the semaphore as needed.
     }
 #endif
 
@@ -34,7 +36,7 @@ ft_bool_t  GPU_HAL_Open(GPU_HAL_Context_t *host)
 
 ft_void_t  GPU_HAL_Fast(GPU_HAL_Context_t *host)
 {
-    spiSetClockDivider(SPI_CLOCK_DIV2);        // SPI at 1/2 SYSCLK speed (12.288MHz on GA, 11.059MHz on Goldilocks, 8.000MHz on Uno)
+    spiSetClockDivider(SPI_CLOCK_DIV2);     // SPI at 1/2 SYSCLK speed (12.288MHz on GA, 11.059MHz on Goldilocks, 8.000MHz on Uno)
 }
 
 ft_void_t  GPU_HAL_Close(GPU_HAL_Context_t *host)
@@ -45,9 +47,9 @@ ft_void_t  GPU_HAL_Close(GPU_HAL_Context_t *host)
     EICRA &= ~_BV(ISC00);                   // clear the ISC00 pin to enable interrupt on low level
     EIMSK &= ~_BV(INT0);                    // disable interrupt INT0
 
-    if( host->xINT0Semaphore != NULL )                 // Check to see if the INT0 semaphore has been created.
+    if( host->xINT0Semaphore != NULL )                  // Check to see if the INT0 semaphore has been created.
     {
-        vSemaphoreDelete( host->xINT0Semaphore );    // delete binary semaphore for INTO.
+        vSemaphoreDelete( host->xINT0Semaphore );       // delete binary semaphore for INTO.
     }
 #endif
 
@@ -79,10 +81,10 @@ ft_void_t  GPU_HAL_StartTransfer(GPU_HAL_Context_t *host, GPU_TRANSFERDIR_T rw, 
         ft_uint8_t Transfer_Array[4];
 
         /* Compose the read packet */
-        Transfer_Array[0] = ((ft_uint8_t)(addr >> 16) & 0x3F);    // we just need the bottom 6 bits (being the upper 6 of the 22 bits of address)
+        Transfer_Array[0] = ((ft_uint8_t)(addr >> 16) & 0x3F);  // we just need the bottom 6 bits (being the upper 6 of the 22 bits of address)
         Transfer_Array[1] = (ft_uint8_t)(addr >> 8);            // the middle 8 bits
-        Transfer_Array[2] = (ft_uint8_t)(addr);                    // the lowest 8 bits
-        Transfer_Array[3] = 0;                                    // Dummy Read byte
+        Transfer_Array[2] = (ft_uint8_t)(addr);                 // the lowest 8 bits
+        Transfer_Array[3] = 0;                                  // Dummy Read byte
 
         spiSelect (Gameduino2);
         spiMultiByteTx(Transfer_Array, 4);
@@ -96,7 +98,7 @@ ft_void_t  GPU_HAL_StartTransfer(GPU_HAL_Context_t *host, GPU_TRANSFERDIR_T rw, 
         /* Compose the write packet */
         Transfer_Array[0] = (((ft_uint8_t)(addr >> 16) & 0x3F) | 0x80);// we just need the bottom 6 bits and add the write bit.
         Transfer_Array[1] = (ft_uint8_t)(addr >> 8);            // the middle 8 bits
-        Transfer_Array[2] = (ft_uint8_t)(addr);                    // the lowest 8 bits
+        Transfer_Array[2] = (ft_uint8_t)(addr);                 // the lowest 8 bits
 
         spiSelect (Gameduino2);
         spiMultiByteTx(Transfer_Array, 3);

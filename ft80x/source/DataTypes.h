@@ -1,5 +1,5 @@
-#ifndef _DATATYPES_H_
-#define _DATATYPES_H_
+#ifndef _GPU_DATATYPES_H_
+#define _GPU_DATATYPES_H_
 
 /*
 File:   DataTypes.h
@@ -8,9 +8,6 @@ File:   DataTypes.h
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define FALSE                (0)
-#define TRUE                 (1)
 
 typedef char                    ft_char8_t;
 typedef signed char             ft_int8_t;
@@ -36,6 +33,6 @@ typedef const unsigned long     ft_const_uint32_t;
 #endif
 
 
-#endif /* !_DATATYPES_H_ */
+#endif /* !_GPU_DATATYPES_H_ */
 
 /* Nothing beyond this*/

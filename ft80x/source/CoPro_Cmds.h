@@ -1,10 +1,8 @@
-
-
-#ifndef _COPRO_CMDS_H_
-#define _COPRO_CMDS_H_
+#ifndef _GPU_COPRO_CMDS_H_
+#define _GPU_COPRO_CMDS_H_
 
 /*
-File:   CoPro_CMds.h
+File:   CoPro_Cmds.h
 */
 
 #ifdef __cplusplus
@@ -63,4 +61,4 @@ ft_void_t GPU_CoCmd_Calibrate(GPU_HAL_Context_t *phost, ft_uint32_t result);
 }
 #endif
 
-#endif  /* !_COPRO_CMDS_H_ */
+#endif  /* !_GPU_COPRO_CMDS_H_ */

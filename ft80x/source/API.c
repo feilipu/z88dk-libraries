@@ -1,6 +1,9 @@
-/* Sample API for the FTDI FT800 EVE */
+/* Sample API for the FTDI FT80x EVE */
 
-#include "Platform.h"
+#include "GPU.h"
+#include "HAL.h"
+#include "API.h"
+#include "X11_RGB.h"
 
 /* Global used for HAL management */
 extern GPU_HAL_Context_t host;
@@ -9,19 +12,19 @@ extern GPU_HAL_Context_t * phost;
 /* Index into the Display List Buffer */
 static ft_uint32_t DLBuffer_Index;
 
-ft_void_t API_Write_CoCmd(ft_const_uint32_t cmd)
+ft_void_t GPU_API_Write_CoCmd(ft_const_uint32_t cmd)
 {
     GPU_HAL_WrCmd32( phost, cmd);
 }
 
-ft_void_t API_Write_DLCmd(ft_const_uint32_t cmd)
+ft_void_t GPU_API_Write_DLCmd(ft_const_uint32_t cmd)
 {
     GPU_HAL_Wr32( phost, (RAM_DL + DLBuffer_Index), cmd);
     /* Increment the DL Buffer index */
     DLBuffer_Index += CMD_SIZE;
 }
 
-ft_void_t API_Reset_DLBuffer( ft_void_t )
+ft_void_t GPU_API_Reset_DLBuffer( ft_void_t )
 {
     /* Reset the DL Buffer index, start writing at RAM_DL first byte */
     DLBuffer_Index = 0;
@@ -29,7 +32,7 @@ ft_void_t API_Reset_DLBuffer( ft_void_t )
 
 /* API to check the status of previous DLSWAP and perform DLSWAP of new DL */
 /* Check for the status of previous DLSWAP and if still not done wait for few ms and check again */
-ft_void_t API_GPU_DLSwap(const ft_uint8_t DL_Swap_Type)
+ft_void_t GPU_API_GPU_DLSwap(const ft_uint8_t DL_Swap_Type)
 {
     ft_uint8_t Swap_Type = DLSWAP_FRAME;
     ft_uint8_t Swap_Done = DLSWAP_FRAME;
@@ -53,13 +56,13 @@ ft_void_t API_GPU_DLSwap(const ft_uint8_t DL_Swap_Type)
 }
 
 /* API to wait until the command buffer is empty, following CMD_SWAP */
-ft_void_t API_WaitCmdfifo_empty(ft_void_t)
+ft_void_t GPU_API_WaitCmdfifo_empty(ft_void_t)
 {
     GPU_HAL_WaitCmdfifo_empty(phost);
 }
 
 /* API to give fade out effect by changing the display PWM from 128 till 0 */
-ft_void_t API_fadeout(ft_void_t)
+ft_void_t GPU_API_fadeout(ft_void_t)
 {
     for (ft_uint8_t i = 128; i >= 0; i -= 3)
     {
@@ -71,7 +74,7 @@ ft_void_t API_fadeout(ft_void_t)
 }
 
 /* API to perform display fade in effect by changing the display PWM from 0 till 100 and finally 128 */
-ft_void_t API_fadein(ft_void_t)
+ft_void_t GPU_API_fadein(ft_void_t)
 {
     for (ft_uint8_t i = 0; i <=128 ; i += 3)
     {
@@ -82,7 +85,8 @@ ft_void_t API_fadein(ft_void_t)
     GPU_HAL_Wr8(phost,REG_PWM_DUTY,0x80); // 128
 }
 
-ft_void_t API_Boot_Config(ft_void_t)  // you must do this first TO OPEN the API and initialise the Gameduino2
+
+ft_void_t GPU_API_Boot_Config(ft_void_t)  // you must do this first TO OPEN the API and initialise the Gameduino2
 {
     /* Global used for HAL management */
     GPU_HAL_Open(&host);
@@ -158,7 +162,7 @@ ft_void_t API_Boot_Config(ft_void_t)  // you must do this first TO OPEN the API 
     GPU_HAL_WaitCmdfifo_empty(phost);
 }
 
-ft_void_t API_Touch_Config(ft_void_t)
+ft_void_t GPU_API_Touch_Config(ft_void_t)
 {
     GPU_HAL_WrCmd32(phost, CMD_DLSTART );
     GPU_HAL_WrCmd32(phost, CLEAR_COLOR_X11(BLACK) );
