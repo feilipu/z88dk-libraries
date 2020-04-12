@@ -92,43 +92,11 @@ typedef struct {
 /*******************************************************************************/
 /*******************************************************************************/
 
-// The APIs for reading/writing transfer continuously only with small buffer system
-ft_void_t   GPU_HAL_StartTransfer(GPU_HAL_Context_t *host, GPU_TRANSFERDIR_T rw, ft_const_uint32_t addr);
-ft_uint8_t  GPU_HAL_Transfer8(GPU_HAL_Context_t *host, ft_const_uint8_t value);
-ft_uint16_t GPU_HAL_Transfer16(GPU_HAL_Context_t *host, ft_const_uint16_t value);
-ft_uint32_t GPU_HAL_Transfer32(GPU_HAL_Context_t *host, ft_const_uint32_t value);
-ft_void_t   GPU_HAL_EndTransfer(GPU_HAL_Context_t *host);
-
-//Helper function APIs Read
-ft_uint8_t  GPU_HAL_Rd8 (GPU_HAL_Context_t *host, ft_const_uint32_t addr);
-ft_uint16_t GPU_HAL_Rd16(GPU_HAL_Context_t *host, ft_const_uint32_t addr);
-ft_uint32_t GPU_HAL_Rd32(GPU_HAL_Context_t *host, ft_const_uint32_t addr);
-
-//Helper function APIs Write
-ft_void_t   GPU_HAL_Wr8 (GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint8_t v);
-ft_void_t   GPU_HAL_Wr16(GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint16_t v);
-ft_void_t   GPU_HAL_Wr32(GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint32_t v);
-
-/*******************************************************************************/
-/*******************************************************************************/
-
 /*The basic APIs Level 1*/
-ft_bool_t   GPU_HAL_Open(GPU_HAL_Context_t *host); // API to initialise the SPI interface and enable the Pin 2 Interrupt
-ft_void_t   GPU_HAL_Fast(GPU_HAL_Context_t *host); // used because maximum SPI rate of Goldilocks 1284p at 22118400Hz is too fast for initialisation
+ft_bool_t   GPU_HAL_Open(GPU_HAL_Context_t *host); // API to initialise the I2C interface and enable the Interrupt
+ft_void_t   GPU_HAL_Fast(GPU_HAL_Context_t *host); // Plaid Mode
 ft_void_t   GPU_HAL_Close(GPU_HAL_Context_t *host);
-//ft_void_t   GPU_HAL_Powercycle(GPU_HAL_Context_t *host,ft_bool_t up); // no reset on Gamdeduino2, unfortunately
-
-/*Preferred public APIs for co-processor Fifo read/write and space management*/
-ft_void_t   GPU_HAL_StartCmdTransfer(GPU_HAL_Context_t *host, GPU_TRANSFERDIR_T rw);
-ft_uint32_t GPU_HAL_TransferCmd(GPU_HAL_Context_t *host, ft_const_uint32_t cmd);
-ft_void_t   GPU_HAL_EndCmdTransfer(GPU_HAL_Context_t *host);
-
-ft_void_t   GPU_HAL_CheckCmdBuffer(GPU_HAL_Context_t *host,ft_const_uint16_t count) ;
-ft_void_t   GPU_HAL_Updatecmdfifo(GPU_HAL_Context_t *host, ft_const_uint16_t count);
-ft_void_t   GPU_HAL_WrCmd32(GPU_HAL_Context_t *host, ft_const_uint32_t cmd);
-ft_void_t   GPU_HAL_WrCmdBuf(GPU_HAL_Context_t *host, ft_const_uint8_t *buffer, ft_uint16_t count);
-ft_void_t   GPU_HAL_WaitCmdfifo_empty(GPU_HAL_Context_t *host);
-ft_void_t   GPU_HAL_ResetCmdFifo(GPU_HAL_Context_t *host);
+//ft_void_t   GPU_HAL_Powercycle(GPU_HAL_Context_t *host,ft_bool_t up);
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -139,8 +107,34 @@ ft_void_t   GPU_PLL_FreqSelect(GPU_HAL_Context_t *host, const GPU_PLL_FREQ_T fre
 ft_void_t   GPU_PowerModeSwitch(GPU_HAL_Context_t *host, const GPU_POWER_MODE_T pwrmode);
 ft_void_t   GPU_CoreReset(GPU_HAL_Context_t *host);
 
+/*******************************************************************************/
+/*******************************************************************************/
+
+// APIs Read
+ft_uint8_t  GPU_HAL_Rd8 (GPU_HAL_Context_t *host, ft_const_uint32_t addr);
+ft_uint16_t GPU_HAL_Rd16(GPU_HAL_Context_t *host, ft_const_uint32_t addr);
+ft_uint32_t GPU_HAL_Rd32(GPU_HAL_Context_t *host, ft_const_uint32_t addr);
+
+// APIs Write
+ft_void_t   GPU_HAL_Wr8 (GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint8_t v);
+ft_void_t   GPU_HAL_Wr16(GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint16_t v);
+ft_void_t   GPU_HAL_Wr32(GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint32_t v);
+
 ft_void_t   GPU_HAL_RdMem(GPU_HAL_Context_t *host, ft_uint32_t addr, ft_uint8_t *buffer, ft_const_uint16_t length);
 ft_void_t   GPU_HAL_WrMem(GPU_HAL_Context_t *host, ft_uint32_t addr, ft_const_uint8_t *buffer, ft_const_uint16_t length);
+
+/*******************************************************************************/
+/*******************************************************************************/
+
+/*Preferred public APIs for co-processor Fifo read/write and space management*/);
+
+ft_void_t   GPU_HAL_CheckCmdBuffer(GPU_HAL_Context_t *host,ft_const_uint16_t count) ;
+ft_void_t   GPU_HAL_Updatecmdfifo(GPU_HAL_Context_t *host, ft_const_uint16_t count);
+ft_void_t   GPU_HAL_WrCmd32(GPU_HAL_Context_t *host, ft_const_uint32_t cmd);
+ft_void_t   GPU_HAL_WrCmdBuf(GPU_HAL_Context_t *host, ft_const_uint8_t *buffer, ft_uint16_t count);
+ft_void_t   GPU_HAL_WaitCmdfifo_empty(GPU_HAL_Context_t *host);
+ft_void_t   GPU_HAL_ResetCmdFifo(GPU_HAL_Context_t *host);
+
 
 ft_uint8_t  GPU_HAL_TransferString(GPU_HAL_Context_t *host, ft_const_char8_t *string);
 
