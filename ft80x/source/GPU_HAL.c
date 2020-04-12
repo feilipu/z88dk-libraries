@@ -1,5 +1,7 @@
 /* Sample HAL for the FTDI FT80x EVE */
 
+#include <stdint.h>
+
 #include "GPU_HAL.h"
 
 /* Global used for HAL management */

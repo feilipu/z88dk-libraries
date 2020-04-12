@@ -1,16 +1,20 @@
 #ifndef _GPU_H_
 #define _GPU_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-
-#include <time.h>       // included to get a random seed for srandom(time(NULL)); and random();
-#include <sys/time.h>
-
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifndef NULL
+#define NULL                ((void*)(0))
+#endif
+
+#ifndef TRUE
+#define TRUE                (1)
+#endif
+
+#ifndef FALSE
+#define FALSE               (0)
 #endif
 
 /* Definitions used for FT800 co-processor command buffer */
