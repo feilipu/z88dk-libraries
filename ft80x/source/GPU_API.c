@@ -3,21 +3,25 @@
 #include "GPU_API.h"
 #include "X11_RGB.h"
 
-/* Global used for HAL management */
-extern GPU_HAL_Context_t host;
-extern GPU_HAL_Context_t * phost;
+/*******************************************************************************/
+
+/* Globals used for HAL management */
+extern GPU_HAL_Context_t    host;
+extern GPU_HAL_Context_t   *phost;
+
+/*******************************************************************************/
 
 /* Index into the Display List Buffer */
 static ft_uint32_t DLBuffer_Index;
 
 ft_void_t GPU_API_Write_CoCmd(ft_const_uint32_t cmd)
 {
-    GPU_HAL_WrCmd32( phost, cmd);
+    GPU_HAL_WrCmd32(phost, cmd);
 }
 
 ft_void_t GPU_API_Write_DLCmd(ft_const_uint32_t cmd)
 {
-    GPU_HAL_Wr32( phost, (RAM_DL + DLBuffer_Index), cmd);
+    GPU_HAL_Wr32(phost, (RAM_DL + DLBuffer_Index), cmd);
     /* Increment the DL Buffer index */
     DLBuffer_Index += CMD_SIZE;
 }

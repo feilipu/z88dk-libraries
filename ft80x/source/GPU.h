@@ -17,6 +17,24 @@ extern "C" {
 #define FALSE               (0)
 #endif
 
+/************************Readme first**************************
+For the YAZ180 the GPU can be attached to either I2C Port 1 or Port 2.
+These commence at addresses 0xA000 or 0x8000 respectively.
+***************************************************************/
+
+#ifndef I2C_PORT2
+#define I2C_PORT2           (0x80)
+#endif
+#ifndef 2C_PORT1
+#define I2C_PORT1           (0xA0)
+#endif
+
+/**************************************************************
+      Defines for hardware parameters
+***************************************************************/
+
+#define GPU_ADDRESS         (0x51)  //Default address: 0x51 FIXME
+
 /* Definitions used for FT800 co-processor command buffer */
 
 #define DL_SIZE             (0x2000)    // 8kB Display List buffer size

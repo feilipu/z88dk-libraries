@@ -4,9 +4,13 @@
 
 #include "GPU_HAL.h"
 
-/* Global used for HAL management */
-GPU_HAL_Context_t host;
-GPU_HAL_Context_t *phost;
+/*******************************************************************************/
+
+/* Globals used for HAL management */
+GPU_HAL_Context_t    host;
+GPU_HAL_Context_t   *phost;
+
+/*******************************************************************************/
 
 /* API to initialise the SPI interface and enable the Pin 2 Interrupt */
 ft_bool_t  GPU_HAL_Open(GPU_HAL_Context_t *host)

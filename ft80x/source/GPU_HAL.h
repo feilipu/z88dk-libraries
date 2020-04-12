@@ -40,6 +40,12 @@ typedef enum {
     GPU_HAL_STATUS_ERROR = GPU_HAL_STATUS_COUNT
 }GPU_HAL_STATUS_E;
 
+typedef enum
+{
+    LCD_PORT2 = I2C_PORT2,
+    LCD_PORT1 = I2C_PORT1
+}GPU_HAL_PORT_T;
+
 /*APIs for Host Commands*/
 typedef enum {
     GPU_INTERNAL_OSC = 0x48,         //default
@@ -77,11 +83,14 @@ typedef struct {
 }GPU_App_Transfer_t;
 
 typedef struct {
+    GPU_HAL_PORT_T      port;
     GPU_HAL_STATUS_E    status;
     ft_uint16_t         ft_cmd_fifo_wp;     // co-processor fifo write pointer
-    GPU_App_Context_t   app_header;         // prototype for application uses
+    GPU_App_Context_t   app_header;         // prototype for application use
 }GPU_HAL_Context_t;
 
+/*******************************************************************************/
+/*******************************************************************************/
 
 // The APIs for reading/writing transfer continuously only with small buffer system
 ft_void_t   GPU_HAL_StartTransfer(GPU_HAL_Context_t *host, GPU_TRANSFERDIR_T rw, ft_const_uint32_t addr);
@@ -99,7 +108,6 @@ ft_uint32_t GPU_HAL_Rd32(GPU_HAL_Context_t *host, ft_const_uint32_t addr);
 ft_void_t   GPU_HAL_Wr8 (GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint8_t v);
 ft_void_t   GPU_HAL_Wr16(GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint16_t v);
 ft_void_t   GPU_HAL_Wr32(GPU_HAL_Context_t *host, ft_const_uint32_t addr, ft_const_uint32_t v);
-
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -122,7 +130,6 @@ ft_void_t   GPU_HAL_WrCmdBuf(GPU_HAL_Context_t *host, ft_const_uint8_t *buffer, 
 ft_void_t   GPU_HAL_WaitCmdfifo_empty(GPU_HAL_Context_t *host);
 ft_void_t   GPU_HAL_ResetCmdFifo(GPU_HAL_Context_t *host);
 
-
 /*******************************************************************************/
 /*******************************************************************************/
 
@@ -143,10 +150,6 @@ ft_int32_t  GPU_HAL_Dec2ASCII(ft_char8_t *pSrc,ft_int32_t value);
 
 /*******************************************************************************/
 /*******************************************************************************/
-
-/* Global used for HAL management */
-extern GPU_HAL_Context_t  host;
-extern GPU_HAL_Context_t *phost;
 
 #ifdef __cplusplus
 }
