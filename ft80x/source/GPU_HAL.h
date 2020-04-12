@@ -20,6 +20,8 @@
 extern "C" {
 #endif
 
+#include "GPU.h"
+
 typedef enum {
     GPU_I2C_MODE = 0,
     GPU_SPI_MODE,

@@ -9,6 +9,8 @@ File:   CoPro_Cmds.h
 extern "C" {
 #endif
 
+#include "GPU_API.h"
+
 ft_void_t GPU_CoCmd_Text(GPU_HAL_Context_t *phost, ft_int16_t x, ft_int16_t y, ft_int16_t font, ft_uint16_t options, const ft_char8_t* s);
 ft_void_t GPU_CoCmd_Number(GPU_HAL_Context_t *phost, ft_int16_t x, ft_int16_t y, ft_int16_t font, ft_uint16_t options, ft_int32_t n);
 ft_void_t GPU_CoCmd_LoadIdentity(GPU_HAL_Context_t *phost);

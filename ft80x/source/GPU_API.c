@@ -1,8 +1,6 @@
 /* Sample API for the FTDI FT80x EVE */
 
-#include "GPU.h"
-#include "HAL.h"
-#include "API.h"
+#include "GPU_API.h"
 #include "X11_RGB.h"
 
 /* Global used for HAL management */

@@ -9,20 +9,18 @@
 #include <time.h>       // included to get a random seed for srandom(time(NULL)); and random();
 #include <sys/time.h>
 
-#include "DataTypes.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Definitions used for FT800 co-processor command buffer */
+
 #define DL_SIZE             (0x2000)    // 8kB Display List buffer size
 #define CMD_FIFO_SIZE       (0x1000)    // 4kB co-processor FIFO size
 #define CMD_SIZE            (4)         // 4 byte per co-processor and Display List command of EVE
+
+
 /* Definition used for FT800 co-processor Display List Buffer */
-
-
-#define FT800_VERSION         "1.9.0"
 
 // Chapter numbers refer to the FT800 Programmers Guide.
 
@@ -333,10 +331,10 @@ extern "C" {
 // 4.3.1 Setting Graphics state
 #define BITMAP_SOURCE(addr)         (((uint32_t)0x01<<24)|((uint32_t)(addr)&0x00FFFFFF))
 #define CLEAR_COLOR_RGB(red,green,blue) (((uint32_t)0x02<<24)|((uint32_t)((red)&0xFF)<<16)|((uint16_t)((green)&0xFF)<<8)|((blue)&0xFF))
-#define CLEAR_COLOR_X11(colour)     (((uint32_t)0x02<<24)|((uint32_t)(pgm_read_byte(&(colour)[0]))<<16)|((uint16_t)(pgm_read_byte(&(colour)[1]))<<8)|(pgm_read_byte(&(colour)[2])))
+#define CLEAR_COLOR_X11(colour)     (((uint32_t)0x02<<24)|((uint32_t)colour[0]<<16)|((uint16_t)colour[1]<<8)|colour[2])
 #define TAG(s)                      (((uint32_t)0x03<<24)|((s)&0xFF))
 #define COLOR_RGB(red,green,blue)   (((uint32_t)0x04<<24)|((uint32_t)((red)&0xFF)<<16)|((uint16_t)((green)&0xFF)<<8)|((blue)&0xFF))
-#define COLOR_X11(colour)           (((uint32_t)0x04<<24)|((uint32_t)(pgm_read_byte(&(colour)[0]))<<16)|((uint16_t)(pgm_read_byte(&(colour)[1]))<<8)|(pgm_read_byte(&(colour)[2])))
+#define COLOR_X11(colour)           (((uint32_t)0x04<<24)|((uint32_t)colour[0]<<16)|((uint16_t)colour[1]<<8)|colour[2])
 #define BITMAP_HANDLE(handle)       (((uint32_t)0x05<<24)|((handle)&0x1F))
 #define CELL(cell)                  (((uint32_t)0x06<<24)|((cell)&0x7F))
 #define BITMAP_LAYOUT(format,linestride,height)      (((uint32_t)0x07<<24)|((uint32_t)((format)&0x1F)<<19)|((uint32_t)((linestride)&0x03FF)<<9)|((height)&0x01FF))
@@ -382,35 +380,11 @@ extern "C" {
 #define RETURN()                     ((uint32_t)0x24<<24)
 #define MACRO(m)                    (((uint32_t)0x25<<24)|((m)&0x01))
 
-
-/* allow GPU_CoCmd_*Color commands to use X11 colours stored in PROGMEM - only used colours are actually stored by linker */
-#define X11(colour)                 (((uint32_t)(pgm_read_byte(&(colour)[0]))<<16)|((uint16_t)(pgm_read_byte(&(colour)[1]))<<8)|(pgm_read_byte(&(colour)[2])))
-
 #define NOTE(n, sharp)              (((n) - 'C') + ((sharp) * 128))
 
 
 #define GPU_NUMCHAR_PERFONT (128)
 #define GPU_FONT_TABLE_SIZE (148)
-
-/* FT80x font table structure */
-/* Font table address in ROM can be found by reading the address from 0xFFFFC location. */
-/* 16 font tables are present at the address read from location 0xFFFFC */
-typedef struct GPU_Fonts
-{
-    /* All the values are in bytes */
-    /* Width of each character font from 0 to 127 */
-    ft_uint8_t    FontWidth[GPU_NUMCHAR_PERFONT];
-    /* Bitmap format of font wrt bitmap formats supported by FT800 - L1, L4, L8 */
-    ft_uint32_t    FontBitmapFormat;
-    /* Font line stride in FT800 ROM */
-    ft_uint32_t    FontLineStride;
-    /* Font width in pixels */
-    ft_uint32_t    FontWidthInPixels;
-    /* Font height in pixels */
-    ft_uint32_t    FontHeightInPixels;
-    /* Pointer to font graphics raw data */
-    ft_uint32_t    PointerToFontGraphicsData;
-}GPU_Fonts_t;
 
 
 #if defined(DISPLAY_RESOLUTION_QVGA)
@@ -466,6 +440,46 @@ typedef struct GPU_Fonts
     #define DispCSpread   1
     #define DispDither    1
 #endif
+
+typedef char                    ft_char8_t;
+typedef signed char             ft_int8_t;
+typedef int                     ft_int16_t;
+typedef long                    ft_int32_t;
+typedef unsigned char           ft_uint8_t;
+typedef unsigned int            ft_uint16_t;
+typedef unsigned long           ft_uint32_t;
+
+typedef void                    ft_void_t;
+typedef unsigned char           ft_bool_t;
+
+typedef const char              ft_const_char8_t;
+typedef const signed char       ft_const_int8_t;
+typedef const int               ft_const_int16_t;
+typedef const long              ft_const_int32_t;
+typedef const unsigned char     ft_const_uint8_t;
+typedef const unsigned int      ft_const_uint16_t;
+typedef const unsigned long     ft_const_uint32_t;
+
+
+/* FT80x font table structure */
+/* Font table address in ROM can be found by reading the address from 0xFFFFC location. */
+/* 16 font tables are present at the address read from location 0xFFFFC */
+typedef struct GPU_Fonts
+{
+    /* All the values are in bytes */
+    /* Width of each character font from 0 to 127 */
+    ft_uint8_t    FontWidth[GPU_NUMCHAR_PERFONT];
+    /* Bitmap format of font wrt bitmap formats supported by FT800 - L1, L4, L8 */
+    ft_uint32_t    FontBitmapFormat;
+    /* Font line stride in FT800 ROM */
+    ft_uint32_t    FontLineStride;
+    /* Font width in pixels */
+    ft_uint32_t    FontWidthInPixels;
+    /* Font height in pixels */
+    ft_uint32_t    FontHeightInPixels;
+    /* Pointer to font graphics raw data */
+    ft_uint32_t    PointerToFontGraphicsData;
+}GPU_Fonts_t;
 
 #ifdef __cplusplus
 }

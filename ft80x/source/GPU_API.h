@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "GPU_HAL.h"
+
 /* GPU API structure definitions */
 typedef struct GPU_API_Bitmap_header
 {

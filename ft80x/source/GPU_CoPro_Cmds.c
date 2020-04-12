@@ -1,10 +1,7 @@
 /* Sample Co-Processor API for the FTDI FT80x EVE */
 
-#include "GPU.h"
-#include "HAL.h"
-#include "API.h"
-#include "X11_RGB.h"
 #include "CoPro_Cmds.h"
+#include "X11_RGB.h"
 
 /******** Private Co-Processor Command Functions **********/
 

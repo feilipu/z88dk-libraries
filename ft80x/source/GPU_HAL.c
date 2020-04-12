@@ -1,7 +1,6 @@
 /* Sample HAL for the FTDI FT80x EVE */
 
-#include "GPU.h"
-#include "HAL.h"
+#include "GPU_HAL.h"
 
 /* Global used for HAL management */
 GPU_HAL_Context_t host;
