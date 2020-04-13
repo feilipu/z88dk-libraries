@@ -227,7 +227,7 @@ void main(void)
     io_pio_port_b = 0x00;
     
     LCD_Init(I2C2_PORT);
-    printf("LCD life on I2C port: %u\n", (LCD_Port == I2C_PORT1 ? 1 : 2));
+    printf("LCD life on I2C port: %u\n", (LCD_Port == I2C1_PORT ? 1 : 2));
 
     LCD_WorkingModeConf(ON, ON, WM_RamMode);// Start RAM mode (characters won't work anymore).    
 

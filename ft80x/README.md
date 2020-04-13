@@ -47,11 +47,11 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +yaz180 --math32 -x -SO3 -clib=new @ft80x.lst -o ft80x`
-
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @ft80x.lst -o ft80x`
-
-`zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @ft80x.lst -o ft80x`
+```sh
+zcc +yaz180 --math32 -x -SO3 -clib=new -v -m --list --c-code-in-asm @ft80x.lst -o ../ft80x
+zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 -v -m --list --c-code-in-asm @ft80x.lst -o ../ft80x
+zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 -v -m --list --c-code-in-asm @ft80x.lst -o ../ft80x
+```
 
 The resulting `ft80x.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 

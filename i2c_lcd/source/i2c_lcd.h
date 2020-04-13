@@ -39,11 +39,11 @@ For the YAZ180 the LCD can be attached to either I2C Port 1 or Port 2.
 These commence at addresses 0xA000 or 0x8000 respectively.
 ***************************************************************/
 
-#ifndef     I2C_PORT2
-#define     I2C_PORT2       (0x80)
+#ifndef     I2C2_PORT
+#define     I2C2_PORT       (0x80)
 #endif
-#ifndef     I2C_PORT1
-#define     I2C_PORT1       (0xA0)
+#ifndef     I2C1_PORT
+#define     I2C1_PORT       (0xA0)
 #endif
 
 /**************************************************************
@@ -341,8 +341,8 @@ typedef struct {
 
 enum LCD_AttachPort
 {
-    LCD_PORT2 = I2C_PORT2,
-    LCD_PORT1 = I2C_PORT1
+    LCD_PORT2 = I2C2_PORT,
+    LCD_PORT1 = I2C1_PORT
 };
 
 enum LCD_RegAddress
