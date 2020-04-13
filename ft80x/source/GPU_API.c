@@ -1,5 +1,13 @@
 /* Sample API for the FTDI FT80x EVE */
 
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <arch/yaz180.h>
+#include <arch/yaz180/i2c.h>
+
 #include "GPU_API.h"
 #include "X11_RGB.h"
 
@@ -66,7 +74,7 @@ ft_void_t GPU_API_WaitCmdfifo_empty(ft_void_t)
 /* API to give fade out effect by changing the display PWM from 128 till 0 */
 ft_void_t GPU_API_fadeout(ft_void_t)
 {
-    for (ft_uint8_t i = 128; i >= 0; i -= 3)
+    for (ft_int8_t i = 127; i >= 0; i -= 3)
     {
         GPU_HAL_Wr8(pScreen,REG_PWM_DUTY,i);
 //      vTaskDelay( 1 );//sleep for 1 tick

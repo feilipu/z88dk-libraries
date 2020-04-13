@@ -42,8 +42,8 @@ typedef enum {
 
 typedef enum
 {
-    LCD_PORT2 = I2C_PORT2,
-    LCD_PORT1 = I2C_PORT1
+    LCD_PORT2 = I2C2_PORT,
+    LCD_PORT1 = I2C1_PORT
 }GPU_HAL_PORT_T;
 
 /*APIs for Host Commands*/
@@ -92,7 +92,7 @@ typedef struct {
 /*******************************************************************************/
 /*******************************************************************************/
 
-/*The basic APIs Level 1*/
+/* The basic APIs Level 1 */
 ft_bool_t   GPU_HAL_Open(GPU_HAL_Context_t *host); // API to initialise the I2C interface and enable the Interrupt
 ft_void_t   GPU_HAL_Fast(GPU_HAL_Context_t *host); // Plaid Mode
 ft_void_t   GPU_HAL_Close(GPU_HAL_Context_t *host);
@@ -126,19 +126,17 @@ ft_void_t   GPU_HAL_WrMem(GPU_HAL_Context_t *host, ft_uint32_t addr, ft_const_ui
 /*******************************************************************************/
 /*******************************************************************************/
 
-/*Preferred public APIs for co-processor Fifo read/write and space management*/);
+/* Preferred public APIs for co-processor Fifo read/write and space management */
 
-ft_void_t   GPU_HAL_CheckCmdBuffer(GPU_HAL_Context_t *host,ft_const_uint16_t count) ;
+ft_void_t   GPU_HAL_CheckCmdBuffer(GPU_HAL_Context_t *host,ft_const_uint16_t count);
 ft_void_t   GPU_HAL_Updatecmdfifo(GPU_HAL_Context_t *host, ft_const_uint16_t count);
-ft_void_t   GPU_HAL_WrCmd32(GPU_HAL_Context_t *host, ft_const_uint32_t cmd);
-ft_void_t   GPU_HAL_WrCmdBuf(GPU_HAL_Context_t *host, ft_const_uint8_t *buffer, ft_uint16_t count);
 ft_void_t   GPU_HAL_WaitCmdfifo_empty(GPU_HAL_Context_t *host);
 ft_void_t   GPU_HAL_ResetCmdFifo(GPU_HAL_Context_t *host);
-
-
-ft_uint8_t  GPU_HAL_TransferString(GPU_HAL_Context_t *host, ft_const_char8_t *string);
-
 ft_void_t   GPU_HAL_WaitLogo_Finish(GPU_HAL_Context_t *host);
+
+ft_void_t   GPU_HAL_WrCmd32(GPU_HAL_Context_t *host, ft_const_uint32_t cmd);
+ft_void_t   GPU_HAL_WrCmdBuf(GPU_HAL_Context_t *host, ft_const_uint8_t *buffer, ft_const_uint16_t count);
+// ft_uint8_t  GPU_HAL_TransferString(GPU_HAL_Context_t *host, ft_const_char8_t *string);
 
 ft_int32_t  GPU_HAL_Dec2ASCII(ft_char8_t *pSrc,ft_int32_t value);
 

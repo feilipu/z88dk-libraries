@@ -399,16 +399,16 @@ extern "C" {
 
 #if defined(DISPLAY_RESOLUTION_QVGA)
     /* Values specific to QVGA LCD display */
-    #define DispWidth      320L
-    #define DispHeight     240L
-    #define DispHCycle     408L
-    #define DispHOffset    70L
-    #define DispHSync0     0L
-    #define DispHSync1     10L
-    #define DispVCycle     263L
-    #define DispVOffset    13L
-    #define DispVSync0     0L
-    #define DispVSync1     2L
+    #define DispWidth      320U
+    #define DispHeight     240U
+    #define DispHCycle     408U
+    #define DispHOffset    70U
+    #define DispHSync0     0U
+    #define DispHSync1     10U
+    #define DispVCycle     263U
+    #define DispVOffset    13U
+    #define DispVSync0     0U
+    #define DispVSync1     2U
     #define DispPCLK       8
     #define DispSwizzle    2
     #define DispPCLKPol    0
@@ -416,16 +416,16 @@ extern "C" {
     #define DispDither     1
 #elif defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
     /* Values specific to HVGA LCD display */
-    #define DispWidth      320L
-    #define DispHeight     480L
-    #define DispHCycle     400L
-    #define DispHOffset    40L
-    #define DispHSync0     0L
-    #define DispHSync1     10L
-    #define DispVCycle     500L
-    #define DispVOffset    10L
-    #define DispVSync0     0L
-    #define DispVSync1     5L
+    #define DispWidth      320U
+    #define DispHeight     480U
+    #define DispHCycle     400U
+    #define DispHOffset    40U
+    #define DispHSync0     0U
+    #define DispHSync1     10U
+    #define DispVCycle     500U
+    #define DispVOffset    10U
+    #define DispVSync0     0U
+    #define DispVSync1     5U
     #define DispPCLK       4
     #define DispSwizzle    2
     #define DispPCLKPol    1
@@ -433,16 +433,16 @@ extern "C" {
     #define DispDither     1
 #else
     /* Default is WQVGA - 480x272 */
-    #define DispWidth     480L
-    #define DispHeight    272L
-    #define DispHCycle    548L
-    #define DispHOffset   43L
-    #define DispHSync0    0L
-    #define DispHSync1    41L
-    #define DispVCycle    292L
-    #define DispVOffset   12L
-    #define DispVSync0    0L
-    #define DispVSync1    10L
+    #define DispWidth     480U
+    #define DispHeight    272U
+    #define DispHCycle    548U
+    #define DispHOffset   43U
+    #define DispHSync0    0U
+    #define DispHSync1    41U
+    #define DispVCycle    292U
+    #define DispVOffset   12U
+    #define DispVSync0    0U
+    #define DispVSync1    10U
     #define DispPCLK      5
     #define DispSwizzle   0         // xxx Swizzle 4DSystems FT843
 //  #define DispSwizzle = 3         // xxx Swizzle for Gameduino2

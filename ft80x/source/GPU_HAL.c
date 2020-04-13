@@ -173,33 +173,36 @@ ft_void_t GPU_HAL_RdMem(GPU_HAL_Context_t *host, ft_uint32_t addr, ft_uint8_t *b
     readAddress[2] = (ft_uint8_t)(addr);                // the lowest 8 bits
     i2c_write( host->port, GPU_ADDRESS, readAddress, 3, I2C_STOP|I2C_MODE_BUFFER );
 
-    i2c_read_set( host->port, LCD_ADDRESS, bufIndex, (uint8_t)length, I2C_RESTART|I2C_MODE_BUFFER );
-    i2c_read_get( host->port, LCD_ADDRESS, (uint8_t)length);
+    i2c_read_set( host->port, GPU_ADDRESS, bufIndex, (uint8_t)length, I2C_RESTART|I2C_MODE_BUFFER );
+    i2c_read_get( host->port, GPU_ADDRESS, (uint8_t)length);
 }
 
-ft_void_t GPU_HAL_WrMem(GPU_HAL_Context_t *host, ft_uint32_t addr , ft_const_uint8_t *buffer, ft_const_uint16_t length)
+ft_void_t GPU_HAL_WrMem(GPU_HAL_Context_t *host, ft_uint32_t addr, ft_const_uint8_t *buffer, ft_const_uint16_t length)
 {
-    static uint8_t writeBuffer[I2C_TX_SENTENCE];
-    static uint8_t *bufIndex;
+    static ft_uint8_t writeBuffer[I2C_TX_SENTENCE];
+    ft_uint8_t *bufIndex;
+    ft_uint16_t lengthRemaining;
+    
 
     writeBuffer[0] = (((ft_uint8_t)(addr >> 16) & 0x3F) | 0x80);// we just need the bottom 6 bits and add the write bit.
     writeBuffer[1] = (ft_uint8_t)(addr >> 8);           // the middle 8 bits
     writeBuffer[2] = (ft_uint8_t)(addr);                // the lowest 8 bits
 
-    bufIndex = buffer;
+    bufIndex = (ft_uint8_t *)buffer;
+    lengthRemaining = (ft_uint16_t)length;
 
-    while( length > I2C_TX_SENTENCE-3 ) {
+    while( lengthRemaining > I2C_TX_SENTENCE-3 ) {
         i2c_available( host->port );
-        memcpy( &writeBuffer[3], bufIndex, I2C_TX_SENTENCE-3 );    // do buffer copy only after some delay
-        i2c_write( host->port, LCD_ADDRESS, writeBuffer, I2C_TX_SENTENCE, I2C_RESTART|I2C_MODE_BUFFER );
+        memcpy( &writeBuffer[3], bufIndex, I2C_TX_SENTENCE-3 ); // do buffer copy only after some delay
+        i2c_write( host->port, GPU_ADDRESS, writeBuffer, I2C_TX_SENTENCE, I2C_RESTART|I2C_MODE_BUFFER );
         bufIndex += I2C_TX_SENTENCE-3;
-        length -= I2C_TX_SENTENCE-3;
+        lengthRemaining -= I2C_TX_SENTENCE-3;
     }
 
-    if( length > 0 ) {
+    if( lengthRemaining > 0 ) {
         i2c_available( host->port ); 
-        memcpy( &writeBuffer[3], bufIndex, length );          // do buffer copy only after some delay
-        i2c_write( host->port, LCD_ADDRESS, writeBuffer, (uint8_t)(length+3), I2C_STOP|I2C_MODE_BUFFER );
+        memcpy( &writeBuffer[3], bufIndex, lengthRemaining );   // do buffer copy only after some delay
+        i2c_write( host->port, GPU_ADDRESS, writeBuffer, (uint8_t)(lengthRemaining+3), I2C_STOP|I2C_MODE_BUFFER );
     }
 }
 
@@ -224,48 +227,12 @@ ft_uint16_t GPU_Cmdfifo_Freespace(GPU_HAL_Context_t *host)
     return( (CMD_FIFO_SIZE - 4) - fullness);
 }
 
-ft_void_t GPU_HAL_CheckCmdBuffer(GPU_HAL_Context_t *host,ft_const_uint16_t count)
+ft_void_t GPU_HAL_CheckCmdBuffer(GPU_HAL_Context_t *host, ft_const_uint16_t count)
 {
    ft_uint16_t getfreespace;
    do{
         getfreespace = GPU_Cmdfifo_Freespace(host);
    }while( getfreespace < count );
-}
-
-/*******************************************************************************/
-/*******************************************************************************/
-
-ft_void_t GPU_HAL_WrCmd32(GPU_HAL_Context_t *host, ft_const_uint32_t cmd)
-{
-    GPU_HAL_CheckCmdBuffer(host,sizeof(cmd));
-    GPU_HAL_Wr32(host, RAM_CMD + host->ft_cmd_fifo_wp, cmd);
-    GPU_HAL_Updatecmdfifo(host,sizeof(cmd));
-}
-
-ft_void_t GPU_HAL_WrCmdBuf(GPU_HAL_Context_t *host, ft_const_uint8_t *buffer, ft_uint16_t count)
-{
-    ft_uint16_t length = 0;
-    ft_uint16_t    offset = 0;
-
-    do{
-        length = count;
-        if (length > GPU_Cmdfifo_Freespace(host)){
-            length = GPU_Cmdfifo_Freespace(host);
-        }
-        GPU_HAL_CheckCmdBuffer(host, length); // this checks the buffer has enough space
-
-        GPU_HAL_StartCmdTransfer(host, GPU_WRITE);
-        spiMultiByteTx(&buffer[offset], length);
-        GPU_HAL_EndTransfer(host);
-
-        GPU_HAL_Updatecmdfifo(host, length);
-
-        offset += length;
-        count -= length;
-
-        if(count != 0) GPU_HAL_WaitCmdfifo_empty(host); // this waits to make sure we're minimising I2C transfers.
-
-    }while( count > 0 );
 }
 
 ft_void_t GPU_HAL_WaitCmdfifo_empty(GPU_HAL_Context_t *host)
@@ -280,16 +247,6 @@ ft_void_t GPU_HAL_ResetCmdFifo(GPU_HAL_Context_t *host)
     host->ft_cmd_fifo_wp = 0;
 }
 
-ft_uint8_t GPU_HAL_TransferString(GPU_HAL_Context_t *host, ft_const_char8_t *string)
-{
-    ft_uint16_t length = (ft_uint16_t)strlen((const char *)string);
-
-    spiMultiByteTx( (ft_uint8_t *)string, length);
-
-    //Append one null as ending flag
-    return GPU_HAL_Transfer8(host,0);
-}
-
 ft_void_t GPU_HAL_WaitLogo_Finish(GPU_HAL_Context_t *host)
 {
     ft_int16_t cmdrdptr,cmdwrptr;
@@ -300,6 +257,52 @@ ft_void_t GPU_HAL_WaitLogo_Finish(GPU_HAL_Context_t *host)
     }while( (cmdwrptr != cmdrdptr) || (cmdrdptr != 0) );
     host->ft_cmd_fifo_wp = 0;
 }
+
+/*******************************************************************************/
+/*******************************************************************************/
+
+ft_void_t GPU_HAL_WrCmd32(GPU_HAL_Context_t *host, ft_const_uint32_t cmd)
+{
+    GPU_HAL_CheckCmdBuffer(host,sizeof(cmd));
+    GPU_HAL_Wr32(host, RAM_CMD + host->ft_cmd_fifo_wp, cmd);
+    GPU_HAL_Updatecmdfifo(host,sizeof(cmd));
+}
+
+ft_void_t GPU_HAL_WrCmdBuf(GPU_HAL_Context_t *host, ft_const_uint8_t *buffer, ft_const_uint16_t count)
+{
+    ft_uint16_t lengthRemaining = (ft_uint16_t)count;
+    ft_uint16_t offset = 0;
+    ft_uint16_t length;
+
+    do{
+        length = GPU_Cmdfifo_Freespace(host); // this checks the buffer has enough space
+        if( length > lengthRemaining )
+            length = lengthRemaining;
+
+        GPU_HAL_WrMem(host, GPU_ADDRESS, &buffer[offset], length);
+
+        GPU_HAL_Updatecmdfifo(host, length);
+
+        offset += length;
+        lengthRemaining -= length;
+
+        if( lengthRemaining != 0 )
+            GPU_HAL_WaitCmdfifo_empty(host); // this waits to make sure we're minimising I2C transfers.
+
+    }while( lengthRemaining > 0 );
+}
+
+#if 0
+ft_uint8_t GPU_HAL_TransferString(GPU_HAL_Context_t *host, ft_const_char8_t *string)
+{
+    ft_uint16_t length = (ft_uint16_t)strlen((const char *)string);
+
+    spiMultiByteTx( (ft_uint8_t *)string, length);
+
+    //Append one null as ending flag
+    return GPU_HAL_Transfer8(host,0);
+}
+#endif
 
 /*******************************************************************************/
 /*******************************************************************************/

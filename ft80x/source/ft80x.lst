@@ -1,4 +1,4 @@
-./CoPro_Cmds.c
+;./GPU_CoPro_Cmds.c
 ./X11_RGB.c
-./HAL.c
-./API.c
+./GPU_HAL.c
+./GPU_API.c

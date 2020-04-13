@@ -471,7 +471,7 @@ ft_void_t GPU_CoCmd_MemCrc(GPU_HAL_Context_t *host, ft_uint32_t ptr, ft_uint32_t
 
 ft_void_t GPU_CoCmd_SendCmd(GPU_HAL_Context_t *host, ft_const_uint32_t cmd)
 {
-    GPU_HAL_TransferCmd(host, cmd);
+    GPU_HAL_WrCmd32(host, cmd);
 }
 
 ft_void_t GPU_CoCmd_SendStr(GPU_HAL_Context_t *host, ft_const_char8_t *s)
