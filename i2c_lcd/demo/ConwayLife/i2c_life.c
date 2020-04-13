@@ -36,13 +36,13 @@
 */
 
 // ZSDCC
-// zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
+// zcc +yaz180 -subtype=app -SO3 -v -m --list --math32 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
 
-// zcc +yaz180 -subtype=cpm -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
+// zcc +yaz180 -subtype=cpm -SO3 -v -m --list --math32 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
 
 
 // SCCZ80
-// zcc +yaz180 -subtype=app -clib=new -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd i2c_life.c -o i2c_life -create-app
+// zcc +yaz180 -subtype=app -clib=new -SO3 -v -m --list --math32 -llib/yaz180/i2c_lcd i2c_life.c -o i2c_life -create-app
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -255,7 +255,7 @@ void main(void)
         display(current_generation);
 
         // Exit after a few generations
-        if( ++generations > 255 ) break;        
+        if( ++generations > 0x10 ) break;        
 #if 0
         // Boringness detector:
         if( get_difference(old_generation,current_generation) < 8 || get_total(current_generation) < 6)

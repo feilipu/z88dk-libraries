@@ -35,7 +35,7 @@
 
 void LCD_ReadSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y)
 {
-    static uint8_t writeBuffer[3];
+    uint8_t writeBuffer[3];
 
     if(length > I2C_RX_SENTENCE) return; // maximum Rx sentence length is 68 Bytes
 

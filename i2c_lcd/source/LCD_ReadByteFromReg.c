@@ -35,8 +35,8 @@
 
 uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr)
 {
-    static uint8_t regAddress;
-    static uint8_t readByte;
+    uint8_t regAddress;
+    uint8_t readByte;
 
     regAddress = (uint8_t)regAddr;
 

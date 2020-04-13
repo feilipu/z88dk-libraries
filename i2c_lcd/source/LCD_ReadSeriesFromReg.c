@@ -35,8 +35,8 @@
 
 void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length)
 {
-    static uint8_t regAddress;
-    static uint8_t *bufIndex;
+    uint8_t regAddress;
+    uint8_t *bufIndex;
 
     if(length > I2C_RX_SENTENCE) return; // maximum Rx sentence length is 68 Bytes
 

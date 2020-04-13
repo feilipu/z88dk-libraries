@@ -35,7 +35,7 @@
 
 uint8_t LCD_ReadByteDispRAM(uint8_t x, uint8_t y)
 {
-    static uint8_t writeBuffer[3];
+    uint8_t writeBuffer[3];
 
     writeBuffer[0] = (uint8_t)ReadRAM_XPosRegAddr;
     writeBuffer[1] = x;

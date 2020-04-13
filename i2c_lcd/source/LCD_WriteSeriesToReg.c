@@ -36,7 +36,7 @@
 void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length)
 {
     static uint8_t writeBuffer[LCD_W_BUFFER+1];
-    static uint8_t *bufIndex;
+    uint8_t *bufIndex;
 
     writeBuffer[0] = (uint8_t)regAddr;
     bufIndex = buf;

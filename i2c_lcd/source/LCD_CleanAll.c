@@ -36,8 +36,6 @@
 void LCD_CleanAll(enum LCD_ColorSort color)
 {
     static uint8_t writeBuffer[2];
-    
-    uint16_t i = 0;
 
     writeBuffer[0] = (uint8_t)DisplayConfigRegAddr;
 
