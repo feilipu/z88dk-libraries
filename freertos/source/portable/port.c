@@ -122,6 +122,19 @@ void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 /*-----------------------------------------------------------*/
 
 /*
+ * Manual context switch callable from ISRs. The first thing we do is save
+ * the registers so we can use a naked attribute.
+ */
+void vPortYieldFromISR(void)  __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
+void vPortYieldFromISR(void)
+{
+    portSAVE_CONTEXT_IN_ISR();
+    vTaskSwitchContext();
+    portRESTORE_CONTEXT_IN_ISR();
+}
+/*-----------------------------------------------------------*/
+
+/*
  * Initialize Timer (PRT1 for YAZ180, and SCZ180 HBIOS).
  */
 void prvSetupTimerInterrupt( void ) __preserves_regs(iyh,iyl)
