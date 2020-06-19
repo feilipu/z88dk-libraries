@@ -32,6 +32,10 @@ extern "C" {
 #error Wrong configuration file (ffconf.h).
 #endif
 
+#ifdef __SDCC
+#pragma disable_warning 126     /* disable "unreachable code" warning */
+#endif
+
 #ifndef __DISKIO_H__
 
 /* Integer types used for FatFs API */
