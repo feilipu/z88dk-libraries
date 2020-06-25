@@ -36,9 +36,9 @@
 */
 
 // ZSDCC
-// zcc +yaz180 -subtype=app -SO3 -v -m --list --math32 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
+// zcc +yaz180 -subtype=app -SO3 -v -m --list --math32 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node100000 i2c_life.c -o i2c_life -create-app
 
-// zcc +yaz180 -subtype=cpm -SO3 -v -m --list --math32 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node200000 i2c_life.c -o i2c_life -create-app
+// zcc +yaz180 -subtype=cpm -SO3 -v -m --list --math32 -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node100000 i2c_life.c -o i2c_life -create-app
 
 
 // SCCZ80
@@ -62,7 +62,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 
-#pragma printf = "%li %lu %s %u" // enables %li %lu %s, %u only
+#pragma printf = "%li %lu %u" // enables %li %lu %u only
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -99,7 +99,7 @@ uint16_t get_total(uint8_t *from)
     {
         for(uint8_t y=0; y < CELLS_Y; ++y)
         {
-            if(get_cell(from,x,y)) ++total;
+            if(get_cell(from,x,y) != 0) ++total;
         }
     }
     return total;
@@ -221,7 +221,7 @@ void main(void)
     
     struct timespec startTime, endTime, resTime;
 
-    clock_gettime(CLOCK_REALTIME,&startTime);
+    clock_gettime(CLOCK_REALTIME, &startTime);
     
     io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
     io_pio_port_b = 0x00;
@@ -247,7 +247,7 @@ void main(void)
                 if(neighbours < 2 || neighbours > 3)
                     clear_cell(current_generation, x, y);
 
-                if(neighbours == 3)
+                else if(neighbours == 3)
                     fill_cell(current_generation, x, y);
             }
         }
@@ -255,7 +255,7 @@ void main(void)
         display(current_generation);
 
         // Exit after a few generations
-        if( ++generations > 0x10 ) break;        
+        if( ++generations > 0xFF ) break;        
 #if 0
         // Boringness detector:
         if( get_difference(old_generation,current_generation) < 8 || get_total(current_generation) < 6)

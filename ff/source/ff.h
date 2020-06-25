@@ -20,13 +20,13 @@
 
 
 #ifndef FF_DEFINED
-#define FF_DEFINED    86606    /* Revision ID */
+#define FF_DEFINED    86606     /* Revision ID */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "ffconf.h"        /* FatFs configuration options */
+#include "ffconf.h"             /* FatFs configuration options */
 
 #if FF_DEFINED != FFCONF_DEF
 #error Wrong configuration file (ffconf.h).
