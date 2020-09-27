@@ -76,13 +76,13 @@ int main()
     FLOAT cx,cy,cz,sx,sy,sz;
     FLOAT t1,t2,t3;
 
-    int node;
+    uint8_t node;
 
-    struct timespec startTime, endTime, resTime;
+//  struct timespec startTime, endTime, resTime;
 
     LCD_Init(I2C2_PORT);
 
-    printf("LCD Cube on I2C port: %u\n", (LCD_Port == I2C1_PORT ? 1 : 2));
+//  printf("LCD Cube on I2C port: %u\n", (LCD_Port == I2C1_PORT ? 1 : 2));
 
     x[0]=-SIZE; y[0]=-SIZE; z[0]=-SIZE;
     x[1]=-SIZE; y[1]= SIZE; z[1]=-SIZE;
@@ -99,7 +99,7 @@ int main()
             zg[node]=z[node];
     }
 
-    clock_gettime(CLOCK_REALTIME, &startTime);
+//  clock_gettime(CLOCK_REALTIME, &startTime);
 
     do {
         cx=COS(vx); cy=COS(vy); sx=SIN(vx); sy=SIN(vy);
@@ -152,11 +152,11 @@ int main()
 
         cpu_delay_ms( 92 );
 
-        clock_gettime(CLOCK_REALTIME,&endTime);
-        timersub(&endTime, &startTime, &resTime);
+//      clock_gettime(CLOCK_REALTIME,&endTime);
+//      timersub(&endTime, &startTime, &resTime);
 
-        printf("Elapsed: %li sec %lu msec\n", resTime.tv_sec, resTime.tv_nsec/1000000 );
-        memcpy((void *)startTime, (void *)endTime, sizeof(endTime));
+//      printf("Elapsed: %li sec %lu msec\n", resTime.tv_sec, resTime.tv_nsec/1000000 );
+//      memcpy((void *)startTime, (void *)endTime, sizeof(endTime));
         
     } while (1);
     return 0;
