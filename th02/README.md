@@ -8,7 +8,7 @@
 
 This is a multifunctional sensor that gives you temperature and relative humidity information at the same time. It utilizes a TH02 sensor that can meet measurement needs of general purposes. It provides reliable readings when environment humidity condition inbetween 0-80% RH, and temperature condition inbetween 0-70°C, covering needs in most home and daily applications that don't contain extreme conditions.
 
-Compiled with sccz80 version 16566-e7212b8e2-20200621, and using zsdcc version 4.0.2 [r11690](https://sourceforge.net/p/sdcc/code/11690/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.0.3 [r11869](https://sourceforge.net/p/sdcc/code/11869/log/?path=/trunk/sdcc).
 
 ## Installation
 
