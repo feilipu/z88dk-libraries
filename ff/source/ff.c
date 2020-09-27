@@ -6576,7 +6576,7 @@ static void putc_bfd (putbuff* pb, TCHAR c)
     WCHAR hs, wc;
 #if FF_LFN_UNICODE == 2
     DWORD dc;
-    TCHAR *tp;
+    const TCHAR *tp;
 #endif
 #endif
 
@@ -6618,7 +6618,7 @@ static void putc_bfd (putbuff* pb, TCHAR c)
             return;
         }
     }
-    tp = (TCHAR*)pb->bs;
+    tp = (const TCHAR*)pb->bs;
     dc = tchar2uni(&tp);    /* UTF-8 ==> UTF-16 */
     if (dc == 0xFFFFFFFF) return;    /* Wrong code? */
     wc = (WCHAR)dc;
