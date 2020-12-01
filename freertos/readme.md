@@ -2,8 +2,8 @@
 
 Developed in partnership with the world’s leading chip companies over a 15 year period, FreeRTOS is a market-leading real–time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS includes a kernel and a growing set of libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability, accessibility, and ease of use.
 
-Current source version status is: 10.3.0 (source identical to 10.3.1).
-Compiled using zsdcc version 4.0.0 [r11556](https://sourceforge.net/p/sdcc/code/11556/log/?path=/trunk/sdcc).
+Current source version status is: 10.4.1.
+Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.0.4 [r11940](https://sourceforge.net/p/sdcc/code/11940/log/?path=/trunk/sdcc).
 
 ## Installation
 
