@@ -67,7 +67,7 @@ static void TaskFileCopy(void *pvParameters)
 
         /* Check function/compatibility of the physical drive */
         /* for SCZ180 first parameter is logical drive our Unit. 0 = MD1 RAM Disk */
-        rc = test_diskio(0, 3, buffer, sizeof( buffer) );
+        rc = test_diskio(2, 3, buffer, sizeof( buffer) );
         if (rc) {
             printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work on this disk driver.\n", rc);
         } else {
