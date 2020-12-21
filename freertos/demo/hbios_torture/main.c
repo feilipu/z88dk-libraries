@@ -28,7 +28,7 @@
 
 #endif
 
-// #pragma output CRT_ORG_BSS = 0x8000     // move bss origin to address 0x9000 (check map to confirm there is no overlap between data and bss sections)
+// #pragma output CRT_ORG_BSS = 0x9000     // move bss origin to address 0x9000 (check map to confirm there is no overlap between data and bss sections)
 #pragma printf = "%s %c %u %li %lu"     // enables %s, %c, %u, %li, %lu only
 
 /* Scheduler include files. */
@@ -57,7 +57,7 @@ static void TaskFileCopy(void *pvParameters)
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
-    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    point on xLastWakeTime is managed automatically by the xTaskDelayUntil()
     API function. */
     xLastWakeTime = xTaskGetTickCount();
 
@@ -75,7 +75,7 @@ static void TaskFileCopy(void *pvParameters)
         }
 
         printf("fileCopy HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
-        vTaskDelayUntil( &xLastWakeTime, ( 2000 / portTICK_PERIOD_MS )  );
+        xTaskDelayUntil( &xLastWakeTime, ( 2000 / portTICK_PERIOD_MS )  );
     }
 
 }
@@ -87,16 +87,16 @@ static void TaskBlinkGreenLED(void *pvParameters)
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
-    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    point on xLastWakeTime is managed automatically by the xTaskDelayUntil()
     API function. */
     xLastWakeTime = xTaskGetTickCount();
 
     for(;;)
     {
-        vTaskDelayUntil( &xLastWakeTime, ( 50 ) );
+        xTaskDelayUntil( &xLastWakeTime, ( 50 ) );
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
 
-        vTaskDelayUntil( &xLastWakeTime, ( 50 )  );
+        xTaskDelayUntil( &xLastWakeTime, ( 50 )  );
        printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
 

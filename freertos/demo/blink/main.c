@@ -37,7 +37,7 @@ static void TaskBlinkRedLED(void *pvParameters)
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
-    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    point on xLastWakeTime is managed automatically by the xTaskDelayUntil()
     API function. */
     xLastWakeTime = xTaskGetTickCount();
 
@@ -45,10 +45,10 @@ static void TaskBlinkRedLED(void *pvParameters)
     {
 
 //      io_pio_port_b |= 0x20;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
+        xTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
 
 //      io_pio_port_b &= 0x0F;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+        xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
 
         printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
@@ -62,17 +62,17 @@ static void TaskBlinkGreenLED(void *pvParameters)
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
-    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    point on xLastWakeTime is managed automatically by the xTaskDelayUntil()
     API function. */
     xLastWakeTime = xTaskGetTickCount();
 
     for(;;)
     {
 //      io_pio_port_b |= 0x05;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
+        xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
 
 //      io_pio_port_b &= 0xF0;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
+        xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
 
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
         printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));

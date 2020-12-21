@@ -2,8 +2,8 @@
 
 Developed in partnership with the world’s leading chip companies over a 15 year period, FreeRTOS is a market-leading real–time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS includes a kernel and a growing set of libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability, accessibility, and ease of use.
 
-Current source version status is: 10.4.1.
-Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.0.4 [r11940](https://sourceforge.net/p/sdcc/code/11940/log/?path=/trunk/sdcc).
+Current source version status is: 10.4.3 LTS.
+Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.0.5 [r11992](https://sourceforge.net/p/sdcc/code/11992/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -73,7 +73,7 @@ static void TaskBlinkRedLED(void *pvParameters)
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
-    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    point on xLastWakeTime is managed automatically by the xTaskDelayUntil()
     API function. */
     xLastWakeTime = xTaskGetTickCount();
 
@@ -81,10 +81,10 @@ static void TaskBlinkRedLED(void *pvParameters)
     {
 
 //      io_pio_port_b |= 0x20;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
+        xTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
 
 //      io_pio_port_b &= 0x0F;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+        xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
 
         printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
@@ -98,17 +98,17 @@ static void TaskBlinkGreenLED(void *pvParameters)
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
-    point on xLastWakeTime is managed automatically by the vTaskDelayUntil()
+    point on xLastWakeTime is managed automatically by the xTaskDelayUntil()
     API function. */
     xLastWakeTime = xTaskGetTickCount();
 
     for(;;)
     {
 //      io_pio_port_b |= 0x05;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
+        xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
 
 //      io_pio_port_b &= 0xF0;              // YAZ180 TIL311
-        vTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
+        xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
 
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
         printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));

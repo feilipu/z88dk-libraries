@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS Kernel V10.4.3
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -68,7 +68,7 @@
     #error "include FreeRTOS.h must appear in source files before include message_buffer.h"
 #endif
 
-/* Message buffers are built onto of stream buffers. */
+/* Message buffers are built on top of stream buffers. */
 #if __SDCC
 #include "include/sdcc/stream_buffer.h"
 #elif __SCCZ80

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.1
+ * FreeRTOS Kernel V10.4.3
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -134,7 +134,7 @@ TickType_t xTimeToBlock, xBlockedTime;
 		/*********************************************************************
 		Test 0
 
-		Basic vTaskDelay() and vTaskDelayUntil() tests. */
+		Basic vTaskDelay() and xTaskDelayUntil() tests. */
 		prvBasicDelayTests();
 
 
@@ -491,7 +491,7 @@ const TickType_t xPeriod = 75, xCycles = 5, xAllowableMargin = ( bktALLOWABLE_MA
 		xErrorOccurred = pdTRUE;
 	}
 
-	/* Now crude tests to check the vTaskDelayUntil() functionality. */
+	/* Now crude tests to check the xTaskDelayUntil() functionality. */
 	xPostTime = xTaskGetTickCount();
 	xLastUnblockTime = xPostTime;
 
@@ -501,7 +501,7 @@ const TickType_t xPeriod = 75, xCycles = 5, xAllowableMargin = ( bktALLOWABLE_MA
 		this loop was entered. */
 		xExpectedUnblockTime = xPostTime + ( x * xPeriod );
 
-		vTaskDelayUntil( &xLastUnblockTime, xPeriod );
+		xTaskDelayUntil( &xLastUnblockTime, xPeriod );
 
 		if( ( xTaskGetTickCount() - xExpectedUnblockTime ) > ( bktTIME_TO_BLOCK + xAllowableMargin ) )
 		{
