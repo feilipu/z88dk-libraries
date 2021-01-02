@@ -1867,7 +1867,7 @@ TaskHandle_t __LIB__ xTaskGetIdleTaskHandle(void) __smallc;
  *  {
  *  TaskStatus_t *pxTaskStatusArray;
  *  volatile UBaseType_t uxArraySize, x;
- *  TickType_t ulTotalRunTime, ulStatsAsPercentage;
+ *  uint32_t ulTotalRunTime, ulStatsAsPercentage;
  *
  *      // Make sure the write buffer does not contain a string.
  * pcWriteBuffer = 0x00;
@@ -1924,9 +1924,9 @@ TaskHandle_t __LIB__ xTaskGetIdleTaskHandle(void) __smallc;
 /*
 UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
                                   const UBaseType_t uxArraySize,
-                                  TickType_t * const pulTotalRunTime ) PRIVILEGED_FUNCTION;
+                                  uint32_t * const pulTotalRunTime ) PRIVILEGED_FUNCTION;
  */
-UBaseType_t __LIB__ uxTaskGetSystemState(TaskStatus_t * const pxTaskStatusArray,const UBaseType_t uxArraySize,TickType_t * const pulTotalRunTime) __smallc;
+UBaseType_t __LIB__ uxTaskGetSystemState(TaskStatus_t * const pxTaskStatusArray,const UBaseType_t uxArraySize,uint32_t * const pulTotalRunTime) __smallc;
 
 
 
@@ -2043,7 +2043,7 @@ void __LIB__ vTaskGetRunTimeStats(char * pcWriteBuffer) __smallc;
 
 /**
  * task. h
- * <PRE>TickType_t ulTaskGetIdleRunTimeCounter( void );</PRE>
+ * <PRE>uint32_t ulTaskGetIdleRunTimeCounter( void );</PRE>
  *
  * configGENERATE_RUN_TIME_STATS and configUSE_STATS_FORMATTING_FUNCTIONS
  * must both be defined as 1 for this function to be available.  The application
@@ -2070,9 +2070,9 @@ void __LIB__ vTaskGetRunTimeStats(char * pcWriteBuffer) __smallc;
  * \ingroup TaskUtils
  */
 /*
-TickType_t ulTaskGetIdleRunTimeCounter( void ) PRIVILEGED_FUNCTION;
+uint32_t ulTaskGetIdleRunTimeCounter( void ) PRIVILEGED_FUNCTION;
  */
-TickType_t __LIB__ ulTaskGetIdleRunTimeCounter(void) __smallc;
+uint32_t __LIB__ ulTaskGetIdleRunTimeCounter(void) __smallc;
 
 
 

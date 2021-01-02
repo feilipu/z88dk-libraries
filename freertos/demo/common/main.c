@@ -70,7 +70,7 @@
 #elif __SCZ180
 #include <arch/scz180.h>
 #include <arch/hbios.h>                     /* Declarations of HBIOS functions */
-#pragma output CRT_ORG_BSS = 0xCA00         // move bss origin, check build output to confirm there is no overlap between data and bss sections
+#pragma output CRT_ORG_BSS = 0xD500         // move bss origin, check build output to confirm there is no overlap between data and bss sections
 
 #endif
 
