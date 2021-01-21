@@ -132,7 +132,7 @@ typedef struct xMEMORY_REGION
 typedef struct xTASK_PARAMETERS
 {
     TaskFunction_t pvTaskCode;
-    const char * const pcName;
+    const char * pcName;
     configSTACK_DEPTH_TYPE usStackDepth;
     void * pvParameters;
     UBaseType_t uxPriority;
