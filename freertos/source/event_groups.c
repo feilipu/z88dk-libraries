@@ -522,7 +522,7 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup,
 EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
 {
     UBaseType_t uxSavedInterruptStatus;
-    EventGroup_t * pxEventBits = xEventGroup;
+    EventGroup_t const * const pxEventBits = xEventGroup;
     EventBits_t uxReturn;
 
     uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
@@ -539,8 +539,8 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup,
                                 const EventBits_t uxBitsToSet )
 {
     ListItem_t * pxListItem, * pxNext;
-    ListItem_t * pxListEnd;
-    List_t * pxList;
+    ListItem_t const * pxListEnd;
+    List_t const * pxList;
     EventBits_t uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits;
     EventGroup_t * pxEventBits = xEventGroup;
     BaseType_t xMatchFound = pdFALSE;

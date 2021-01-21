@@ -35,7 +35,7 @@ In addition to C standard functions, re-entrant versions of `ctime()`, `asctime(
 
 Along with the usual smattering of utility functions, such as `is_leap_year()`, this library includes a set of functions related the sun and moon, as well as sidereal time functions.
 
-Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.0.4 [r11940](https://sourceforge.net/p/sdcc/code/11940/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.0.7 [r12016](https://sourceforge.net/p/sdcc/code/12016/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -142,11 +142,11 @@ See the `set_dst()` function for more information about Daylight Saving.
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
-`zcc +target --math32 -x -SO3 -clib=new @time.lst -o ../time`
-
-`zcc +target --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @time.lst -o ../time`
-
-`zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @time.lst -o ../time`
+```
+zcc +target --math32 -x -SO3 -clib=new @time.lst -o ../time
+zcc +target --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @time.lst -o ../time
+zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @time.lst -o ../time
+```
 
 The resulting `time.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
