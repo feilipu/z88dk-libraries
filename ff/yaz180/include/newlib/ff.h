@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem module  R0.14                               /
+/  FatFs - Generic FAT Filesystem module  R0.14b                              /
 /-----------------------------------------------------------------------------/
 /
-/ Copyright (C) 2019, ChaN, all right reserved.
+/ Copyright (C) 2021, ChaN, all right reserved.
 /
 / FatFs module is an open source software. Redistribution and use of FatFs in
 / source and binary forms, with or without modification, are permitted provided
@@ -22,7 +22,7 @@ include(__link__.m4)
 define(`m4_SCCZ80_NOLIB', 1)
 
 #ifndef FF_DEFINED
-#define FF_DEFINED    86606    /* Revision ID */
+#define FF_DEFINED      86631   /* Revision ID */
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,10 +32,14 @@ extern "C" {
 
 /* Integer types used for FatFs API */
 
-#if defined(_WIN32)	/* Main development platform */
+#if defined(_WIN32)     /* Windows VC++ (for development only) */
 #define FF_INTDEF 2
 #include <windows.h>
 typedef unsigned __int64 QWORD;
+#include <float.h>
+#define isnan(v) _isnan(v)
+#define isinf(v) (!_finite(v))
+
 #elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__cplusplus)	/* C99 or later */
 #define FF_INTDEF 2
 #include <stdint.h>
@@ -60,26 +64,29 @@ typedef unsigned long   DWORD;  /* 32-bit unsigned integer */
 
 #endif  /* !__DISKIO_H__ */
 
+/* Type of file size and LBA variables */
 
-/* Definitions of volume management */
-
-#if FF_MULTI_PARTITION          /* Multiple partition configuration */
-typedef struct {
-    BYTE pd;    /* Physical drive number */
-    BYTE pt;    /* Partition: 0:Auto detect, 1-4:Forced partition) */
-} PARTITION;
-extern PARTITION VolToPart[];   /* Volume - Partition mapping table */
+#if FF_FS_EXFAT
+#if FF_INTDEF != 2
+#error exFAT feature wants C99 or later
+#endif
+typedef QWORD FSIZE_t;
+#if FF_LBA64
+typedef QWORD LBA_t;
+#else
+typedef DWORD LBA_t;
+#endif
+#else
+#if FF_LBA64
+#error exFAT needs to be enabled when enable 64-bit LBA
+#endif
+typedef DWORD FSIZE_t;
+typedef DWORD LBA_t;
 #endif
 
-#if FF_STR_VOLUME_ID
-#ifndef FF_VOLUME_STRS
-extern const char* VolumeStr[FF_VOLUMES];    /* User defined volume ID */
-#endif
-#endif
 
 
-
-/* Type of path name strings on FatFs API */
+/* Type of path name strings on FatFs API (TCHAR) */
 
 #ifndef _INC_TCHAR
 #define _INC_TCHAR
@@ -107,25 +114,20 @@ typedef char TCHAR;
 #endif
 
 
+/* Definitions of volume management */
 
-/* Type of file size and LBA variables */
+#if FF_MULTI_PARTITION          /* Multiple partition configuration */
+typedef struct {
+    BYTE pd;    /* Physical drive number */
+    BYTE pt;    /* Partition: 0:Auto detect, 1-4:Forced partition) */
+} PARTITION;
+extern PARTITION VolToPart[];   /* Volume - Partition mapping table */
+#endif
 
-#if FF_FS_EXFAT
-#if FF_INTDEF != 2
-#error exFAT feature wants C99 or later
+#if FF_STR_VOLUME_ID
+#ifndef FF_VOLUME_STRS
+extern const char* VolumeStr[FF_VOLUMES];    /* User defined volume ID */
 #endif
-typedef QWORD FSIZE_t;
-#if FF_LBA64
-typedef QWORD LBA_t;
-#else
-typedef DWORD LBA_t;
-#endif
-#else
-#if FF_LBA64
-#error exFAT needs to be enabled when enable 64-bit LBA
-#endif
-typedef DWORD FSIZE_t;
-typedef DWORD LBA_t;
 #endif
 
 
@@ -381,10 +383,6 @@ __OPROTO(,,TCHAR,*,f_gets,TCHAR* buff,int len,FIL* fp)
 #define f_rewinddir(dp) f_readdir((dp), 0)
 #define f_rmdir(path) f_unlink(path)
 #define f_unmount(path) f_mount(0, path, 0)
-
-#ifndef EOF
-#define EOF (-1)
-#endif
 
 
 

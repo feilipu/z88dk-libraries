@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------*/
-/* Unicode handling functions for FatFs R0.14                             */
+/* Unicode handling functions for FatFs R0.14b                            */
 /*------------------------------------------------------------------------*/
 /* This module will occupy a huge memory in the .const section when the    /
 /  FatFs is configured for LFN with DBCS. If the system has any Unicode    /
@@ -7,7 +7,7 @@
 /  that function to avoid silly memory consumption.                        /
 /-------------------------------------------------------------------------*/
 /*
-/ Copyright (C) 2019, ChaN, all right reserved.
+/ Copyright (C) 2021, ChaN, all right reserved.
 /
 / FatFs module is an open source software. Redistribution and use of FatFs in
 / source and binary forms, with or without modification, are permitted provided
