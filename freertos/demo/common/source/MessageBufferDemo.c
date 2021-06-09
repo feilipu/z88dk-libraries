@@ -232,7 +232,7 @@ UBaseType_t uxOriginalPriority;
 	/* Now the buffer should be full, and attempting to add anything will should
 	fail. */
 	configASSERT( xMessageBufferIsFull( xMessageBuffer ) == pdTRUE );
-	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, sizeof( pucData[ 0 ] ), mbDONT_BLOCK );
+	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, sizeof( *pucData ), mbDONT_BLOCK );
 	configASSERT( xReturned == 0 );
 	( void ) xReturned; /* In case configASSERT() is not defined. */
 
@@ -242,7 +242,7 @@ UBaseType_t uxOriginalPriority;
 	uxOriginalPriority = uxTaskPriorityGet( NULL );
 	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
 	xTimeBeforeCall = xTaskGetTickCount();
-	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, sizeof( pucData[ 0 ] ), xBlockTime );
+	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, sizeof( *pucData ), xBlockTime );
 	xTimeAfterCall = xTaskGetTickCount();
 	vTaskPrioritySet( NULL, uxOriginalPriority );
 	configASSERT( ( ( TickType_t ) ( xTimeAfterCall - xTimeBeforeCall ) ) >= xBlockTime );

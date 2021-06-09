@@ -22,7 +22,6 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -230,29 +229,23 @@ BaseType_t sErrorHasOccurred = pdFALSE;
         sErrorHasOccurred = pdTRUE;
     } // */
 
-/*    if( xAreBlockingQueuesStillRunning() != pdTRUE )
+    if( xArePollingQueuesStillRunning() != pdTRUE )
+    {
+        vDisplayMessage( "Polling queue count unchanged!\r\n" );
+        sErrorHasOccurred = pdTRUE;
+    } // */
+
+/*  if( xAreBlockingQueuesStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Blocking queues count unchanged!\r\n" );
         sErrorHasOccurred = pdTRUE;
     } // */
 
-    if( xArePollingQueuesStillRunning() != pdTRUE )
-    {
-        vDisplayMessage( "Polling queue count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
-    }
-
-    if( xIsCreateTaskStillRunning() != pdTRUE )
-    {
-        vDisplayMessage( "Incorrect number of tasks running!\r\n" );
-        sErrorHasOccurred = pdTRUE;
-    }
-
     if( xAreSemaphoreTasksStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Semaphore take count unchanged!\r\n" );
         sErrorHasOccurred = pdTRUE;
-    }
+    } // */
 
     if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
     {
@@ -277,6 +270,12 @@ BaseType_t sErrorHasOccurred = pdFALSE;
         vDisplayMessage( "Recursive mutex count unchanged!\r\n" );
         sErrorHasOccurred = pdTRUE;
     } // */
+
+    if( xIsCreateTaskStillRunning() != pdTRUE )
+    {
+        vDisplayMessage( "Incorrect number of tasks running!\r\n" );
+        sErrorHasOccurred = pdTRUE;
+    }
 
     if( sErrorHasOccurred == pdFALSE )
     {
