@@ -9,7 +9,7 @@
 /---------------------------------------------------------------------------*/
 
 #if __RC2014
-#define FF_FS_READONLY  0
+#define FF_FS_READONLY  1
 #else
 #define FF_FS_READONLY  0
 #endif
