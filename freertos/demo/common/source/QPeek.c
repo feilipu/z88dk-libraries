@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.1
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,21 +19,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
-
 
 /*
  * Tests the behaviour when data is peeked from a queue when there are
  * multiple tasks blocked on the queue.
  */
 
+
 #include <stdlib.h>
 
-/* Kernel includes. */
+/* Scheduler include files. */
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/queue.h>
@@ -364,6 +363,7 @@ uint32_t ulValue;
 		if( ulValue != 0x01234567 )
 		{
 			/* We did not receive the expected value. */
+			xErrorDetected = pdTRUE;
 		}
 
 		/* Lets just delay a while as this is an intensive test as we don't

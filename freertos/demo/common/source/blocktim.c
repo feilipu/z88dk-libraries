@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.3
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -30,6 +29,7 @@
  * send or receive functions prematurely.  A description of the tests is
  * included within the code.
  */
+
 
 /* Kernel includes. */
 #include <freertos/FreeRTOS.h>
@@ -472,7 +472,8 @@ BaseType_t xData;
 static void prvBasicDelayTests( void )
 {
 TickType_t xPreTime, xPostTime, x, xLastUnblockTime, xExpectedUnblockTime;
-const TickType_t xPeriod = 75, xCycles = 5, xAllowableMargin = ( bktALLOWABLE_MARGIN >> 1 );
+const TickType_t xPeriod = 75, xCycles = 5, xAllowableMargin = ( bktALLOWABLE_MARGIN >> 1 ), xHalfPeriod = xPeriod / ( TickType_t ) 2;
+BaseType_t xDidBlock;
 
 	/* Temporarily increase priority so the timing is more accurate, but not so
 	high as to disrupt the timer tests. */
@@ -509,6 +510,48 @@ const TickType_t xPeriod = 75, xCycles = 5, xAllowableMargin = ( bktALLOWABLE_MA
 		}
 
 		xPrimaryCycles++;
+	}
+
+	/* Crude tests for return value of xTaskDelayUntil().  First a standard block
+	should return that the task does block. */
+	xDidBlock = xTaskDelayUntil( &xLastUnblockTime, xPeriod );
+	if( xDidBlock != pdTRUE )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Now delay a few ticks so repeating the above block period will not block for
+	the full amount of time, but will still block. */
+	vTaskDelay( xHalfPeriod );
+	xDidBlock = xTaskDelayUntil( &xLastUnblockTime, xPeriod );
+	if( xDidBlock != pdTRUE )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* This time block for longer than xPeriod before calling xTaskDelayUntil() so
+	the call to xTaskDelayUntil() should not block. */
+	vTaskDelay( xPeriod );
+	xDidBlock = xTaskDelayUntil( &xLastUnblockTime, xPeriod );
+	if( xDidBlock != pdFALSE )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Catch up. */
+	xDidBlock = xTaskDelayUntil( &xLastUnblockTime, xPeriod );
+	if( xDidBlock != pdTRUE )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Again block for slightly longer than a period so ensure the time is in the
+	past next time xTaskDelayUntil() gets called. */
+	vTaskDelay( xPeriod + xAllowableMargin );
+	xDidBlock = xTaskDelayUntil( &xLastUnblockTime, xPeriod );
+	if( xDidBlock != pdFALSE )
+	{
+		xErrorOccurred = pdTRUE;
 	}
 
 	/* Reset to the original task priority ready for the other tests. */

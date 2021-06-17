@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.1
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -127,7 +127,7 @@ int main( void )
 //  vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
     vStartSemaphoreTasks( mainSEMAPHORE_TASK_PRIORITY );
 
-    vStartCountingSemaphoreTasks();
+//  vStartCountingSemaphoreTasks();
 //  vStartDynamicPriorityTasks();
 //  vStartQueuePeekTasks();
 //  vStartRecursiveMutexTasks();
@@ -215,69 +215,69 @@ char * pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
 
 static void prvCheckOtherTasksAreStillRunning( void )
 {
-BaseType_t sErrorHasOccurred = pdFALSE;
+BaseType_t xErrorHasOccurred = pdFALSE;
 
     if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Integer maths task count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
 /*  if( xAreMathsTaskStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Floating point maths task count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
     if( xArePollingQueuesStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Polling queue count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
 /*  if( xAreBlockingQueuesStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Blocking queues count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
     if( xAreSemaphoreTasksStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Semaphore take count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
-    if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+/*  if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Counting semaphore count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
 /*  if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Dynamic task priority count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     }  // */
 
 /*  if( xAreQueuePeekTasksStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Queue peek count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
 /*  if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Recursive mutex count unchanged!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     } // */
 
     if( xIsCreateTaskStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Incorrect number of tasks running!\r\n" );
-        sErrorHasOccurred = pdTRUE;
+        xErrorHasOccurred = pdTRUE;
     }
 
-    if( sErrorHasOccurred == pdFALSE )
+    if( xErrorHasOccurred == pdFALSE )
     {
         vDisplayMessage( "OK\r\n" );
     }
