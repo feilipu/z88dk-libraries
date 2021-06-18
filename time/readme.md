@@ -143,7 +143,7 @@ See the `set_dst()` function for more information about Daylight Saving.
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +target --math32 -x -SO3 -clib=new @time.lst -o ../time
+zcc +target --math32 -x -O2 -clib=new @time.lst -o ../time
 zcc +target --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @time.lst -o ../time
 zcc +target --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @time.lst -o ../time
 ```

@@ -48,7 +48,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +yaz180 --math32 -x -SO3 -clib=new @i2c_lcd.lst -o ../i2c_lcd
+zcc +yaz180 --math32 -x -O2 -clib=new @i2c_lcd.lst -o ../i2c_lcd
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @i2c_lcd.lst -o ../i2c_lcd
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @i2c_lcd.lst -o ../i2c_lcd
 ```

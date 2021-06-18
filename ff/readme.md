@@ -118,13 +118,13 @@ zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -
 zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 ```
-zcc +yaz180 -clib=new -x -SO3 --math32 @ff.lst -o ../ff
+zcc +yaz180 -clib=new -x -O2 --math32 @ff.lst -o ../ff
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 For any supported target.
 ```
-zcc +target -clib=new -x -SO3 --math32 @ff.lst -o ../ff
+zcc +target -clib=new -x -O2 --math32 @ff.lst -o ../ff
 zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```

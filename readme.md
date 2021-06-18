@@ -64,7 +64,7 @@ The libraries can be compiled using the following command lines in Linux, with t
 
 ```
 cd ~/library/source
-zcc +target -x -SO3 -clib=new --math32 @library.lst -o ../library
+zcc +target -x -O2 -clib=new --math32 @library.lst -o ../library
 mv ../library.lib ../target/lib/newlib/sccz80
 zcc +target -x -SO3 -clib=sdcc_ix --math32 --max-allocs-per-node400000 @library.lst -o ../library
 mv ../library.lib ../target/lib/newlib/sdcc_ix

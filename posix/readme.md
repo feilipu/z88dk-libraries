@@ -177,18 +177,18 @@ void main (void)
 The posix library can be compiled from the `posix/source` directory using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +rc2014 -clib=new -x -SO3 --math32 @posix.lst -o ../posix
+zcc +rc2014 -clib=new -x -O2 --math32 @posix.lst -o ../posix
 zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @posix.lst -o ../posix
 zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @posix.lst -o ../posix
 ```
 ```
-zcc +yaz180 -clib=new -x -SO3 --math32 @posix.lst -o ../posix
+zcc +yaz180 -clib=new -x -O2 --math32 @posix.lst -o ../posix
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32--max-allocs-per-node400000 @posix.lst -o ../posix
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @posix.lst -o ../posix
 ```
 For any supported target.
 ```
-zcc +target -clib=new -x -SO3 --math32 @posix.lst -o ../posix
+zcc +target -clib=new -x -O2 --math32 @posix.lst -o ../posix
 zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @posix.lst -o ../posix
 zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @posix.lst -o ../posix
 ```
