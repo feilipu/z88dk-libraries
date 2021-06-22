@@ -55,9 +55,9 @@
 
 #define configUSE_TICK_HOOK                 0
 #define configCPU_CLOCK_HZ                  ( ( uint32_t ) __CPU_CLOCK )
-#define configMAX_PRIORITIES                4
+#define configMAX_PRIORITIES                8
 #define configIDLE_SHOULD_YIELD             1
-#define configMINIMAL_STACK_SIZE            ( 85 )
+#define configMINIMAL_STACK_SIZE            ( 48 + 16 )
 #define configMAX_TASK_NAME_LEN             ( 8 )
 
 #define configQUEUE_REGISTRY_SIZE           0

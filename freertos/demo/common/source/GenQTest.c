@@ -56,11 +56,11 @@
 #define genqMUTEX_HIGH_PRIORITY		( tskIDLE_PRIORITY + 3 )
 
 #ifndef genqMUTEX_TEST_TASK_STACK_SIZE
-	#define genqMUTEX_TEST_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+	#define genqMUTEX_TEST_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE + 64 )
 #endif
 
 #ifndef genqGENERIC_QUEUE_TEST_TASK_STACK_SIZE
-	#define genqGENERIC_QUEUE_TEST_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+	#define genqGENERIC_QUEUE_TEST_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE + 64 )
 #endif
 /*-----------------------------------------------------------*/
 

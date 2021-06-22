@@ -55,7 +55,7 @@
 #define tmrdemoNUM_TIMER_RESETS			( ( uint8_t ) 10 )
 
 #ifndef tmrTIMER_TEST_TASK_STACK_SIZE
-	#define tmrTIMER_TEST_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+	#define tmrTIMER_TEST_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE + 64 )
 #endif
 
 /*-----------------------------------------------------------*/

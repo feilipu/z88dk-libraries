@@ -48,7 +48,7 @@
 /* Demo program include files. */
 #include "include/flop.h"
 
-#define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
+#define mathSTACK_SIZE		( configMINIMAL_STACK_SIZE + 64 )
 #define mathNUMBER_OF_TASKS  ( 8 )
 
 /* Four tasks, each of which performs a different floating point calculation.
@@ -110,7 +110,7 @@ BaseType_t sError = pdFALSE;
 
 		/* If the calculation does not match the expected constant, stop the
 		increment of the check variable. */
-		if( fabs( f4 - fAnswer ) > 0.001F )
+		if( fabs( f4 - fAnswer ) > 0.01F )
 		{
 			sError = pdTRUE;
 		}
@@ -163,7 +163,7 @@ BaseType_t sError = pdFALSE;
 
 		/* If the calculation does not match the expected constant, stop the
 		increment of the check variable. */
-		if( fabs( f4 - fAnswer ) > 0.001F )
+		if( fabs( f4 - fAnswer ) > 0.01F )
 		{
 			sError = pdTRUE;
 		}

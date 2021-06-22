@@ -42,7 +42,7 @@
 
 /* Allow parameters to be overridden on a demo by demo basis. */
 #ifndef notifyNOTIFIED_TASK_STACK_SIZE
-	#define notifyNOTIFIED_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+	#define notifyNOTIFIED_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE + 64 )
 #endif
 
 #define notifyTASK_PRIORITY		( tskIDLE_PRIORITY )

@@ -86,7 +86,7 @@ be overridden by a definition in FreeRTOSConfig.h. */
 #define recmu15ms_DELAY					( pdMS_TO_TICKS( 15 ) )
 
 #ifndef recmuRECURSIVE_MUTEX_TEST_TASK_STACK_SIZE
-	#define recmuRECURSIVE_MUTEX_TEST_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+	#define recmuRECURSIVE_MUTEX_TEST_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE + 64 )
 #endif
 
 /* The three tasks as described at the top of this file. */

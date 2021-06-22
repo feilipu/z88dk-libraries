@@ -106,7 +106,7 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
 #ifndef priSUSPENDED_RX_TASK_STACK_SIZE
-	#define priSUSPENDED_RX_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE )
+	#define priSUSPENDED_RX_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 64 )
 #endif
 #define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
 #define priSLEEP_TIME				pdMS_TO_TICKS( 128 )

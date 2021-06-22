@@ -97,12 +97,12 @@
 #pragma printf = "%s"                       // enables %s only
 
 /* Priority definitions for all the tasks in the demo application. */
-#define mainMATH_TASK_PRIORITY              ( tskIDLE_PRIORITY + 0 )
-#define mainSEMAPHORE_TASK_PRIORITY         ( tskIDLE_PRIORITY + 0 )
-#define mainQUEUE_POLL_PRIORITY             ( tskIDLE_PRIORITY + 1 )
-#define mainQUEUE_BLOCK_PRIORITY            ( tskIDLE_PRIORITY + 2 )
-#define mainPRINT_TASK_PRIORITY             ( tskIDLE_PRIORITY + 3 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
+#define mainMATH_TASK_PRIORITY              ( tskIDLE_PRIORITY + 1 )
+#define mainSEMAPHORE_TASK_PRIORITY         ( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_POLL_PRIORITY             ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_BLOCK_PRIORITY            ( tskIDLE_PRIORITY + 3 )
+#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 4 )
+#define mainPRINT_TASK_PRIORITY             ( tskIDLE_PRIORITY + 5 )
 
 #define mainPRINT_STACK_SIZE                ( ( uint16_t ) 256 )
 
@@ -151,14 +151,17 @@ static void vErrorChecks( void *pvParameters )
 {
 TickType_t xExpectedWakeTime;
 const TickType_t xPrintRate = ( TickType_t ) 2000 / portTICK_PERIOD_MS;
-const long lMaxAllowableTimeDifference = ( long ) 0;
+const TickType_t xMaxAllowableTimeDifference = 0;
 TickType_t xWakeTime;
-long lTimeDifference;
-const char *pcReceivedMessage;
-char * pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
+TickType_t xTimeDifference;
+const char * pcReceivedMessage;
+const char * pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
 
     /* Stop warnings. */
     ( void ) pvParameters;
+
+    uint8_t count = 0;
+    io_pio_control = __IO_PIO_CNTL_00;
 
     /* Loop continuously, blocking, then checking all the other tasks are still
     running, before blocking once again.  This task blocks on the queue of messages
@@ -166,6 +169,9 @@ char * pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
     message becoming available. */
     while(1)
     {
+
+        io_pio_port_b = count++;
+
         /* Calculate the time we will unblock if no messages are received
         on the queue.  This is used to check that we have not blocked for too long. */
         xExpectedWakeTime = xTaskGetTickCount();
@@ -186,14 +192,14 @@ char * pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
             time we should have unblocked. */
             if( xWakeTime > xExpectedWakeTime )
             {
-                lTimeDifference = ( long ) ( xWakeTime - xExpectedWakeTime );
+                xTimeDifference = (TickType_t)(xWakeTime - xExpectedWakeTime);
             }
             else
             {
-                lTimeDifference = ( long ) ( xExpectedWakeTime - xWakeTime );
+                xTimeDifference = (TickType_t)(xExpectedWakeTime - xWakeTime);
             }
 
-            if( lTimeDifference > lMaxAllowableTimeDifference )
+            if( xTimeDifference > xMaxAllowableTimeDifference )
             {
                 /* We blocked too long - create a message that will get
                 printed out the next time around. */
@@ -275,7 +281,7 @@ BaseType_t xErrorHasOccurred = pdFALSE;
     {
         vDisplayMessage( "Incorrect number of tasks running!\r\n" );
         xErrorHasOccurred = pdTRUE;
-    }
+    } // */
 
     if( xErrorHasOccurred == pdFALSE )
     {

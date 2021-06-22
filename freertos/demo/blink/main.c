@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////
 
 // zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos main.c -o blink -create-app
+// cat > /dev/ttyUSB0 < blink.ihx
 
 // zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/scz180/freertos main.c -o blink -create-app
 // cat > /dev/ttyUSB0 < blink.ihx
@@ -29,6 +30,8 @@
 static void TaskBlinkRedLED(void *pvParameters);
 static void TaskBlinkGreenLED(void *pvParameters);
 
+static uint8_t portBstate;
+
 /*-----------------------------------------------------------*/
 
 static void TaskBlinkRedLED(void *pvParameters)
@@ -44,10 +47,12 @@ static void TaskBlinkRedLED(void *pvParameters)
     for(;;)
     {
 
-//      io_pio_port_b |= 0x20;              // YAZ180 TIL311
+        portBstate |= 0x20;                 // YAZ180 TIL311
+        io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
 
-//      io_pio_port_b &= 0x0F;              // YAZ180 TIL311
+        portBstate |= 0x50;                 // YAZ180 TIL311
+        io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
 
         printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
@@ -68,10 +73,12 @@ static void TaskBlinkGreenLED(void *pvParameters)
 
     for(;;)
     {
-//      io_pio_port_b |= 0x05;              // YAZ180 TIL311
+        portBstate |= 0x05;                 // YAZ180 TIL311
+        io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
 
-//      io_pio_port_b &= 0xF0;              // YAZ180 TIL311
+        portBstate |= 0x02;                 // YAZ180 TIL311
+        io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
 
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
@@ -84,13 +91,13 @@ static void TaskBlinkGreenLED(void *pvParameters)
 int main(void)
 {
 
-//  io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
-//  io_pio_port_b = 0x00;                   // on YAZ180 TIL311
+    io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
+    io_pio_port_b = 0x00;                   // on YAZ180 TIL311
 
     xTaskCreate(
         TaskBlinkRedLED
         ,  "RedLED"
-        ,  128
+        ,  48
         ,  NULL
         ,  3
         ,  NULL ); //
@@ -98,7 +105,7 @@ int main(void)
     xTaskCreate(
         TaskBlinkGreenLED
         ,  "GreenLED"
-        ,  128
+        ,  48
         ,  NULL
         ,  3
         ,  NULL ); //

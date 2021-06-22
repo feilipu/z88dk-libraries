@@ -65,7 +65,7 @@ Changes from V2.0.0
 /* Demo program include files. */
 #include "include/PollQ.h"
 
-#define pollqSTACK_SIZE			configMINIMAL_STACK_SIZE
+#define pollqSTACK_SIZE			( configMINIMAL_STACK_SIZE + 64 )
 #define pollqQUEUE_SIZE			( 10 )
 #define pollqPRODUCER_DELAY		( pdMS_TO_TICKS( ( TickType_t ) 200 ) )
 #define pollqCONSUMER_DELAY		( pollqPRODUCER_DELAY - ( TickType_t ) ( 20 / portTICK_PERIOD_MS ) )

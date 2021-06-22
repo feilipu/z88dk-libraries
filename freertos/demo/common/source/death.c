@@ -53,7 +53,7 @@
 /* Demo program include files. */
 #include "include/death.h"
 
-#define deathSTACK_SIZE		( configMINIMAL_STACK_SIZE + 60 )
+#define deathSTACK_SIZE		( configMINIMAL_STACK_SIZE + 64 )
 
 /* The task originally created which is responsible for periodically dynamically
 creating another four tasks. */

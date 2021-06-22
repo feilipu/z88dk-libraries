@@ -58,7 +58,7 @@
 /* Demo program include files. */
 #include "include/BlockQ.h"
 
-#define blckqSTACK_SIZE		configMINIMAL_STACK_SIZE
+#define blckqSTACK_SIZE		( configMINIMAL_STACK_SIZE + 64 )
 #define blckqNUM_TASK_SETS	( 3 )
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 0 )

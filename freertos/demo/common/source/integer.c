@@ -41,6 +41,9 @@
 /* Demo program include files. */
 #include "include/integer.h"
 
+#include "include/print.h"
+
+
 /* The constants used in the calculation. */
 #define intgCONST1				( ( long ) 123 )
 #define intgCONST2				( ( long ) 234567 )
@@ -48,7 +51,7 @@
 #define intgCONST4				( ( long ) 7 )
 #define intgEXPECTED_ANSWER		( ( ( intgCONST1 + intgCONST2 ) * intgCONST3 ) / intgCONST4 )
 
-#define intgSTACK_SIZE			configMINIMAL_STACK_SIZE
+#define intgSTACK_SIZE			( configMINIMAL_STACK_SIZE + 64 )
 
 /* As this is not the minimal version, we will create two tasks. */
 #define intgNUMBER_OF_TASKS		( 2 )
@@ -85,6 +88,8 @@ volatile long lValue;
 BaseType_t sError = pdFALSE;
 volatile BaseType_t *pxTaskHasExecuted;
 
+const char * pcCalculationIncorrect = "Integer calculation incorrect!\r\n";
+
 	/* Set a pointer to the variable we are going to set to true each
 	iteration.  This is also a good test of the parameter passing mechanism
 	within each port. */
@@ -115,6 +120,7 @@ volatile BaseType_t *pxTaskHasExecuted;
 		if( lValue != intgEXPECTED_ANSWER ) /*lint !e774 volatile used to prevent this being optimised out. */
 		{
 			sError = pdTRUE;
+			vPrintDisplayMessage( &pcCalculationIncorrect );
 		}
 
 		if( sError == pdFALSE )
@@ -155,7 +161,9 @@ BaseType_t sTask;
 
 		/* Reset the check variable so we can tell if it has been set by
 		the next time around. */
+		portENTER_CRITICAL();
 		xTaskCheck[ sTask ] = pdFALSE;
+		portEXIT_CRITICAL();
 	}
 
 	return xReturn;
