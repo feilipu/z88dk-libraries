@@ -1,8 +1,8 @@
 main.c
 fileIO.c
 
-source/death.c
 source/print.c
+source/death.c
 
 source/BlockQ.c
 source/blocktim.c

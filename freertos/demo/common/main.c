@@ -78,7 +78,8 @@
 
 /* Demo file headers. */
 
-#include "include/partest.h"
+#include "include/fileIO.h"
+#include "include/print.h"
 
 #include "include/BlockQ.h"
 #include "include/PollQ.h"
@@ -91,18 +92,15 @@
 #include "include/QPeek.h"
 #include "include/recmutex.h"
 
-#include "include/print.h"
-#include "include/fileIO.h"
-
 #pragma printf = "%s"                       // enables %s only
 
 /* Priority definitions for all the tasks in the demo application. */
 #define mainMATH_TASK_PRIORITY              ( tskIDLE_PRIORITY + 1 )
-#define mainSEMAPHORE_TASK_PRIORITY         ( tskIDLE_PRIORITY + 1 )
-#define mainQUEUE_POLL_PRIORITY             ( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_BLOCK_PRIORITY            ( tskIDLE_PRIORITY + 3 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 4 )
-#define mainPRINT_TASK_PRIORITY             ( tskIDLE_PRIORITY + 5 )
+#define mainSEMAPHORE_TASK_PRIORITY         ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_POLL_PRIORITY             ( tskIDLE_PRIORITY + 3 )
+#define mainQUEUE_BLOCK_PRIORITY            ( tskIDLE_PRIORITY + 4 )
+#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 6 )
+#define mainPRINT_TASK_PRIORITY             ( tskIDLE_PRIORITY + 7 )
 
 #define mainPRINT_STACK_SIZE                ( ( uint16_t ) 256 )
 

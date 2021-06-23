@@ -53,7 +53,7 @@
 /* Demo program include files. */
 #include "include/death.h"
 
-#define deathSTACK_SIZE		( configMINIMAL_STACK_SIZE + 64 )
+#define deathSTACK_SIZE     ( configMINIMAL_STACK_SIZE + 64 )
 
 /* The task originally created which is responsible for periodically dynamically
 creating another four tasks. */
@@ -86,7 +86,7 @@ TaskHandle_t xCreatedTask;
 
 void vCreateSuicidalTasks( UBaseType_t uxPriority )
 {
-	xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) NULL, uxPriority, NULL );
+    xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) NULL, uxPriority, NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -96,41 +96,41 @@ volatile long l1, l2;
 TaskHandle_t xTaskToKill;
 const TickType_t xDelay = pdMS_TO_TICKS( ( TickType_t ) 200 );
 
-	/* Test deletion of a task's secure context, if any. */
-	portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE );
+    /* Test deletion of a task's secure context, if any. */
+    portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE );
 
-	if( pvParameters != NULL )
-	{
-		/* This task is periodically created four times.  Two created tasks are
-		passed a handle to the other task so it can kill it before killing itself.
-		The other task is passed in null. */
-		xTaskToKill = *( TaskHandle_t* )pvParameters;
-	}
-	else
-	{
-		xTaskToKill = NULL;
-	}
+    if( pvParameters != NULL )
+    {
+        /* This task is periodically created four times.  Two created tasks are
+        passed a handle to the other task so it can kill it before killing itself.
+        The other task is passed in null. */
+        xTaskToKill = *( TaskHandle_t* )pvParameters;
+    }
+    else
+    {
+        xTaskToKill = NULL;
+    }
 
-	for( ;; )
-	{
-		/* Do something random just to use some stack and registers. */
-		l1 = 2;
-		l2 = 89;
-		l2 *= l1;
-		vTaskDelay( xDelay );
+    for( ;; )
+    {
+        /* Do something random just to use some stack and registers. */
+        l1 = 2;
+        l2 = 89;
+        l2 *= l1;
+        vTaskDelay( xDelay );
 
-		if( xTaskToKill != NULL )
-		{
-			/* Make sure the other task has a go before we delete it. */
-			vTaskDelay( ( TickType_t ) 0 );
+        if( xTaskToKill != NULL )
+        {
+            /* Make sure the other task has a go before we delete it. */
+            vTaskDelay( ( TickType_t ) 0 );
 
-			/* Kill the other task that was created by vCreateTasks(). */
-			vTaskDelete( xTaskToKill );
+            /* Kill the other task that was created by vCreateTasks(). */
+            vTaskDelete( xTaskToKill );
 
-			/* Kill ourselves. */
-			vTaskDelete( NULL );
-		}
-	}
+            /* Kill ourselves. */
+            vTaskDelete( NULL );
+        }
+    }
 }/*lint !e818 !e550 Function prototype must be as per standard for task functions. */
 /*-----------------------------------------------------------*/
 
@@ -139,28 +139,28 @@ static portTASK_FUNCTION( vCreateTasks, pvParameters )
 const TickType_t xDelay = pdMS_TO_TICKS( ( TickType_t ) 1000 );
 UBaseType_t uxPriority;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+    /* Remove compiler warning about unused parameter. */
+    ( void ) pvParameters;
 
-	/* Delay at the start to ensure tasks created by other demos have been
-	created before storing the current number of tasks. */
-	vTaskDelay( xDelay );
-	uxTasksRunningAtStart = ( UBaseType_t ) uxTaskGetNumberOfTasks();
+    /* Delay at the start to ensure tasks created by other demos have been
+    created before storing the current number of tasks. */
+    vTaskDelay( xDelay );
+    uxTasksRunningAtStart = ( UBaseType_t ) uxTaskGetNumberOfTasks();
 
-	uxPriority = uxTaskPriorityGet( NULL );
+    uxPriority = uxTaskPriorityGet( NULL );
 
-	for( ;; )
-	{
-		/* Just loop round, delaying then creating the four suicidal tasks. */
-		vTaskDelay( xDelay );
+    for( ;; )
+    {
+        /* Just loop round, delaying then creating the four suicidal tasks. */
+        vTaskDelay( xDelay );
 
-		xCreatedTask = NULL;
+        xCreatedTask = NULL;
 
-		xTaskCreate( vSuicidalTask, "SUICID1", configMINIMAL_STACK_SIZE, NULL, uxPriority, &xCreatedTask );
-		xTaskCreate( vSuicidalTask, "SUICID2", configMINIMAL_STACK_SIZE, &xCreatedTask, uxPriority, NULL );
+        xTaskCreate( vSuicidalTask, "SUICID1", configMINIMAL_STACK_SIZE, NULL, uxPriority, &xCreatedTask );
+        xTaskCreate( vSuicidalTask, "SUICID2", configMINIMAL_STACK_SIZE, &xCreatedTask, uxPriority, NULL );
 
-		++usCreationCount;
-	}
+        ++usCreationCount;
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -172,29 +172,29 @@ static uint16_t usLastCreationCount = 0xfff;
 BaseType_t xReturn = pdTRUE;
 static UBaseType_t uxTasksRunningNow;
 
-	if( usLastCreationCount == usCreationCount )
-	{
-		xReturn = pdFALSE;
-	}
-	else
-	{
-		usLastCreationCount = usCreationCount;
-	}
+    if( usLastCreationCount == usCreationCount )
+    {
+        xReturn = pdFALSE;
+    }
+    else
+    {
+        usLastCreationCount = usCreationCount;
+    }
 
-	uxTasksRunningNow = ( UBaseType_t ) uxTaskGetNumberOfTasks();
+    uxTasksRunningNow = ( UBaseType_t ) uxTaskGetNumberOfTasks();
 
-	if( uxTasksRunningNow < uxTasksRunningAtStart )
-	{
-		xReturn = pdFALSE;
-	}
-	else if( ( uxTasksRunningNow - uxTasksRunningAtStart ) > uxMaxNumberOfExtraTasksRunning )
-	{
-		xReturn = pdFALSE;
-	}
-	else
-	{
-		/* Everything is okay. */
-	}
+    if( uxTasksRunningNow < uxTasksRunningAtStart )
+    {
+        xReturn = pdFALSE;
+    }
+    else if( ( uxTasksRunningNow - uxTasksRunningAtStart ) > uxMaxNumberOfExtraTasksRunning )
+    {
+        xReturn = pdFALSE;
+    }
+    else
+    {
+        /* Everything is okay. */
+    }
 
-	return xReturn;
+    return xReturn;
 }

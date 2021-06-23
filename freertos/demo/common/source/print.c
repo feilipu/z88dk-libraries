@@ -51,8 +51,8 @@
 /*
 Changes from V2.0.0
 
-	+ Delay periods are now specified using variables and constants of
-	  TickType_t rather than unsigned long.
+    + Delay periods are now specified using variables and constants of
+      TickType_t rather than unsigned long.
 */
 
 
@@ -67,27 +67,32 @@ Changes from V2.0.0
 /* Demo program include files. */
 #include "include/print.h"
 
+/* use stdio where possible */
+#ifdef __STDIO_H__
+    #define USE_STDIO
+#endif
+
 static QueueHandle_t xPrintQueue;
 
 /*-----------------------------------------------------------*/
 
 void vPrintInitialise( void )
 {
-const UBaseType_t uxQueueSize = 20;
+const UBaseType_t uxQueueSize = 80;
 
-	/* Create the queue on which errors will be reported. */
-	xPrintQueue = xQueueCreate( uxQueueSize, ( UBaseType_t ) sizeof( UBaseType_t * ) );
+    /* Create the queue on which errors will be reported. */
+    xPrintQueue = xQueueCreate( uxQueueSize, ( UBaseType_t ) sizeof( UBaseType_t * ) );
 }
 /*-----------------------------------------------------------*/
 
-void vPrintDisplayMessage( char ** ppcMessageToSend )
+void vPrintDisplayMessage( const char ** ppcMessageToSend )
 {
-	#ifdef USE_STDIO
-		xQueueSend( xPrintQueue, ( void * ) ppcMessageToSend, ( TickType_t ) 0 );
-	#else
-    	/* Stop warnings. */
-		( void ) ppcMessageToSend;
-	#endif
+    #ifdef USE_STDIO
+        xQueueSend( xPrintQueue, ( void * ) ppcMessageToSend, ( TickType_t ) 0 );
+    #else
+        /* Stop warnings. */
+        ( void ) ppcMessageToSend;
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -95,12 +100,12 @@ const char *pcPrintGetNextMessage( TickType_t xPrintRate )
 {
 char *pcMessage;
 
-	if( xQueueReceive( xPrintQueue, &pcMessage, xPrintRate ) == pdPASS )
-	{
-		return pcMessage;
-	}
-	else
-	{
-		return NULL;
-	}
+    if( xQueueReceive( xPrintQueue, &pcMessage, xPrintRate ) == pdPASS )
+    {
+        return pcMessage;
+    }
+    else
+    {
+        return NULL;
+    }
 }

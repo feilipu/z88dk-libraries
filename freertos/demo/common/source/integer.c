@@ -45,16 +45,16 @@
 
 
 /* The constants used in the calculation. */
-#define intgCONST1				( ( long ) 123 )
-#define intgCONST2				( ( long ) 234567 )
-#define intgCONST3				( ( long ) -3 )
-#define intgCONST4				( ( long ) 7 )
-#define intgEXPECTED_ANSWER		( ( ( intgCONST1 + intgCONST2 ) * intgCONST3 ) / intgCONST4 )
+#define intgCONST1              ( ( long ) 123 )
+#define intgCONST2              ( ( long ) 234567 )
+#define intgCONST3              ( ( long ) -3 )
+#define intgCONST4              ( ( long ) 7 )
+#define intgEXPECTED_ANSWER     ( ( ( intgCONST1 + intgCONST2 ) * intgCONST3 ) / intgCONST4 )
 
-#define intgSTACK_SIZE			( configMINIMAL_STACK_SIZE + 64 )
+#define intgSTACK_SIZE          ( configMINIMAL_STACK_SIZE + 64 )
 
-/* As this is not the minimal version, we will create two tasks. */
-#define intgNUMBER_OF_TASKS		( 2 )
+/* As this is not the minimal version, we will create four tasks. */
+#define intgNUMBER_OF_TASKS     ( 4 )
 
 /* The task function.  Repeatedly performs a 32 bit calculation, checking the
 result against the expected result.  If the result is incorrect then the
@@ -73,10 +73,10 @@ void vStartIntegerMathTasks( UBaseType_t uxPriority )
 {
 BaseType_t sTask;
 
-	for( sTask = 0; sTask < intgNUMBER_OF_TASKS; sTask++ )
-	{
-		xTaskCreate( vCompeteingIntMathTask, "IntMath", intgSTACK_SIZE, ( void * ) &( xTaskCheck[ sTask ] ), uxPriority, ( TaskHandle_t * ) NULL );
-	}
+    for( sTask = 0; sTask < intgNUMBER_OF_TASKS; sTask++ )
+    {
+        xTaskCreate( vCompeteingIntMathTask, "IntMath", intgSTACK_SIZE, ( void * ) &( xTaskCheck[ sTask ] ), uxPriority, ( TaskHandle_t * ) NULL );
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -90,56 +90,56 @@ volatile BaseType_t *pxTaskHasExecuted;
 
 const char * pcCalculationIncorrect = "Integer calculation incorrect!\r\n";
 
-	/* Set a pointer to the variable we are going to set to true each
-	iteration.  This is also a good test of the parameter passing mechanism
-	within each port. */
-	pxTaskHasExecuted = ( volatile BaseType_t * ) pvParameters;
+    /* Set a pointer to the variable we are going to set to true each
+    iteration.  This is also a good test of the parameter passing mechanism
+    within each port. */
+    pxTaskHasExecuted = ( volatile BaseType_t * ) pvParameters;
 
-	/* Keep performing a calculation and checking the result against a constant. */
-	for( ;; )
-	{
-		/* Perform the calculation.  This will store partial value in
-		registers, resulting in a good test of the context switch mechanism. */
-		lValue = intgCONST1;
-		lValue += intgCONST2;
+    /* Keep performing a calculation and checking the result against a constant. */
+    for( ;; )
+    {
+        /* Perform the calculation.  This will store partial value in
+        registers, resulting in a good test of the context switch mechanism. */
+        lValue = intgCONST1;
+        lValue += intgCONST2;
 
-		/* Yield in case cooperative scheduling is being used. */
-		#if configUSE_PREEMPTION == 0
-		{
-			taskYIELD();
-		}
-		#endif
+        /* Yield in case cooperative scheduling is being used. */
+        #if configUSE_PREEMPTION == 0
+        {
+            taskYIELD();
+        }
+        #endif
 
-		/* Finish off the calculation. */
-		lValue *= intgCONST3;
-		lValue /= intgCONST4;
+        /* Finish off the calculation. */
+        lValue *= intgCONST3;
+        lValue /= intgCONST4;
 
-		/* If the calculation is found to be incorrect we stop setting the
-		TaskHasExecuted variable so the check task can see an error has
-		occurred. */
-		if( lValue != intgEXPECTED_ANSWER ) /*lint !e774 volatile used to prevent this being optimised out. */
-		{
-			sError = pdTRUE;
-			vPrintDisplayMessage( &pcCalculationIncorrect );
-		}
+        /* If the calculation is found to be incorrect we stop setting the
+        TaskHasExecuted variable so the check task can see an error has
+        occurred. */
+        if( lValue != intgEXPECTED_ANSWER ) /*lint !e774 volatile used to prevent this being optimised out. */
+        {
+            sError = pdTRUE;
+            vPrintDisplayMessage( &pcCalculationIncorrect );
+        }
 
-		if( sError == pdFALSE )
-		{
-			/* We have not encountered any errors, so set the flag that show
-			we are still executing.  This will be periodically cleared by
-			the check task. */
-			portENTER_CRITICAL();
-				*pxTaskHasExecuted = pdTRUE;
-			portEXIT_CRITICAL();
-		}
+        if( sError == pdFALSE )
+        {
+            /* We have not encountered any errors, so set the flag that show
+            we are still executing.  This will be periodically cleared by
+            the check task. */
+            portENTER_CRITICAL();
+                *pxTaskHasExecuted = pdTRUE;
+            portEXIT_CRITICAL();
+        }
 
-		/* Yield in case cooperative scheduling is being used. */
-		#if configUSE_PREEMPTION == 0
-		{
-			taskYIELD();
-		}
-		#endif
-	}
+        /* Yield in case cooperative scheduling is being used. */
+        #if configUSE_PREEMPTION == 0
+        {
+            taskYIELD();
+        }
+        #endif
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -149,22 +149,22 @@ BaseType_t xAreIntegerMathsTaskStillRunning( void )
 BaseType_t xReturn = pdTRUE;
 BaseType_t sTask;
 
-	/* Check the maths tasks are still running by ensuring their check variables
-	are still being set to true. */
-	for( sTask = 0; sTask < intgNUMBER_OF_TASKS; sTask++ )
-	{
-		if( xTaskCheck[ sTask ] == pdFALSE )
-		{
-			/* The check has not incremented so an error exists. */
-			xReturn = pdFALSE;
-		}
+    /* Check the maths tasks are still running by ensuring their check variables
+    are still being set to true. */
+    for( sTask = 0; sTask < intgNUMBER_OF_TASKS; sTask++ )
+    {
+        if( xTaskCheck[ sTask ] == pdFALSE )
+        {
+            /* The check has not incremented so an error exists. */
+            xReturn = pdFALSE;
+        }
 
-		/* Reset the check variable so we can tell if it has been set by
-		the next time around. */
-		portENTER_CRITICAL();
-		xTaskCheck[ sTask ] = pdFALSE;
-		portEXIT_CRITICAL();
-	}
+        /* Reset the check variable so we can tell if it has been set by
+        the next time around. */
+        portENTER_CRITICAL();
+        xTaskCheck[ sTask ] = pdFALSE;
+        portEXIT_CRITICAL();
+    }
 
-	return xReturn;
+    return xReturn;
 }

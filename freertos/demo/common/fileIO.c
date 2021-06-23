@@ -24,6 +24,7 @@
  *
  */
 
+/* Standard includes. */
 #include <stdio.h>
 #include <string.h>
 
@@ -35,7 +36,7 @@
 
 void vDisplayMessage( const char * const pcMessageToPrint )
 {
-			printf( "%s", pcMessageToPrint );
-			fflush( stdout );
+    fprintf( stdout, "%s", pcMessageToPrint );
+    fflush( stdout );
 }
 /*-----------------------------------------------------------*/

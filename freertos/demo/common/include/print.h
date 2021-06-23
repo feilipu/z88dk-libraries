@@ -28,7 +28,7 @@
 #define PRINT_H
 
 void vPrintInitialise( void );
-void vPrintDisplayMessage( char ** pcMessageToSend );
+void vPrintDisplayMessage( const char ** pcMessageToSend );
 const char *pcPrintGetNextMessage( TickType_t xPrintRate );
 
 #endif
