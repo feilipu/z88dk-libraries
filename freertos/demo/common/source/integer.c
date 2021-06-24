@@ -129,7 +129,7 @@ const char * pcCalculationIncorrect = "Integer calculation incorrect!\r\n";
             we are still executing.  This will be periodically cleared by
             the check task. */
             portENTER_CRITICAL();
-                *pxTaskHasExecuted = pdTRUE;
+            *pxTaskHasExecuted = pdTRUE;
             portEXIT_CRITICAL();
         }
 
@@ -161,9 +161,7 @@ BaseType_t sTask;
 
         /* Reset the check variable so we can tell if it has been set by
         the next time around. */
-        portENTER_CRITICAL();
-        xTaskCheck[ sTask ] = pdFALSE;
-        portEXIT_CRITICAL();
+        xTaskCheck[ sTask ] = pdFALSE;;
     }
 
     return xReturn;

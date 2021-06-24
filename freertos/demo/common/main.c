@@ -43,9 +43,6 @@
  * are posted.  It will therefore only block for the full 2 seconds if no messages
  * are posted onto the queue.
  *
- * Main. c also provides a demonstration of how the trace visualisation utility can
- * be used, and how the scheduler can be stopped.
- *
  */
 
  ////////////////////////////////////////////////////////
@@ -73,6 +70,8 @@
 
 #endif
 
+#pragma printf = "%s"                       // enables %s format only
+
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
@@ -91,8 +90,6 @@
 #include "include/dynamic.h"
 #include "include/QPeek.h"
 #include "include/recmutex.h"
-
-#pragma printf = "%s"                       // enables %s only
 
 /* Priority definitions for all the tasks in the demo application. */
 #define mainMATH_TASK_PRIORITY              ( tskIDLE_PRIORITY + 1 )
@@ -135,7 +132,7 @@ int main( void )
 
     /* This task has to be created last as it keeps account of the number of tasks
     it expects to see running. */
-    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+//  vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
     /* Set the scheduler running.  This function will not return unless a task
     calls vTaskEndScheduler(). */
@@ -275,7 +272,7 @@ BaseType_t xErrorHasOccurred = pdFALSE;
         xErrorHasOccurred = pdTRUE;
     } // */
 
-    if( xIsCreateTaskStillRunning() != pdTRUE )
+/*  if( xIsCreateTaskStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Incorrect number of tasks running!\r\n" );
         xErrorHasOccurred = pdTRUE;

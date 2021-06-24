@@ -132,7 +132,7 @@ BaseType_t xError = pdFALSE, xLoop;
                     /* If an error has ever been recorded we stop incrementing the
                     check variable. */
                     portENTER_CRITICAL();
-                        xPollingProducerCount++;
+                    xPollingProducerCount++;
                     portEXIT_CRITICAL();
                 }
 
@@ -177,7 +177,7 @@ BaseType_t xError = pdFALSE;
                         /* Only increment the check variable if no errors have
                         occurred. */
                         portENTER_CRITICAL();
-                            xPollingConsumerCount++;
+                        xPollingConsumerCount++;
                         portEXIT_CRITICAL();
                     }
                 }

@@ -343,7 +343,7 @@ int16_t sError = pdFALSE;
         {
             /* If no errors have occurred then increment the check variable. */
             portENTER_CRITICAL();
-                usCheckVariable++;
+            usCheckVariable++;
             portEXIT_CRITICAL();
         }
 
