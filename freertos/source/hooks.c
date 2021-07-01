@@ -40,38 +40,38 @@
 
 #if ( configSUPPORT_STATIC_ALLOCATION >= 1 )
 
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
-                                    StackType_t **ppxIdleTaskStackBuffer,
-                                    configSTACK_DEPTH_TYPE *pulIdleTaskStackSize );
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    StackType_t ** ppxIdleTaskStackBuffer,
+                                    configSTACK_DEPTH_TYPE * puxIdleTaskStackSize );
 
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
-                                    StackType_t **ppxIdleTaskStackBuffer,
-                                    configSTACK_DEPTH_TYPE *pulIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
+                                    StackType_t ** ppxIdleTaskStackBuffer,
+                                    configSTACK_DEPTH_TYPE * puxIdleTaskStackSize )
 {
     static StaticTask_t xIdleTaskTCB;
     static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
     *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
     *ppxIdleTaskStackBuffer = uxIdleTaskStack;
-    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+    *puxIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 
 #if ( configUSE_TIMERS >= 1 )
 
-void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
-                                     StackType_t **ppxTimerTaskStackBuffer,
-                                     configSTACK_DEPTH_TYPE *pulTimerTaskStackSize );
+void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                     StackType_t ** ppxTimerTaskStackBuffer,
+                                     configSTACK_DEPTH_TYPE * puxTimerTaskStackSize );
 
-void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
-                                     StackType_t **ppxTimerTaskStackBuffer,
-                                     configSTACK_DEPTH_TYPE *pulTimerTaskStackSize )
+void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                     StackType_t ** ppxTimerTaskStackBuffer,
+                                     configSTACK_DEPTH_TYPE * puxTimerTaskStackSize )
 {
     static StaticTask_t xTimerTaskTCB;
     static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
     *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
     *ppxTimerTaskStackBuffer = uxTimerTaskStack;
-    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+    *puxTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
 #endif /* configUSE_TIMERS >= 1 */
