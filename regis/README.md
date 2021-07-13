@@ -55,6 +55,58 @@ zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.ls
 
 The resulting `regis.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
+## Preparing XTERM to support ReGIS
+
+XTERM is the only known software solution supporting ReGIS commands (to be improved I'm sure). But it doesn't support ReGIS in the default build. You'll need to enable ReGIS yourself.
+``` sh
+% sudo apt install -y libxaw7-dev libncurses-dev
+% wget https://invisible-island.net/datafiles/release/xterm.tar.gz
+% tar xf xterm.tar.gz
+% cd xterm-368
+% ./configure --enable-regis-graphics
+% make
+% sudo make install
+```
+
+As XTERM has no serial interface itself, so you'll need to use one. A suggestion is to use picocom. It is also useful for working with the retrocomputers generally. First test that it is working as per below.
+
+``` sh
+% sudo apt install -y picocom
+% picocom -b 115200 -f h /dev/ttyUSB0
+```
+
+And, finally together with VT340 emulation.
+``` sh
+% xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0
+```
+
+Another alternative is using VT125 emulation.
+``` sh
+% xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0
+```
+
+## Demonstration
+
+There is a demonstration program, which should produce the below result (subject to improvement).
+
+<div>
+<table style="border: 2px solid #cccccc;">
+<tbody>
+<tr>
+<td style="border: 1px solid #cccccc; padding: 6px;"><a href="https://github.com/feilipu/z88dk-libraries/blob/master/regis/demo/regis_demo.png" target="_blank"><img src="https://github.com/feilipu/z88dk-libraries/blob/master/regis/demo/regis_demo.png"/></a></td>
+</tr>
+<tr>
+<th style="border: 1px solid #cccccc; padding: 6px;"><centre>RC2014 ReGIS - Picocom in XTERM<center></th>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+## Credits
+
+For describing [how to get XTERM working](https://groups.google.com/g/rc2014-z80/c/fuji5iuJ3Jc/m/FNYwGGbaAQAJ) with ReGIS, thanks Rob Gowin.
+
 ## License
 
 This demo is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check LICENSE for more information.
