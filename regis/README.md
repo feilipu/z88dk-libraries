@@ -3,7 +3,7 @@
 
 ReGIS interprets commands that allow you to simply and efficiently control a video monitor screen and draw pictures on the screen with lines, curves, and circles. Also, ReGIS provides commands to include text characters in pictures. The ReGIS graphics language is designed for conciseness and easy transport of code from the host to the ReGIS device. The language consists of commands that are modified by options.
 
-Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.1.6 [r12419](https://sourceforge.net/p/sdcc/code/12419/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.1.6 r12419.
 
 ## Installation
 
@@ -38,14 +38,14 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 	5.profit
 
 ### ZSDCC
-`zcc +rc2014 -subtype=app -v -m -SO3 --list --math32  -llib/rc2014/regis --max-allocs-per-node100000 @test.lst -o test -create-app`
+`zcc +rc2014 -subtype=app -v -m -SO3 --list --math32  -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
 
 ### SCCZ80
-`zcc +rc2014 -subtype=app -clib=new -v -m -SO3 --list --math32 -llib/rc2014/regis @test.lst -o test -create-app`
+`zcc +rc2014 -subtype=app -clib=new -v -m -SO3 --list --math32 -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ## Preparation
 
-The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
+The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```
 zcc +rc2014 --math32 -x -O2 -clib=new @regis.lst -o ../regis

@@ -30,12 +30,22 @@ int main(void)
     window_new( &mywindow, 768, 480 );
 
     draw_intensity( &mywindow, MA);
-    draw_abs( &mywindow, 400, 200 );
-    draw_line_rel( &mywindow, -200, 200 );
-    draw_line_abs( &mywindow, 200, 100);
 
-    draw_abs( &mywindow, 600, 100 );
+    draw_abs( &mywindow, 600, 200 );
+    draw_line_rel( &mywindow, -200, 200 );
+    draw_line_abs( &mywindow, 400, 100);
+
+    draw_abs( &mywindow, 700, 100 );
     draw_box_fill( &mywindow, -100, -50);
+
+    draw_intensity( &mywindow, DK);
+    draw_box( &mywindow, -50, -25);
+
+    draw_intensity( &mywindow, CY);
+
+    draw_abs( &mywindow, 200, 100 );
+    draw_arc( &mywindow, 50, 50, 270);
+    draw_arc( &mywindow, 100, 100, -180);
 
     window_write( &mywindow );
     window_close( &mywindow );

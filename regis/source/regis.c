@@ -359,28 +359,40 @@ void draw_unbox_fill(window_t * win,int16_t width,int16_t height)
     appendstring(win, s);
 }
 
-/* Draw an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-void draw_arc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Draw an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
+void draw_arc(window_t * win,int16_t dx,int16_t dy,int16_t arc)
 {
+    char s[20];
+    sprintf(s, "C(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
 
+    appendstring(win, s);
 }
 
-/* Erase an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-void draw_unarc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Erase an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
+void draw_unarc(window_t * win,int16_t dx,int16_t dy,int16_t arc)
 {
+    char s[26];
+    sprintf(s, "C(W(E))(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
 
+    appendstring(win, s);
 }
 
-/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-void draw_arc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
+void draw_arc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc)
 {
+    char s[26];
+    sprintf(s, "C(W(S1))(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
 
+    appendstring(win, s);
 }
 
-/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-void draw_unarc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
+void draw_unarc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc)
 {
+    char s[30];
+    sprintf(s, "C(W(S1,E))(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
 
+    appendstring(win, s);
 }
 
 /* Draw text from current position */

@@ -149,142 +149,142 @@ typedef struct window_s {
 /****************************************************************************/
 
 /* Open a graphics window, in graphics mode, and inititialise graphics */
-extern uint8_t  window_new(window_t * win,uint16_t width,uint16_t height) __smallc;
+uint8_t  window_new(window_t * win,uint16_t width,uint16_t height) __smallc;
 
 
 
 /* Reset a graphics window, clear command string */
-extern void  window_reset(window_t * win) __smallc;
+void window_reset(window_t * win) __smallc;
 
 
 
 /* Write out instructions */
-extern void  window_write(window_t * win) __smallc;
+void window_write(window_t * win) __smallc;
 
 
 
 /* Clear window */
-extern void  window_clear(window_t * win) __smallc;
+void window_clear(window_t * win) __smallc;
 
 
 
 /* Close a graphics window, return to text mode */
-extern void  window_close(window_t * win) __smallc;
+void window_close(window_t * win) __smallc;
 
 
 
 /* Set writing mode */
-extern void  draw_mode(window_t * win,mode_t mode) __smallc;
+void draw_mode(window_t * win,mode_t mode) __smallc;
 
 
 
 /* Set writing pattern */
-extern void  draw_pattern(window_t * win,pattern_t pattern) __smallc;
+void draw_pattern(window_t * win,pattern_t pattern) __smallc;
 
 
 
 /* Set writing intensity (colour) */
-extern void  draw_intensity(window_t * win,intensity_t intensity) __smallc;
+void draw_intensity(window_t * win,intensity_t intensity) __smallc;
 
 
 
 /* Relative move position */
-extern void  draw_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
+void draw_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
 
 
 
 /* Relative move offset direction */
-extern void  draw_ofs(window_t * win,uint16_t d,offset_t offset) __smallc;
+void draw_ofs(window_t * win,uint16_t d,offset_t offset) __smallc;
 
 
 
 /* Set absolute position */
-extern void  draw_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void draw_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Draw a pixel to screen at current position */
-extern void  draw_pixel_rel(window_t * win) __smallc;
+void draw_pixel_rel(window_t * win) __smallc;
 
 
 
 /* Erase a pixel at current position */
-extern void  draw_unpixel_rel(window_t * win) __smallc;
+void draw_unpixel_rel(window_t * win) __smallc;
 
 
 
 /* Draw a pixel at absolute location */
-extern void  draw_pixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void draw_pixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Erase a pixel at absolute location */
-extern void  draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Draw a line to relative position, initial pixel undrawn */
-extern void  draw_line_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
+void draw_line_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
 
 
 
 /* Erase a line from current position, initial pixel undrawn */
-extern void  draw_unline_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
+void draw_unline_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
 
 
 
 /* Draw a line to absolute location, initial pixel undrawn */
-extern void  draw_line_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void draw_line_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Erase a line to absolute location, initial pixel undrawn */
-extern void  draw_unline_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void draw_unline_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Draw a box from current position */
-extern void  draw_box(window_t * win,int16_t width,int16_t height) __smallc;
+void draw_box(window_t * win,int16_t width,int16_t height) __smallc;
 
 
 
 /* Erase a box from current position */
-extern void  draw_unbox(window_t * win,int16_t width,int16_t height) __smallc;
+void draw_unbox(window_t * win,int16_t width,int16_t height) __smallc;
 
 
 
 /* Draw a filled box from current position */
-extern void  draw_box_fill(window_t * win,int16_t width,int16_t height) __smallc;
+void draw_box_fill(window_t * win,int16_t width,int16_t height) __smallc;
 
 
 
 /* Erase a filled box from current position */
-extern void  draw_unbox_fill(window_t * win,int16_t width,int16_t height) __smallc;
+void draw_unbox_fill(window_t * win,int16_t width,int16_t height) __smallc;
 
 
 
-/* Draw an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-extern void  draw_arc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc) __smallc;
+/* Draw an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
+void draw_arc(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
 
 
 
-/* Erase an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-extern void  draw_unarc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc) __smallc;
+/* Erase an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
+void draw_unarc(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
 
 
 
-/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-extern void  draw_arc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc) __smallc;
+/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
+void draw_arc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
 
 
 
-/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-extern void  draw_unarc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc) __smallc;
+/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
+void draw_unarc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
 
 
 
 /* Draw text from current position */
-extern void  draw_text(window_t * win,char *text,uint8_t textlen,uint8_t size) __smallc;
+void draw_text(window_t * win,char *text,uint8_t textlen,uint8_t size) __smallc;
 
 
 

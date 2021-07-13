@@ -215,17 +215,17 @@ __OPROTO(,,void,,draw_box_fill,window_t * win,int16_t width,int16_t height)
 /* Erase a filled box from current position */
 __OPROTO(,,void,,draw_unbox_fill,window_t * win,int16_t width,int16_t height)
 
-/* Draw an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-__OPROTO(,,void,,draw_arc,window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Draw an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
+__OPROTO(,,void,,draw_arc,window_t * win,int16_t dx,int16_t dy,int16_t arc)
 
-/* Erase an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-__OPROTO(,,void,,draw_unarc,window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Erase an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
+__OPROTO(,,void,,draw_unarc,window_t * win,int16_t dx,int16_t dy,int16_t arc)
 
-/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-__OPROTO(,,void,,draw_arc_fill,window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
+__OPROTO(,,void,,draw_arc_fill,window_t * win,int16_t dx,int16_t dy,int16_t arc)
 
-/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-__OPROTO(,,void,,draw_unarc_fill,window_t * win,uint16_t radius,int16_t offset,uint16_t arc)
+/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
+__OPROTO(,,void,,draw_unarc_fill,window_t * win,int16_t dx,int16_t dy,int16_t arc)
 
 /* Draw text from current position */
 __OPROTO(,,void,,draw_text,window_t * win,char *text,uint8_t textlen,uint8_t size)
