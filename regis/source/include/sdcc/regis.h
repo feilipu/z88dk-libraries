@@ -103,13 +103,26 @@ typedef enum pattern_e
     P1  = 1,            // solid
     P2  = 2,            // dash
     P3  = 3,            // dit dash
-    P4  = 4,
-    P5  = 5,
-    P6  = 6,            // dit
-    P7  = 7,            // dit dit
+    P4  = 4,            // dot
+    P5  = 5,            // dit dit dash
+    P6  = 6,
+    P7  = 7,
     P8  = 8,
     P9  = 9
 } pattern_t;
+
+/* intensity (colour) I(c) */
+typedef enum intensity_e
+{
+    DK  = 0,            // Dark (black)
+    BL  = 1,            // Blue
+    RD  = 2,            // Red
+    MA  = 3,            // Magenta
+    GR  = 4,            // Green
+    CY  = 5,            // Cyan
+    YE  = 6,            // Yellow
+    WH  = 7             // White
+} intensity_t;
 
 /* Structure to use when opening a window - as per usual,if type <> 0
  * then open graphics window number with width (in pixels) width.
@@ -136,111 +149,115 @@ typedef struct window_s {
 /****************************************************************************/
 
 /* Open a graphics window, in graphics mode, and inititialise graphics */
-uint8_t window_new(window_t * win,uint16_t width,uint16_t height);
+extern uint8_t window_new(window_t * win,uint16_t width,uint16_t height);
 
 
 /* Reset a graphics window, clear command string */
-void window_reset(window_t * win);
+extern void window_reset(window_t * win);
 
 
 /* Write out instructions */
-void window_write(window_t * win);
+extern void window_write(window_t * win);
 
 
 /* Clear window */
-void window_clear(window_t * win);
+extern void window_clear(window_t * win);
 
 
 /* Close a graphics window, return to text mode */
-void window_close(window_t * win);
+extern void window_close(window_t * win);
 
 
 /* Set writing mode */
-void draw_mode(window_t * win,mode_t mode);
+extern void draw_mode(window_t * win,mode_t mode);
 
 
 /* Set writing pattern */
-void draw_pattern(window_t * win,pattern_t pattern);
+extern void draw_pattern(window_t * win,pattern_t pattern);
+
+
+/* Set writing intensity (colour) */
+extern void draw_intensity(window_t * win,intensity_t intensity);
 
 
 /* Relative move position */
-void draw_rel(window_t * win,int16_t dx,int16_t dy);
+extern void draw_rel(window_t * win,int16_t dx,int16_t dy);
 
 
 /* Relative move offset direction */
-void draw_ofs(window_t * win,uint16_t d,offset_t offset);
+extern void draw_ofs(window_t * win,uint16_t d,offset_t offset);
 
 
 /* Set absolute position */
-void draw_abs(window_t * win,uint16_t x,uint16_t y);
+extern void draw_abs(window_t * win,uint16_t x,uint16_t y);
 
 
 /* Draw a pixel to screen at current position */
-void draw_pixel_rel(window_t * win);
+extern void draw_pixel_rel(window_t * win);
 
 
 /* Erase a pixel at current position */
-void draw_unpixel_rel(window_t * win);
+extern void draw_unpixel_rel(window_t * win);
 
 
 /* Draw a pixel at absolute location */
-void draw_pixel_abs(window_t * win,uint16_t x,uint16_t y);
+extern void draw_pixel_abs(window_t * win,uint16_t x,uint16_t y);
 
 
 /* Erase a pixel at absolute location */
-void draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y);
+extern void draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y);
 
 
-/* Draw a line to relative position */
-void draw_line_rel(window_t * win,int16_t dx,int16_t dy);
+/* Draw a line to relative position, initial pixel undrawn */
+extern void draw_line_rel(window_t * win,int16_t dx,int16_t dy);
 
 
-/* Erase a line from current position */
-void draw_unline_rel(window_t * win,int16_t dx,int16_t dy);
+/* Erase a line from current position, initial pixel undrawn */
+extern void draw_unline_rel(window_t * win,int16_t dx,int16_t dy);
 
 
-/* Draw a line to absolute location */
-void draw_line_abs(window_t * win,uint16_t x,uint16_t y);
+/* Draw a line to absolute location, initial pixel undrawn */
+extern void draw_line_abs(window_t * win,uint16_t x,uint16_t y);
 
 
-/* Erase a line to absolute location */
-void draw_unline_abs(window_t * win,uint16_t x,uint16_t y);
+/* Erase a line to absolute location, initial pixel undrawn */
+extern void draw_unline_abs(window_t * win,uint16_t x,uint16_t y);
 
 
 /* Draw a box from current position */
-void draw_box(window_t * win,uint16_t width,uint16_t height);
+extern void draw_box(window_t * win,int16_t width,int16_t height);
 
 
 /* Erase a box from current position */
-void draw_unbox(window_t * win,uint16_t width,uint16_t height);
+extern void draw_unbox(window_t * win,int16_t width,int16_t height);
 
 
 /* Draw a filled box from current position */
-void draw_box_fill(window_t * win,uint16_t width,uint16_t height);
+extern void draw_box_fill(window_t * win,int16_t width,int16_t height);
 
 
 /* Erase a filled box from current position */
-void draw_unbox_fill(window_t * win,uint16_t width,uint16_t height);
+extern void draw_unbox_fill(window_t * win,int16_t width,int16_t height);
 
 
 /* Draw an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-void draw_arc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
+extern void draw_arc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
 
 
 /* Erase an arc (circle) in anticlockwise degrees (0 - 360) from current position */
-void draw_unarc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
+extern void draw_unarc(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
 
 
 /* Draw an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-void draw_arc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
+extern void draw_arc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
 
 
 /* Erase an arc (circle) filled in anticlockwise degrees (0 - 360) from current position */
-void draw_unarc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
+extern void draw_unarc_fill(window_t * win,uint16_t radius,int16_t offset,uint16_t arc);
 
 
 /* Draw text from current position */
-void draw_text(window_t * win,char *text,uint8_t textlen,uint8_t size);
+extern void draw_text(window_t * win,char *text,uint8_t textlen,uint8_t size);
 
 
 #ifdef __cplusplus
