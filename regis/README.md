@@ -70,7 +70,7 @@ XTERM is the only known software solution supporting ReGIS commands (to be impro
 
 As XTERM has no serial interface itself, so you'll need to use one. A suggestion is to use picocom. It is also useful for working with the retrocomputers generally. First test that it is working as per below.
 
-Adding the `--send command` will allow the use of xmodem to send binary files to the RC2014 from within picocom.
+Adding the `--send-cmd` option will allow the use of xmodem to send binary files to the RC2014 from within picocom.
 
 ``` sh
 % sudo apt install -y picocom
