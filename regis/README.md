@@ -38,10 +38,10 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 	5.profit
 
 ### ZSDCC
-`zcc +rc2014 -subtype=app -v -m -SO3 --list --math32  -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -v -m --list --math32  -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
 
 ### SCCZ80
-`zcc +rc2014 -subtype=app -clib=new -v -m -SO3 --list --math32 -llib/rc2014/regis regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --list --math32 -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ## Preparation
 
@@ -53,7 +53,7 @@ zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.ls
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
-The resulting `regis.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
 ## Preparing XTERM to support ReGIS
 
@@ -70,19 +70,21 @@ XTERM is the only known software solution supporting ReGIS commands (to be impro
 
 As XTERM has no serial interface itself, so you'll need to use one. A suggestion is to use picocom. It is also useful for working with the retrocomputers generally. First test that it is working as per below.
 
+Adding the `--send command` will allow the use of xmodem to send binary files to the RC2014 from within picocom.
+
 ``` sh
 % sudo apt install -y picocom
-% picocom -b 115200 -f h /dev/ttyUSB0
+% picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 And, finally together with VT340 emulation.
 ``` sh
-% xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0
+% xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Another alternative is using VT125 emulation.
 ``` sh
-% xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0
+% xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 ## Demonstration

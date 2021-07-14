@@ -77,13 +77,13 @@
 /* offset direction */
 typedef enum offset_e
 {
-    E   = 0,
+    EE  = 0,
     NE  = 1,
-    N   = 2,
+    NN  = 2,
     NW  = 3,
-    W   = 4,
+    WW  = 4,
     SW  = 5,
-    S   = 6,
+    SS  = 6,
     SE  = 7
 } offset_t;
 
@@ -114,14 +114,14 @@ typedef enum pattern_e
 /* intensity (colour) I(c) */
 typedef enum intensity_e
 {
-    DK  = 0,            // Dark (black)
-    BL  = 1,            // Blue
-    RD  = 2,            // Red
-    MA  = 3,            // Magenta
-    GR  = 4,            // Green
-    CY  = 5,            // Cyan
-    YE  = 6,            // Yellow
-    WH  = 7             // White
+    D   = 0,            // Dark (black)
+    B   = 1,            // Blue
+    R   = 2,            // Red
+    M   = 3,            // Magenta
+    G   = 4,            // Green
+    C   = 5,            // Cyan
+    Y   = 6,            // Yellow
+    W   = 7             // White
 } intensity_t;
 
 /* Structure to use when opening a window - as per usual,if type <> 0
@@ -137,9 +137,6 @@ typedef struct window_s {
     uint16_t width;     // desired window width  (ReGIS maximum 768)
     uint16_t height;    // desired window height (ReGIS maximum 480)
 
-    uint16_t xs;        // saved cursor position
-    uint16_t ys;        // saved cursor position
-
     pattern_t pattern;  // current writing pattern
     mode_t mode;        // current writing mode
 } window_t;
@@ -149,142 +146,157 @@ typedef struct window_s {
 /****************************************************************************/
 
 /* Open a graphics window, in graphics mode, and inititialise graphics */
-uint8_t  window_new(window_t * win,uint16_t width,uint16_t height) __smallc;
+uint8_t __LIB__ window_new(window_t * win,uint16_t width,uint16_t height) __smallc;
 
 
 
 /* Reset a graphics window, clear command string */
-void window_reset(window_t * win) __smallc;
+void __LIB__ window_reset(window_t * win) __smallc;
 
 
 
 /* Write out instructions */
-void window_write(window_t * win) __smallc;
+void __LIB__ window_write(window_t * win) __smallc;
 
 
 
 /* Clear window */
-void window_clear(window_t * win) __smallc;
+void __LIB__ window_clear(window_t * win) __smallc;
 
 
 
 /* Close a graphics window, return to text mode */
-void window_close(window_t * win) __smallc;
+void __LIB__ window_close(window_t * win) __smallc;
 
 
 
 /* Set writing mode */
-void draw_mode(window_t * win,mode_t mode) __smallc;
+void __LIB__ draw_mode(window_t * win,mode_t mode) __smallc;
 
 
 
 /* Set writing pattern */
-void draw_pattern(window_t * win,pattern_t pattern) __smallc;
+void __LIB__ draw_pattern(window_t * win,pattern_t pattern) __smallc;
 
 
 
 /* Set writing intensity (colour) */
-void draw_intensity(window_t * win,intensity_t intensity) __smallc;
+void __LIB__ draw_intensity(window_t * win,intensity_t intensity) __smallc;
 
 
 
 /* Relative move position */
-void draw_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
+void __LIB__ draw_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
 
 
 
 /* Relative move offset direction */
-void draw_ofs(window_t * win,uint16_t d,offset_t offset) __smallc;
+void __LIB__ draw_ofs(window_t * win,uint16_t d,offset_t offset) __smallc;
 
 
 
 /* Set absolute position */
-void draw_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void __LIB__ draw_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Draw a pixel to screen at current position */
-void draw_pixel_rel(window_t * win) __smallc;
+void __LIB__ draw_pixel_rel(window_t * win) __smallc;
 
 
 
 /* Erase a pixel at current position */
-void draw_unpixel_rel(window_t * win) __smallc;
+void __LIB__ draw_unpixel_rel(window_t * win) __smallc;
 
 
 
 /* Draw a pixel at absolute location */
-void draw_pixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void __LIB__ draw_pixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Erase a pixel at absolute location */
-void draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+void __LIB__ draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
-/* Draw a line to relative position, initial pixel undrawn */
-void draw_line_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
+/* Draw a line to relative position */
+void __LIB__ draw_line_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
 
 
 
-/* Erase a line from current position, initial pixel undrawn */
-void draw_unline_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
+/* Erase a line from current position */
+void __LIB__ draw_unline_rel(window_t * win,int16_t dx,int16_t dy) __smallc;
 
 
 
-/* Draw a line to absolute location, initial pixel undrawn */
-void draw_line_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+/* Draw a line to absolute location */
+void __LIB__ draw_line_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
-/* Erase a line to absolute location, initial pixel undrawn */
-void draw_unline_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
+/* Erase a line to absolute location */
+void __LIB__ draw_unline_abs(window_t * win,uint16_t x,uint16_t y) __smallc;
 
 
 
 /* Draw a box from current position */
-void draw_box(window_t * win,int16_t width,int16_t height) __smallc;
+void __LIB__ draw_box(window_t * win,int16_t width,int16_t height) __smallc;
 
 
 
 /* Erase a box from current position */
-void draw_unbox(window_t * win,int16_t width,int16_t height) __smallc;
+void __LIB__ draw_unbox(window_t * win,int16_t width,int16_t height) __smallc;
 
 
 
 /* Draw a filled box from current position */
-void draw_box_fill(window_t * win,int16_t width,int16_t height) __smallc;
+void __LIB__ draw_box_fill(window_t * win,int16_t width,int16_t height) __smallc;
 
 
 
 /* Erase a filled box from current position */
-void draw_unbox_fill(window_t * win,int16_t width,int16_t height) __smallc;
+void __LIB__ draw_unbox_fill(window_t * win,int16_t width,int16_t height) __smallc;
+
+
+
+/* Draw a circle, centred on current position */
+void __LIB__ draw_circle(window_t * win,uint16_t radius) __smallc;
+
+
+
+/* Erase a circle, centred on current position */
+void __LIB__ draw_uncircle(window_t * win,uint16_t radius) __smallc;
+
+
+
+/* Draw a circle filled, centred on current position */
+void __LIB__ draw_circle_fill(window_t * win,uint16_t radius) __smallc;
+
+
+
+/* Erase a circle filled, centred on current position */
+void __LIB__ draw_uncircle_fill(window_t * win,uint16_t radius) __smallc;
 
 
 
 /* Draw an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
-void draw_arc(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
+void __LIB__ draw_arc(window_t * win,uint16_t radius,int16_t arc) __smallc;
 
 
 
 /* Erase an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
-void draw_unarc(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
-
-
-
-/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
-void draw_arc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
-
-
-
-/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
-void draw_unarc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc) __smallc;
+void __LIB__ draw_unarc(window_t * win,uint16_t radius,int16_t arc) __smallc;
 
 
 
 /* Draw text from current position */
-void draw_text(window_t * win,char *text,uint8_t textlen,uint8_t size) __smallc;
+void __LIB__ draw_text(window_t * win,char * text,uint8_t size) __smallc;
+
+
+
+/* Draw custom ReGIS from current position */
+void __LIB__ draw_free(window_t * win,char * text) __smallc;
 
 
 

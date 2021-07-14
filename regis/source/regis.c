@@ -41,17 +41,26 @@
 #include "include/sdcc/regis.h"
 #endif
 
+
+#if __SCCZ80
+#include "include/sccz80/regis.h"
+void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+#elif __SDCC
+#include "include/sdcc/regis.h"
+void appendstring(window_t * win, char * text) __z88dk_callee;
+#endif
+
+
 /****************************************************************************/
-/***       Static Functions                                               ***/
+/***       Private Functions                                              ***/
 /****************************************************************************/
 
-static void appendstring(window_t * win, char * text);
-static void appendnumber(window_t * win, int n);
-
-// --------------------------------------------------------
-// STATIC FUNCTION appendstring
-// --------------------------------------------------------
-static void appendstring(window_t * win, char * text)
+#if __SCCZ80
+void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee
+#elif __SDCC
+#include "include/sdcc/regis.h"
+void appendstring(window_t * win, char * text) __z88dk_callee
+#endif
 {
     int l = strlen(win->command) + strlen(text) + 1;
 
@@ -63,18 +72,6 @@ static void appendstring(window_t * win, char * text)
     }
 
     strcat(win->command, text);
-}
-
-// --------------------------------------------------------
-// STATIC FUNCTION appendnumber
-// --------------------------------------------------------
-static void appendnumber(window_t * win, int n)
-{
-    char sn[8];
-
-    sprintf(sn, "%.3d", n);
-
-    appendstring(win, sn);
 }
 
 
@@ -178,14 +175,14 @@ void draw_intensity(window_t * win,intensity_t intensity)
 
     switch (intensity)
     {
-        case DK: sprintf(s,"W(I(D))"); break;
-        case BL: sprintf(s,"W(I(B))"); break;
-        case RD: sprintf(s,"W(I(R))"); break;
-        case MA: sprintf(s,"W(I(M))"); break;
-        case GR: sprintf(s,"W(I(G))"); break;
-        case CY: sprintf(s,"W(I(C))"); break;
-        case YE: sprintf(s,"W(I(Y))"); break;
-        case WH: sprintf(s,"W(I(W))"); break;
+        case D: sprintf(s,"W(I(D))"); break;
+        case B: sprintf(s,"W(I(B))"); break;
+        case R: sprintf(s,"W(I(R))"); break;
+        case M: sprintf(s,"W(I(M))"); break;
+        case G: sprintf(s,"W(I(G))"); break;
+        case C: sprintf(s,"W(I(C))"); break;
+        case Y: sprintf(s,"W(I(Y))"); break;
+        case W: sprintf(s,"W(I(W))"); break;
     }
 
     appendstring(win, s);
@@ -212,17 +209,17 @@ void draw_ofs(window_t * win,uint16_t d,offset_t offset)
 
     appendstring(win, s);
     
-    hypot = (uint16_t)(((uint32_t)d*408)/577);  // d/sqrt(2)
+    hypot = (uint16_t)((d*70)/99);  // d/sqrt(2)
 
     switch (offset)
     {
-        case  E: win->x += d; break;
+        case EE: win->x += d; break;
         case NE: win->y -= hypot; win->x += hypot; break;
-        case  N: win->y -= d; break;
+        case NN: win->y -= d; break;
         case NW: win->y -= hypot; win->x -= hypot; break;
-        case  W: win->x -= d; break;
+        case WW: win->x -= d; break;
         case SW: win->y += hypot; win->x -= hypot; break;
-        case  S: win->y += d; break;
+        case SS: win->y += d; break;
         case SE: win->y += hypot; win->x += hypot; break;
     }
 }
@@ -251,7 +248,7 @@ void draw_pixel_rel(window_t * win)
 /* Erase a pixel at current position */
 void draw_unpixel_rel(window_t * win)
 {
-    char s[10];
+    char s[12];
     sprintf(s, "V(W(E))[]");
 
     appendstring(win, s);
@@ -260,7 +257,7 @@ void draw_unpixel_rel(window_t * win)
 /* Draw a pixel at absolute location */
 void draw_pixel_abs(window_t * win,uint16_t x,uint16_t y)
 {
-    char s[20];
+    char s[18];
     sprintf(s, "P[%.3d,%.3d]V[]", x, y);
 
     appendstring(win, s);
@@ -269,7 +266,7 @@ void draw_pixel_abs(window_t * win,uint16_t x,uint16_t y)
 /* Erase a pixel at absolute location */
 void draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y)
 {
-    char s[26];
+    char s[24];
     sprintf(s, "P[%.3d,%.3d]V(W(E))[]", x, y);
 
     appendstring(win, s);
@@ -278,8 +275,8 @@ void draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y)
 /* Draw a line to relative position */
 void draw_line_rel(window_t * win,int16_t dx,int16_t dy)
 {
-    char s[14];
-    sprintf(s, "V[%+.3d,%+.3d]", dx, dy);
+    char s[16];
+    sprintf(s, "V[][%+.3d,%+.3d]", dx, dy);
 
     appendstring(win, s);
 
@@ -290,8 +287,8 @@ void draw_line_rel(window_t * win,int16_t dx,int16_t dy)
 /* Erase a line from current position */
 void draw_unline_rel(window_t * win,int16_t dx,int16_t dy)
 {
-    char s[20];
-    sprintf(s, "V(W(E))[%+.3d,%+.3d]", dx, dy);
+    char s[22];
+    sprintf(s, "V(W(E))[][%+.3d,%+.3d]", dx, dy);
 
     appendstring(win, s);
 
@@ -302,8 +299,8 @@ void draw_unline_rel(window_t * win,int16_t dx,int16_t dy)
 /* Draw a line to absolute location */
 void draw_line_abs(window_t * win,uint16_t x,uint16_t y)
 {
-    char s[14];
-    sprintf(s, "V[%.3d,%.3d]", x, y);
+    char s[16];
+    sprintf(s, "V[][%.3d,%.3d]", x, y);
 
     appendstring(win, s);
 
@@ -314,8 +311,8 @@ void draw_line_abs(window_t * win,uint16_t x,uint16_t y)
 /* Erase a line to absolute location */
 void draw_unline_abs(window_t * win,uint16_t x,uint16_t y)
 {
-    char s[20];
-    sprintf(s, "V(W(E))[%.3d,%.3d]", x, y);
+    char s[22];
+    sprintf(s, "V(W(E))[][%.3d,%.3d]", x, y);
 
     appendstring(win, s);
 
@@ -327,7 +324,7 @@ void draw_unline_abs(window_t * win,uint16_t x,uint16_t y)
 void draw_box(window_t * win,int16_t width,int16_t height)
 {
     char s[30];
-    sprintf(s, "V[%+.3d,][,%+.3d][%+.3d,][,%+.3d]", width, height, -width, -height);
+    sprintf(s, "V(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width, -height);
 
     appendstring(win, s);
 }
@@ -336,7 +333,7 @@ void draw_box(window_t * win,int16_t width,int16_t height)
 void draw_unbox(window_t * win,int16_t width,int16_t height)
 {
     char s[36];
-    sprintf(s, "V(W(E))[%+.3d,][,%+.3d][%+.3d,][,%+.3d]", width, height, -width, -height);
+    sprintf(s, "V(W(E))(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width, -height);
 
     appendstring(win, s);
 }
@@ -344,8 +341,8 @@ void draw_unbox(window_t * win,int16_t width,int16_t height)
 /* Draw a filled box from current position */
 void draw_box_fill(window_t * win,int16_t width,int16_t height)
 {
-    char s[36];
-    sprintf(s, "V(W(S1))[%+.3d,][,%+.3d][%+.3d,][,%+.3d]", width, height, -width, -height);
+    char s[38];
+    sprintf(s, "V(W(S1))(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width, -height);
 
     appendstring(win, s);
 }
@@ -353,50 +350,79 @@ void draw_box_fill(window_t * win,int16_t width,int16_t height)
 /* Erase a filled box from current position */
 void draw_unbox_fill(window_t * win,int16_t width,int16_t height)
 {
-    char s[36];
-    sprintf(s, "V(W(S1,E))[%+.3d,][,%+.3d][%+.3d,][,%+.3d]", width, height, -width, -height);
+    char s[40];
+    sprintf(s, "V(W(S1,E))(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width, -height);
+
+    appendstring(win, s);
+}
+
+/* Draw a circle, centred on current position */
+void draw_circle(window_t * win,uint16_t radius)
+{
+    char s[10];
+    sprintf(s, "C[%+.3d]", radius);
+
+    appendstring(win, s);
+}
+
+/* Erase a circle, centred on current position */
+void draw_uncircle(window_t * win,uint16_t radius)
+{
+    char s[16];
+    sprintf(s, "C(W(E))[%+.3d]", radius);
+
+    appendstring(win, s);
+}
+
+/* Draw a circle filled, centred on current position */
+void draw_circle_fill(window_t * win,uint16_t radius)
+{
+    char s[16];
+    sprintf(s, "C(W(S1))[%+.3d]", radius);
+
+    appendstring(win, s);
+}
+
+/* Erase a circle filled, centred on current position */
+void draw_uncircle_fill(window_t * win,uint16_t radius)
+{
+    char s[20];
+    sprintf(s, "C(W(S1,E))[%+.3d]", radius);
 
     appendstring(win, s);
 }
 
 /* Draw an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
-void draw_arc(window_t * win,int16_t dx,int16_t dy,int16_t arc)
+void draw_arc(window_t * win,uint16_t radius,int16_t arc)
 {
-    char s[20];
-    sprintf(s, "C(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
+    char s[16];
+    sprintf(s, "C(A%+.3d)[%+.3d]", arc, radius);
 
     appendstring(win, s);
 }
 
 /* Erase an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
-void draw_unarc(window_t * win,int16_t dx,int16_t dy,int16_t arc)
+void draw_unarc(window_t * win,uint16_t radius,int16_t arc)
 {
-    char s[26];
-    sprintf(s, "C(W(E))(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
-
-    appendstring(win, s);
-}
-
-/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
-void draw_arc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc)
-{
-    char s[26];
-    sprintf(s, "C(W(S1))(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
-
-    appendstring(win, s);
-}
-
-/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
-void draw_unarc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc)
-{
-    char s[30];
-    sprintf(s, "C(W(S1,E))(A%+.3d)[%+.3d,%+.3d]", arc, dx, dy);
+    char s[20];
+    sprintf(s, "C(W(E))(A%+.3d)[%+.3d]", arc, radius);
 
     appendstring(win, s);
 }
 
 /* Draw text from current position */
-void draw_text(window_t * win,char *text,uint8_t textlen,uint8_t size)
+void draw_text(window_t * win,char * text,uint8_t size)
 {
-
+    char s[10];
+    sprintf(s, "T(S%.2d)\"", size);
+    appendstring(win, s);
+    appendstring(win, text);
+    appendstring(win, "\"");
 }
+
+/* Draw custom ReGIS from current position */
+void draw_free(window_t * win,char * text)
+{
+    appendstring(win, text);
+}
+

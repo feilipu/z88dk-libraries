@@ -77,13 +77,13 @@
 /* offset direction */
 typedef enum offset_e
 {
-    E   = 0,
+    EE  = 0,
     NE  = 1,
-    N   = 2,
+    NN  = 2,
     NW  = 3,
-    W   = 4,
+    WW  = 4,
     SW  = 5,
-    S   = 6,
+    SS  = 6,
     SE  = 7
 } offset_t;
 
@@ -114,14 +114,14 @@ typedef enum pattern_e
 /* intensity (colour) I(c) */
 typedef enum intensity_e
 {
-    DK  = 0,            // Dark (black)
-    BL  = 1,            // Blue
-    RD  = 2,            // Red
-    MA  = 3,            // Magenta
-    GR  = 4,            // Green
-    CY  = 5,            // Cyan
-    YE  = 6,            // Yellow
-    WH  = 7             // White
+    D   = 0,            // Dark (black)
+    B   = 1,            // Blue
+    R   = 2,            // Red
+    M   = 3,            // Magenta
+    G   = 4,            // Green
+    C   = 5,            // Cyan
+    Y   = 6,            // Yellow
+    W   = 7             // White
 } intensity_t;
 
 /* Structure to use when opening a window - as per usual,if type <> 0
@@ -136,9 +136,6 @@ typedef struct window_s {
 
     uint16_t width;     // desired window width  (ReGIS maximum 768)
     uint16_t height;    // desired window height (ReGIS maximum 480)
-
-    uint16_t xs;        // saved cursor position
-    uint16_t ys;        // saved cursor position
 
     pattern_t pattern;  // current writing pattern
     mode_t mode;        // current writing mode
@@ -208,19 +205,19 @@ void draw_pixel_abs(window_t * win,uint16_t x,uint16_t y);
 void draw_unpixel_abs(window_t * win,uint16_t x,uint16_t y);
 
 
-/* Draw a line to relative position, initial pixel undrawn */
+/* Draw a line to relative position */
 void draw_line_rel(window_t * win,int16_t dx,int16_t dy);
 
 
-/* Erase a line from current position, initial pixel undrawn */
+/* Erase a line from current position */
 void draw_unline_rel(window_t * win,int16_t dx,int16_t dy);
 
 
-/* Draw a line to absolute location, initial pixel undrawn */
+/* Draw a line to absolute location */
 void draw_line_abs(window_t * win,uint16_t x,uint16_t y);
 
 
-/* Erase a line to absolute location, initial pixel undrawn */
+/* Erase a line to absolute location */
 void draw_unline_abs(window_t * win,uint16_t x,uint16_t y);
 
 
@@ -240,24 +237,36 @@ void draw_box_fill(window_t * win,int16_t width,int16_t height);
 void draw_unbox_fill(window_t * win,int16_t width,int16_t height);
 
 
+/* Draw a circle, centred on current position */
+void draw_circle(window_t * win,uint16_t radius);
+
+
+/* Erase a circle, centred on current position */
+void draw_uncircle(window_t * win,uint16_t radius);
+
+
+/* Draw a circle filled, centred on current position */
+void draw_circle_fill(window_t * win,uint16_t radius);
+
+
+/* Erase a circle filled, centred on current position */
+void draw_uncircle_fill(window_t * win,uint16_t radius);
+
+
 /* Draw an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
-void draw_arc(window_t * win,int16_t dx,int16_t dy,int16_t arc);
+void draw_arc(window_t * win,uint16_t radius,int16_t arc);
 
 
 /* Erase an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
-void draw_unarc(window_t * win,int16_t dx,int16_t dy,int16_t arc);
-
-
-/* Draw an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
-void draw_arc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc);
-
-
-/* Erase an arc (circle) filled in anticlockwise degrees (0 - 360), centred on current position */
-void draw_unarc_fill(window_t * win,int16_t dx,int16_t dy,int16_t arc);
+void draw_unarc(window_t * win,uint16_t radius,int16_t arc);
 
 
 /* Draw text from current position */
-void draw_text(window_t * win,char *text,uint8_t textlen,uint8_t size);
+void draw_text(window_t * win,char * text,uint8_t size);
+
+
+/* Draw custom ReGIS from current position */
+void draw_free(window_t * win,char * text);
 
 
 #ifdef __cplusplus
