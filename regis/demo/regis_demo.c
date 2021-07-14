@@ -11,16 +11,14 @@
 #include <lib/rc2014/regis.h>
 
 // ZSDCC compile
-// zcc +rc2014 -subtype=cpm -v -m -SO3 --list -llib/rc2014/regis --c-code-in-asm --max-allocs-per-node200000 regis_demo.c -o regis_demo -create-app
+// zcc +rc2014 -subtype=cpm -v -m --list -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app
 
 // SCCZ80 compile
-// zcc +rc2014 -subtype=cpm -clib=new -v -m -SO3 --list -llib/rc2014/regis regis_demo.c -o regis_demo -create-app
+// zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --list -llib/rc2014/regis regis_demo.c -o regis -create-app
 
 // Expected output (where ^ is ESC character).
 // ^P1pS(E)W(I(M))P[600,200]V[][-200,+200]V[][400,100]W(I(G))P[700,100]V(B)[+050,][,+050][-050,](E)V(W(S1))(B)[-100,][,-050][+100,](E)V(W(S1,E))(B)[-050,][,-025][+050,](E)W(I(C))P[200,100]C(A-180)[+100]C(A+180)[+050]W(I(B))P[200,300]C(W(S1))[+100]C(W(S1,E))[+050]W(I(W))T(S01)"hello world"^\
 
-
-#pragma printf = "%s %c %g"     // Enables %s %c %g only.
 
 window_t mywindow;
 

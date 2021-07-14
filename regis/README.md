@@ -38,10 +38,10 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 	5.profit
 
 ### ZSDCC
-`zcc +rc2014 -subtype=cpm -v -m --list --math32 -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -v -m --list -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
 
 ### SCCZ80
-`zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --list --math32 -llib/rc2014/regis regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ## Preparation
 

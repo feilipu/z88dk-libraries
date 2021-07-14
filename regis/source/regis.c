@@ -41,8 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-#pragma printf  =  "%c %s %d"       // enables %c, %s, %d only
-
 /****************************************************************************/
 /***       Private Functions                                              ***/
 /****************************************************************************/
@@ -53,11 +51,9 @@ void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
 void appendstring(window_t * win, char * text) __z88dk_callee;
 #endif
 
-
 #if __SCCZ80
 void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee
 #elif __SDCC
-#include "include/sdcc/regis.h"
 void appendstring(window_t * win, char * text) __z88dk_callee
 #endif
 {
@@ -77,7 +73,6 @@ void appendstring(window_t * win, char * text) __z88dk_callee
 /****************************************************************************/
 /***       Functions                                                      ***/
 /****************************************************************************/
-
 
 /* Open a graphics window, in graphics mode, and inititialise graphics */
 uint8_t window_new(window_t * win,uint16_t width,uint16_t height) 
