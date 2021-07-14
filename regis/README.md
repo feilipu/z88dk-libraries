@@ -38,7 +38,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 	5.profit
 
 ### ZSDCC
-`zcc +rc2014 -subtype=cpm -v -m --list --math32  -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -v -m --list --math32 -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
 
 ### SCCZ80
 `zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --list --math32 -llib/rc2014/regis regis_demo.c -o regis -create-app`
@@ -79,12 +79,12 @@ Adding the `--send-cmd` option will allow the use of xmodem to send binary files
 
 And, finally together with VT340 emulation.
 ``` sh
-% xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Another alternative is using VT125 emulation.
 ``` sh
-% xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 ## Demonstration

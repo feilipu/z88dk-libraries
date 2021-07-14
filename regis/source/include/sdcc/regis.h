@@ -39,10 +39,6 @@
 
 #include <stdint.h>
 
-
-#pragma printf  =  "%c %s %d"       // enables %c, %s, %d only
-
-
 #define ASCII_NULL      0x00        // null
 #define ASCII_BELL      0x07        // bell
 #define ASCII_BS        0x08        // backspace

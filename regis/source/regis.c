@@ -41,19 +41,18 @@
 #include "include/sdcc/regis.h"
 #endif
 
-
-#if __SCCZ80
-#include "include/sccz80/regis.h"
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
-#elif __SDCC
-#include "include/sdcc/regis.h"
-void appendstring(window_t * win, char * text) __z88dk_callee;
-#endif
-
+#pragma printf  =  "%c %s %d"       // enables %c, %s, %d only
 
 /****************************************************************************/
 /***       Private Functions                                              ***/
 /****************************************************************************/
+
+#if __SCCZ80
+void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+#elif __SDCC
+void appendstring(window_t * win, char * text) __z88dk_callee;
+#endif
+
 
 #if __SCCZ80
 void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee
