@@ -30,7 +30,7 @@
  */
 
 include(__link__.m4)
-define(`m4_SCCZ80_NOLIB', 1)
+undefine(`m4_SCCZ80_NOLIB')
 
 #ifndef _TH02_H
 #define _TH02_H

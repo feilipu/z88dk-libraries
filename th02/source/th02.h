@@ -79,17 +79,31 @@ enum TH02_AttachPort
 /***        Function Definition                                           ***/
 /****************************************************************************/
 
-//  void th02_init(enum TH02_AttachPort device);
-extern void th02_init(enum TH02_AttachPort device);
+#if __SDCC
 
+//  void th02_init(enum TH02_AttachPort device);
+void th02_init(enum TH02_AttachPort device);
 
 //  float th02_read_temperature(enum TH02_AttachPort device);
-extern float th02_read_temperature(enum TH02_AttachPort device);
-
+float th02_read_temperature(enum TH02_AttachPort device);
 
 //  float th02_read_humidity(enum TH02_AttachPort device);
-extern float th02_read_humidity(enum TH02_AttachPort device);
+float th02_read_humidity(enum TH02_AttachPort device);
 
+#endif
+
+#if __SCCZ80
+
+//  void th02_init(enum TH02_AttachPort device);
+void __LIB__ th02_init(enum TH02_AttachPort device) __smallc;
+
+//  float th02_read_temperature(enum TH02_AttachPort device);
+float __LIB__ th02_read_temperature(enum TH02_AttachPort device) __smallc;
+
+//  float th02_read_humidity(enum TH02_AttachPort device);
+float __LIB__ th02_read_humidity(enum TH02_AttachPort device) __smallc;
+
+#endif
 
 #ifdef __cplusplus
 }
