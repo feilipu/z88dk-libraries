@@ -114,7 +114,7 @@ DSTATUS disk_initialize_fastcall (
     BYTE pdrv               /* Physical drive number */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall;
 #elif __SCCZ80
-DSTATUS disk_initialize (
+DSTATUS __LIB__ disk_initialize (
     BYTE pdrv               /* Physical drive number */
 )  __smallc __z88dk_fastcall;
 #endif
@@ -124,7 +124,7 @@ DSTATUS disk_status_fastcall (
     BYTE pdrv              /* Physical drive number */
 ) __preserves_regs(iyh,iyl) __z88dk_fastcall;
 #elif __SCCZ80
-DSTATUS disk_status (
+DSTATUS __LIB__ disk_status (
     BYTE pdrv              /* Physical drive number */
 ) __smallc __z88dk_fastcall;
 #endif
@@ -137,7 +137,7 @@ DRESULT disk_read (
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl);
 #elif __SCCZ80
-DRESULT disk_read (
+DRESULT __LIB__ disk_read (
     BYTE pdrv,              /* Physical drive number */
     BYTE *buff,             /* Pointer to the data buffer to store read data */
     LBA_t sector,           /* Start sector number (LBA) */
@@ -153,7 +153,7 @@ DRESULT disk_write (
     UINT count              /* Sector count (1..128) */
 ) __preserves_regs(iyh,iyl);
 #elif __SCCZ80
-DRESULT disk_write (
+DRESULT __LIB__ disk_write (
     BYTE pdrv,              /* Physical drive number */
     const BYTE *buff,       /* Pointer to the data to be written */
     LBA_t sector,           /* Start sector number (LBA) */
@@ -168,7 +168,7 @@ DRESULT disk_ioctl (
     void *buff              /* Buffer to send/receive control data */
 ) __preserves_regs(iyh,iyl);
 #elif __SCCZ80
-DRESULT disk_ioctl (
+DRESULT __LIB__ disk_ioctl (
     BYTE pdrv,              /* Physical drive number */
     BYTE cmd,               /* Control code */
     void *buff              /* Buffer to send/receive control data */
