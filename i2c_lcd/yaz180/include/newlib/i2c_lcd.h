@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 include(__link__.m4)
-define(`m4_SCCZ80_NOLIB', 1)
+undefine(`m4_SCCZ80_NOLIB')
 
 #ifndef __I2C_LCD_H_
 #define __I2C_LCD_H_
@@ -360,7 +360,7 @@ enum LCD_RegAddress
     ReadRAM_YPosRegAddr=34,
     WriteRAM_XPosRegAddr=35,
     WriteRAM_YPosRegAddr=36,
-    
+
     DrawDotXPosRegAddr=64,          //14
     DrawDotYPosRegAddr=65,
 

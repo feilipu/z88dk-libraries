@@ -362,7 +362,7 @@ enum LCD_RegAddress
     ReadRAM_YPosRegAddr=34,
     WriteRAM_XPosRegAddr=35,
     WriteRAM_YPosRegAddr=36,
-    
+
     DrawDotXPosRegAddr=64,          //14
     DrawDotYPosRegAddr=65,
 
@@ -460,121 +460,187 @@ enum LCD_SettingMode
     LOAD_TO_EEPROM=0x80
 };
 
-//  void LCD_Init(enum LCD_AttachPort port);
-extern void LCD_Init(enum LCD_AttachPort port);
+#if __SDCC
 
+//  void LCD_Init(enum LCD_AttachPort port);
+void LCD_Init(enum LCD_AttachPort port);
 
 //  uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr);
-extern uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr);
-
+uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr);
 
 //  void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, uint8_t byte);
-extern void LCD_WriteByteToReg(enum LCD_RegAddress regAddr,uint8_t byte);
-
+void LCD_WriteByteToReg(enum LCD_RegAddress regAddr,uint8_t byte);
 
 //  void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length);
-extern void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length);
-
+void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length);
 
 //  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length);
-extern void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length);
-
+void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length);
 
 //  void LCD_FontModeConf(enum LCD_FontSort font, enum LCD_FontMode mode, enum LCD_CharMode cMode);
-extern void LCD_FontModeConf(enum LCD_FontSort font,enum LCD_FontMode mode,enum LCD_CharMode cMode);
-
+void LCD_FontModeConf(enum LCD_FontSort font,enum LCD_FontMode mode,enum LCD_CharMode cMode);
 
 //  void LCD_CharGotoXY(uint8_t x, uint8_t y);
-extern void LCD_CharGotoXY(uint8_t x,uint8_t y);
-
+void LCD_CharGotoXY(uint8_t x,uint8_t y);
 
 //  void LCD_DispCharAt(char character, uint8_t x, uint8_t y);
-extern void LCD_DispCharAt(char character,uint8_t x,uint8_t y);
-
+void LCD_DispCharAt(char character,uint8_t x,uint8_t y);
 
 //  void LCD_DispStringAt(char *buf, uint8_t x, uint8_t y);
-extern void LCD_DispStringAt(char *buf,uint8_t x,uint8_t y);
-
+void LCD_DispStringAt(char *buf,uint8_t x,uint8_t y);
 
 //  void LCD_CursorConf(enum LCD_SwitchState swi, uint8_t freq);
-extern void LCD_CursorConf(enum LCD_SwitchState swi,uint8_t freq);
-
+void LCD_CursorConf(enum LCD_SwitchState swi,uint8_t freq);
 
 //  void LCD_CursorGotoXY(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
-extern void LCD_CursorGotoXY(uint8_t x,uint8_t y,uint8_t width,uint8_t height);
-
+void LCD_CursorGotoXY(uint8_t x,uint8_t y,uint8_t width,uint8_t height);
 
 //  void LCD_DrawDotAt(uint8_t x, uint8_t y, enum LCD_ColorSort color);
-extern void LCD_DrawDotAt(uint8_t x,uint8_t y,enum LCD_ColorSort color);
-
+void LCD_DrawDotAt(uint8_t x,uint8_t y,enum LCD_ColorSort color);
 
 //  void LCD_DrawHLineAt(uint8_t startX, uint8_t endX, uint8_t y, enum LCD_ColorSort color);
-extern void LCD_DrawHLineAt(uint8_t startX,uint8_t endX,uint8_t y,enum LCD_ColorSort color);
-
+void LCD_DrawHLineAt(uint8_t startX,uint8_t endX,uint8_t y,enum LCD_ColorSort color);
 
 //  void LCD_DrawVLineAt(uint8_t startY, uint8_t endY, uint8_t x, enum LCD_ColorSort color);
-extern void LCD_DrawVLineAt(uint8_t startY,uint8_t endY,uint8_t x,enum LCD_ColorSort color);
-
+void LCD_DrawVLineAt(uint8_t startY,uint8_t endY,uint8_t x,enum LCD_ColorSort color);
 
 //  void LCD_DrawLineAt(uint8_t startX, uint8_t endX, uint8_t startY, uint8_t endY, enum LCD_ColorSort color);
-extern void LCD_DrawLineAt(uint8_t startX,uint8_t endX,uint8_t startY,uint8_t endY,enum LCD_ColorSort color);
-
+void LCD_DrawLineAt(uint8_t startX,uint8_t endX,uint8_t startY,uint8_t endY,enum LCD_ColorSort color);
 
 //  void LCD_DrawRectangleAt(uint8_t x, uint8_t y, uint8_t width, uint8_t height, enum LCD_DrawMode mode);
-extern void LCD_DrawRectangleAt(uint8_t x,uint8_t y,uint8_t width,uint8_t height,enum LCD_DrawMode mode);
-
+void LCD_DrawRectangleAt(uint8_t x,uint8_t y,uint8_t width,uint8_t height,enum LCD_DrawMode mode);
 
 //  void LCD_DrawCircleAt(uint8_t x, uint8_t y, uint8_t r, enum LCD_DrawMode mode);
-extern void LCD_DrawCircleAt(uint8_t x,uint8_t y,uint8_t r,enum LCD_DrawMode mode);
-
+void LCD_DrawCircleAt(uint8_t x,uint8_t y,uint8_t r,enum LCD_DrawMode mode);
 
 //  void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y);
-extern void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap,uint8_t x,uint8_t y);
-
+void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap,uint8_t x,uint8_t y);
 
 //  void LCD_DrawFullScreen(uint8_t *buf);
-extern void LCD_DrawFullScreen(uint8_t *buf);
-
+void LCD_DrawFullScreen(uint8_t *buf);
 
 //  uint8_t LCD_ReadByteDispRAM(uint8_t x, uint8_t y);
-extern uint8_t LCD_ReadByteDispRAM(uint8_t x,uint8_t y);
-
+uint8_t LCD_ReadByteDispRAM(uint8_t x,uint8_t y);
 
 //  void LCD_WriteByteDispRAM(uint8_t byte, uint8_t x, uint8_t y);
-extern void LCD_WriteByteDispRAM(uint8_t byte,uint8_t x,uint8_t y);
-
+void LCD_WriteByteDispRAM(uint8_t byte,uint8_t x,uint8_t y);
 
 //  void LCD_ReadSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y);
-extern void LCD_ReadSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y);
-
+void LCD_ReadSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y);
 
 //  void LCD_WriteSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y);
-extern void LCD_WriteSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y);
-
+void LCD_WriteSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y);
 
 //  void LCD_DisplayConf(enum LCD_DisplayMode mode);
-extern void LCD_DisplayConf(enum LCD_DisplayMode mode);
-
+void LCD_DisplayConf(enum LCD_DisplayMode mode);
 
 //  void LCD_WorkingModeConf(enum LCD_SwitchState logoSwi, enum LCD_SwitchState backLightSwi, enum LCD_WorkingMode mode);
-extern void LCD_WorkingModeConf(enum LCD_SwitchState logoSwi,enum LCD_SwitchState backLightSwi,enum LCD_WorkingMode mode);
-
+void LCD_WorkingModeConf(enum LCD_SwitchState logoSwi,enum LCD_SwitchState backLightSwi,enum LCD_WorkingMode mode);
 
 //  void LCD_BacklightConf(enum LCD_SettingMode mode, uint8_t byte);
-extern void LCD_BacklightConf(enum LCD_SettingMode mode,uint8_t byte);
-
+void LCD_BacklightConf(enum LCD_SettingMode mode,uint8_t byte);
 
 //  void LCD_ContrastConf(enum LCD_SettingMode mode, uint8_t byte);
-extern void LCD_ContrastConf(enum LCD_SettingMode mode,uint8_t byte);
-
+void LCD_ContrastConf(enum LCD_SettingMode mode,uint8_t byte);
 
 //  void LCD_DeviceAddrEdit(uint8_t newAddr);
-extern void LCD_DeviceAddrEdit(uint8_t newAddr);
-
+void LCD_DeviceAddrEdit(uint8_t newAddr);
 
 //  void LCD_CleanAll(enum LCD_ColorSort color);
-extern void LCD_CleanAll(enum LCD_ColorSort color);
+void LCD_CleanAll(enum LCD_ColorSort color);
 
+#endif
+
+#if __SCCZ80
+
+//  void LCD_Init(enum LCD_AttachPort port);
+void __LIB__ LCD_Init(enum LCD_AttachPort port) __smallc;
+
+//  uint8_t LCD_ReadByteFromReg(enum LCD_RegAddress regAddr);
+uint8_t __LIB__ LCD_ReadByteFromReg(enum LCD_RegAddress regAddr) __smallc;
+
+//  void LCD_WriteByteToReg(enum LCD_RegAddress regAddr, uint8_t byte);
+void __LIB__ LCD_WriteByteToReg(enum LCD_RegAddress regAddr,uint8_t byte) __smallc;
+
+//  void LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length);
+void __LIB__ LCD_ReadSeriesFromReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length) __smallc;
+
+//  void LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr, uint8_t *buf, uint16_t length);
+void __LIB__ LCD_WriteSeriesToReg(enum LCD_RegAddress regAddr,uint8_t *buf,uint16_t length) __smallc;
+
+//  void LCD_FontModeConf(enum LCD_FontSort font, enum LCD_FontMode mode, enum LCD_CharMode cMode);
+void __LIB__ LCD_FontModeConf(enum LCD_FontSort font,enum LCD_FontMode mode,enum LCD_CharMode cMode) __smallc;
+
+//  void LCD_CharGotoXY(uint8_t x, uint8_t y);
+void __LIB__ LCD_CharGotoXY(uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_DispCharAt(char character, uint8_t x, uint8_t y);
+void __LIB__ LCD_DispCharAt(char character,uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_DispStringAt(char *buf, uint8_t x, uint8_t y);
+void __LIB__ LCD_DispStringAt(char *buf,uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_CursorConf(enum LCD_SwitchState swi, uint8_t freq);
+void __LIB__ LCD_CursorConf(enum LCD_SwitchState swi,uint8_t freq) __smallc;
+
+//  void LCD_CursorGotoXY(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
+void __LIB__ LCD_CursorGotoXY(uint8_t x,uint8_t y,uint8_t width,uint8_t height) __smallc;
+
+//  void LCD_DrawDotAt(uint8_t x, uint8_t y, enum LCD_ColorSort color);
+void __LIB__ LCD_DrawDotAt(uint8_t x,uint8_t y,enum LCD_ColorSort color) __smallc;
+
+//  void LCD_DrawHLineAt(uint8_t startX, uint8_t endX, uint8_t y, enum LCD_ColorSort color);
+void __LIB__ LCD_DrawHLineAt(uint8_t startX,uint8_t endX,uint8_t y,enum LCD_ColorSort color) __smallc;
+
+//  void LCD_DrawVLineAt(uint8_t startY, uint8_t endY, uint8_t x, enum LCD_ColorSort color);
+void __LIB__ LCD_DrawVLineAt(uint8_t startY,uint8_t endY,uint8_t x,enum LCD_ColorSort color) __smallc;
+
+//  void LCD_DrawLineAt(uint8_t startX, uint8_t endX, uint8_t startY, uint8_t endY, enum LCD_ColorSort color);
+void __LIB__ LCD_DrawLineAt(uint8_t startX,uint8_t endX,uint8_t startY,uint8_t endY,enum LCD_ColorSort color) __smallc;
+
+//  void LCD_DrawRectangleAt(uint8_t x, uint8_t y, uint8_t width, uint8_t height, enum LCD_DrawMode mode);
+void __LIB__ LCD_DrawRectangleAt(uint8_t x,uint8_t y,uint8_t width,uint8_t height,enum LCD_DrawMode mode) __smallc;
+
+//  void LCD_DrawCircleAt(uint8_t x, uint8_t y, uint8_t r, enum LCD_DrawMode mode);
+void __LIB__ LCD_DrawCircleAt(uint8_t x,uint8_t y,uint8_t r,enum LCD_DrawMode mode) __smallc;
+
+//  void LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap, uint8_t x, uint8_t y);
+void __LIB__ LCD_DrawScreenAreaAt(GUI_Bitmap_t *bitmap,uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_DrawFullScreen(uint8_t *buf);
+void __LIB__ LCD_DrawFullScreen(uint8_t *buf) __smallc;
+
+//  uint8_t LCD_ReadByteDispRAM(uint8_t x, uint8_t y);
+uint8_t __LIB__ LCD_ReadByteDispRAM(uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_WriteByteDispRAM(uint8_t byte, uint8_t x, uint8_t y);
+void __LIB__ LCD_WriteByteDispRAM(uint8_t byte,uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_ReadSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y);
+void __LIB__ LCD_ReadSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_WriteSeriesDispRAM(uint8_t *buf, uint16_t length, uint8_t x, uint8_t y);
+void __LIB__ LCD_WriteSeriesDispRAM(uint8_t *buf,uint16_t length,uint8_t x,uint8_t y) __smallc;
+
+//  void LCD_DisplayConf(enum LCD_DisplayMode mode);
+void __LIB__ LCD_DisplayConf(enum LCD_DisplayMode mode) __smallc;
+
+//  void LCD_WorkingModeConf(enum LCD_SwitchState logoSwi, enum LCD_SwitchState backLightSwi, enum LCD_WorkingMode mode);
+void __LIB__ LCD_WorkingModeConf(enum LCD_SwitchState logoSwi,enum LCD_SwitchState backLightSwi,enum LCD_WorkingMode mode) __smallc;
+
+//  void LCD_BacklightConf(enum LCD_SettingMode mode, uint8_t byte);
+void __LIB__ LCD_BacklightConf(enum LCD_SettingMode mode,uint8_t byte) __smallc;
+
+//  void LCD_ContrastConf(enum LCD_SettingMode mode, uint8_t byte);
+void __LIB__ LCD_ContrastConf(enum LCD_SettingMode mode,uint8_t byte) __smallc;
+
+//  void LCD_DeviceAddrEdit(uint8_t newAddr);
+void __LIB__ LCD_DeviceAddrEdit(uint8_t newAddr) __smallc;
+
+//  void LCD_CleanAll(enum LCD_ColorSort color);
+void __LIB__ LCD_CleanAll(enum LCD_ColorSort color) __smallc;
+
+#endif
 
 #ifdef __cplusplus
 }
