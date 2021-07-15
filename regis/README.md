@@ -59,7 +59,7 @@ The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` 
 
 XTERM is the only known software solution supporting ReGIS commands (to be improved I'm sure). But it doesn't support ReGIS in the default build. You'll need to enable ReGIS yourself.
 ``` sh
-% sudo apt install -y libxaw7-dev libncurses-dev
+% sudo apt install -y libxaw7-dev libncurses-dev libxft-dev
 % wget https://invisible-island.net/datafiles/release/xterm.tar.gz
 % tar xf xterm.tar.gz
 % cd xterm-368
