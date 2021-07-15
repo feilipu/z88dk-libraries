@@ -103,7 +103,7 @@ void window_reset(window_t * win)
 /* Write out instructions */
 void window_write(window_t * win)
 {
-    fprintf(stdout, "%s", win->command);
+    fputs(win->command, stdout);
 }
 
 /* Clear window */
