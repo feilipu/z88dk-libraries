@@ -107,7 +107,8 @@ There is a demonstration program, which should produce the below result (subject
 
 ## Credits
 
-For describing [how to get XTERM working](https://groups.google.com/g/rc2014-z80/c/fuji5iuJ3Jc/m/FNYwGGbaAQAJ) with ReGIS, thanks Rob Gowin.
+For describing [how to get XTERM working with ReGIS](https://groups.google.com/g/rc2014-z80/c/fuji5iuJ3Jc/m/FNYwGGbaAQAJ), thanks Rob Gowin.
+For advising on how to get [ReGIS fonts in XTERM working](https://github.com/feilipu/z88dk-libraries/commit/107c23d2f31791b0a35bfc8833a7747a84544649#diff-45390165fce0bae9bf04313a098b2a42d5d727bf90d4be040f01ec0f7fee969d), thanks Thomas Dickey.
 
 ## License
 
