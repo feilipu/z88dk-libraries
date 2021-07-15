@@ -1,7 +1,7 @@
 ## ReGIS - Remote Graphics Instruction Set
 ------------
 
-ReGIS interprets commands that allow you to simply and efficiently control a video monitor screen and draw pictures on the screen with lines, curves, and circles. Also, ReGIS provides commands to include text characters in pictures. The ReGIS graphics language is designed for conciseness and easy transport of code from the host to the ReGIS device. The language consists of commands that are modified by options.
+ReGIS interprets commands that allow you to simply and efficiently control a video monitor screen and draw pictures on the screen with lines, curves, and circles using a serial interface (USART). Also, ReGIS provides commands to include scalable text characters in pictures. The ReGIS graphics language is designed for conciseness and easy transport of code from the host to the ReGIS device. The language consists of commands that are modified by options.
 
 Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.1.6 r12419.
 
@@ -32,10 +32,10 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Usage
     1.git clone this repository.
-    2.use `z88dk-lib` to import into z88k
-	3.open the demo `regis_demo.c`
-	4.use incantation below
-	5.profit
+    2.use `z88dk-lib` to import this library into z88k.
+    3.open the demo `regis_demo.c` to test your success.
+    4.compile the demonstration using the incantation(s) below.
+    5.profit.
 
 ### ZSDCC
 `zcc +rc2014 -subtype=cpm -v -m --list -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
@@ -68,9 +68,10 @@ XTERM is the only known software solution supporting ReGIS commands (to be impro
 % sudo make install
 ```
 
-As XTERM has no serial interface itself, so you'll need to use one. A suggestion is to use picocom. It is also useful for working with the retrocomputers generally. First test that it is working as per below.
+As XTERM has no serial interface itself, so you'll need to use one. A suggestion is to use picocom.<br>
+It is also useful for working with retrocomputers generally. First test that your installation is working as per below.
 
-Adding the `--send-cmd` option will allow the use of xmodem to send binary files to the RC2014 from within picocom.
+Adding the `--send-cmd` option will allow the use of `xmodem` or `sx` to send binary files to the RC2014 CP/M `xmodem` from within picocom.
 
 ``` sh
 % sudo apt install -y picocom
@@ -104,6 +105,11 @@ There is a demonstration program, which should produce the below result (subject
 </table>
 </div>
 
+This is image generated from the below ReGIS code.<br>
+Expected output (where `^` is the `ESC` character).
+```
+^P1pS(E)W(I(M))P[600,200]V[][-200,+200]V[][400,100]W(I(G))P[700,100]V(B)[+050,][,+050][-050,](E)V(W(S1))(B)[-100,][,-050][+100,](E)V(W(S1,E))(B)[-050,][,-025][+050,](E)W(I(C))P[200,100]C(A-180)[+100]C(A+180)[+050]W(I(B))P[200,300]C(W(S1))[+100]C(W(S1,E))[+050]W(I(W))T(S01)"hello world"^\
+```
 
 ## Credits
 
@@ -112,7 +118,7 @@ For advising on how to get [ReGIS fonts in XTERM working](https://github.com/fei
 
 ## License
 
-This demo is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check LICENSE for more information.
+This library is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check the LICENSE file for more information.
 
-Contributing to this software is warmly welcomed. You can do this basically by [forking](https://help.github.com/articles/fork-a-repo), committing modifications and then [pull requests](https://help.github.com/articles/using-pull-requests).
+Contributing to this software is warmly welcomed. You can do this by [forking](https://help.github.com/articles/fork-a-repo), committing modifications and then [pull requests](https://help.github.com/articles/using-pull-requests).
 
