@@ -59,7 +59,7 @@ void appendstring(window_t * win, char * text) __z88dk_callee;
 void draw_unbox(window_t * win,int16_t width,int16_t height)
 {
     char s[36];
-    sprintf(s, "V(W(E))(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width, -height);
+    sprintf(s, "V(W(E))(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width);
 
     appendstring(win, s);
 }
