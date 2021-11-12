@@ -3,7 +3,7 @@
 
 ReGIS interprets commands that allow you to simply and efficiently control a video monitor screen and draw pictures on the screen with lines, curves, and circles using a serial interface (USART). Also, ReGIS provides commands to include scalable text characters in pictures. The ReGIS graphics language is designed for conciseness and easy transport of code from the host to the ReGIS device. The language consists of commands that are modified by options.
 
-Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.1.6 r12419.
+Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.1.6 [r12555](https://sourceforge.net/p/sdcc/code/12555/log/?path=/trunk/sdcc).
 
 ## Installation
 
