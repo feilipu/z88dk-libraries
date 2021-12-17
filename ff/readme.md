@@ -114,6 +114,7 @@ The ff library can be compiled from the `ff/source` directory using the followin
 
 ```
 zcc +rc2014 -clib=new -x -O2 --math32 @ff.lst -o ../ff
+zcc +rc2014 -clib=new -m8085 -x -O2 --math32 @ff.lst -o ../ff
 zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
