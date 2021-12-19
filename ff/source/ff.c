@@ -20,6 +20,7 @@
 
 
 #include <string.h>
+#include <sys/compiler.h>
 #include "ff.h"                     /* Declarations of FatFs API */
 
 #if __HBIOS
