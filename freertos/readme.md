@@ -2,8 +2,11 @@
 
 Developed in partnership with the world’s leading chip companies over a 15 year period, FreeRTOS is a market-leading real–time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS includes a kernel and a growing set of libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability, accessibility, and ease of use.
 
-Current source version status is: 10.4.4.
-Compiled with sccz80 version 16894-223f580fd-20200818, and using zsdcc version 4.1.6 [r12555](https://sourceforge.net/p/sdcc/code/12555/log/?path=/trunk/sdcc).
+Current source version status is: 10.4.6. Snapshot 1 January 2022.
+
+Over the past few years freeRTOS development has become increasingly 32-bit orientated, with little change or improvement for the 8-bit world. As such I'm treating this 1st January 2022 10.4.6 snapshot as my LTS release.
+
+Compiled with sccz80 Version: 19027-7557a4792-20211229, and using zsdcc version 4.1.6 [r12555](https://sourceforge.net/p/sdcc/code/12555/log/?path=/trunk/sdcc).
 
 ## Installation
 

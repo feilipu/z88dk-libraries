@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Phillip Stevens  All Rights Reserved.
+ * Copyright (C) 2022 Phillip Stevens  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -414,7 +414,8 @@ typedef uint8_t                     UBaseType_t;
 /*
 extern void vPortYield( void );
  */
-extern void vPortYield(void);
+extern void __LIB__ vPortYield(void) __smallc;
+
 
 #define portYIELD()                 vPortYield()
 
