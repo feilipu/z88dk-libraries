@@ -3,7 +3,7 @@
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
 Current source version status is: 0.14b, April 17, 2021.<br>
-Compiled with sccz80 Version: 19027-7557a4792-20211229, and using zsdcc version 4.1.6 [r12555](https://sourceforge.net/p/sdcc/code/12555/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 19027-7557a4792-20211229, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 #### Features
 
@@ -81,25 +81,25 @@ A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets.
 // zcc +rc2014 -subtype=app -v --list -m -SO3 -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
 
-static FATFS FatFs;		/* FatFs work area needed for each volume */
-static FIL Fil;			/* File object needed for each open file */
+static FATFS FatFs;        /* FatFs work area needed for each volume */
+static FIL Fil;            /* File object needed for each open file */
 
 void main (void)
 {
-	UINT bw;
+    UINT bw;
 
-	f_mount(&FatFs, "0:", 0);	        /* Give a work area to the default drive */
-//  f_mount(&FatFs, "3:", 0);	        /* Give a work area to the HBIOS SD0: drive */
+    f_mount(&FatFs, "0:", 0);                       /* Give a work area to the default drive */
+//  f_mount(&FatFs, "3:", 0);                       /* Give a work area to the HBIOS SD0: drive */
 
-	if (f_open(&Fil, "newfile.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
-	{	/* Create a file */
+    if (f_open(&Fil, "newfile.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
+    {    /* Create a file */
 
-		f_write(&Fil, "It works!\r\n", 11, &bw);	/* Write data to the file */
+        f_write(&Fil, "It works!\r\n", 11, &bw);    /* Write data to the file */
 
-		f_close(&Fil);								/* Close the file */
+        f_close(&Fil);                              /* Close the file */
 
-		printf("It works!\r\n");
-	}
+        printf("It works!\r\n");
+    }
 }
 
 ```
@@ -115,19 +115,19 @@ The ff library can be compiled from the `ff/source` directory using the followin
 ```
 zcc +rc2014 -clib=new -x -O2 --math32 @ff.lst -o ../ff
 zcc +rc2014 -clib=new -m8085 -x -O2 -D__DISABLE_BUILTIN --math32 @ff.lst -o ../ff_85
-zcc +rc2014 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +rc2014 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +rc2014 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +rc2014 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 ```
 zcc +yaz180 -clib=new -x -O2 --math32 @ff.lst -o ../ff
-zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 For any supported target.
 ```
 zcc +target -clib=new -x -O2 --math32 @ff.lst -o ../ff
-zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
+zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
