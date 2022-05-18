@@ -3,7 +3,7 @@
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
 Current source version status is: 0.14b, April 17, 2021.<br>
-Compiled with sccz80 version 19027-7557a4792-20211229, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 19534-83d3302b4-20220518, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 #### Features
 
@@ -74,11 +74,11 @@ A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets.
 
 #endif
 
-// zcc +yaz180 -subtype=app -v --list -m -SO3 -clib=sdcc_iy -llib/yaz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/yaz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +scz180 -subtype=app -v --list -m -SO3 -clib=sdcc_iy -llib/scz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/scz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +rc2014 -subtype=app -v --list -m -SO3 -clib=sdcc_iy -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +rc2014 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
 
 static FATFS FatFs;        /* FatFs work area needed for each volume */
@@ -113,19 +113,19 @@ Then configure the library to suit your requirements by adjusting the `source/ff
 The ff library can be compiled from the `ff/source` directory using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +rc2014 -clib=new -x -O2 --math32 @ff.lst -o ../ff
+zcc +rc2014 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
 zcc +rc2014 -clib=new -m8085 -x -O2 --opt-code-speed=inlineints -D__DISABLE_BUILTIN --math32 @ff.lst -o ../ff_85
 zcc +rc2014 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +rc2014 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 ```
-zcc +yaz180 -clib=new -x -O2 --math32 @ff.lst -o ../ff
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 For any supported target.
 ```
-zcc +target -clib=new -x -O2 --math32 @ff.lst -o ../ff
+zcc +target -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
 zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```

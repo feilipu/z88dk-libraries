@@ -5,7 +5,7 @@ Summary of the file system management libraries.
 ```
 FatFs --> diskio_sd    - use to access the CSIO SD Card interface on SC126, SC130, and SC131 directly.
       \-> diskio_hbios - use to access any logical disk interface supported by RomWBW HBIOS (use the logical drive number).
-      \-> diskio integrated in z88dk - 82C55 IDE drivers for RC2014 PPIDE, YAZ180 PPIDE.
+      \-> diskio integrated in z88dk - 82C55 IDE drivers for RC2014 IDE Hard Drive Module and YAZ180 integrated PPIDE.
 ```
 
 ### diskio_hbios
@@ -64,11 +64,11 @@ The libraries can be compiled using the following command lines in Linux, with t
 
 ```
 cd ~/library/source
-zcc +target -x -O2 -clib=new --math32 @library.lst -o ../library
+zcc +target -clib=new -x -O2 --opt-code-speed=inlineints --math32 @library.lst -o ../library
 mv ../library.lib ../target/lib/newlib/sccz80
-zcc +target -x -SO3 -clib=sdcc_ix --math32 --max-allocs-per-node400000 @library.lst -o ../library
+zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @library.lst -o ../library
 mv ../library.lib ../target/lib/newlib/sdcc_ix
-zcc +target -x -SO3 -clib=sdcc_iy --math32 --max-allocs-per-node400000 @library.lst -o ../library
+zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @library.lst -o ../library
 mv ../library.lib ../target/lib/newlib/sdcc_iy
 ```
 The resulting `library.lib` file should be moved to `~/library/target/lib/newlib/sdcc_ix` or `~/library/target/lib/newlib/sdcc_iy` respectively, as noted above.

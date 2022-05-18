@@ -38,22 +38,22 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 	5.profit
 
 ### ZSDCC
-`zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180  -llib/yaz180/ft80x --c-code-in-asm --max-allocs-per-node400000 @test.lst -o test -create-app`
+`zcc +yaz180 -subtype=app -SO3 --max-allocs-per-node400000 -v -m --list --math32 -llib/yaz180/ft80x @test.lst -o test -create-app`
 
 ### SCCZ80
-`zcc +yaz180 -subtype=app -clib=new -v -m -SO3 --list --math32_z180 -llib/yaz180/ft80x @test.lst -o test -create-app`
+`zcc +yaz180 -subtype=app -clib=new -O2 --opt-code-speed=inlineints -v -m --list --math32 -llib/yaz180/ft80x @test.lst -o test -create-app`
 
 ## Preparation
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```sh
-zcc +yaz180 --math32 -x -O2 -clib=new -v -m --list --c-code-in-asm @ft80x.lst -o ../ft80x
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 -v -m --list --c-code-in-asm @ft80x.lst -o ../ft80x
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 -v -m --list --c-code-in-asm @ft80x.lst -o ../ft80x
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ft80x.lst -o ../ft80x
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
 ```
 
-The resulting `ft80x.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+The resulting `ft80x.lib` file should be moved to `~/yaz180/lib/newlib/sccz80` or `~/yaz180/lib/newlib/sdcc_ix` or `~/yaz180/lib/newlib/sdcc_iy` respectively.
 
 ## Licence
 

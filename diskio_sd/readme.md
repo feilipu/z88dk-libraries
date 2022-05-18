@@ -2,7 +2,7 @@
 
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
-Compiled with sccz80 version 19027-7557a4792-20211229, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 19534-83d3302b4-20220518, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 #### Features
 <ul>
@@ -64,7 +64,7 @@ A simple usage example, for the `+scz180` target.
 #include <lib/scz180/diskio_sd.h> 
 #endif
 
-// zcc +scz180 -subtype=app -v --list -m -SO3 --opt-code-size -clib=sdcc_iy  -llib/scz180/diskio_sd -llib/scz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 --opt-code-size --max-allocs-per-node200000 -llib/scz180/diskio_sd -llib/scz180/ff ff_main.c -o ff_main -create-app
 
 static FATFS FatFs;		/* FatFs work area needed for each volume */
 static FIL Fil;			/* File object needed for each open file */
@@ -94,16 +94,16 @@ void main (void)
 The diskio_sd library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +scz180 -clib=new -x -O2 --math32 @diskio_sd.lst -o ../diskio_sd
-zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
-zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
+zcc +scz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +scz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +scz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 ```
 ```
-zcc +target -clib=new -x -02 --math32 @diskio_sd.lst -o ../diskio_sd
-zcc +target -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
-zcc +target -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @diskio_sd.lst -o ../diskio_sd
+zcc +target -clib=new -x -02 --opt-code-speed=inlineints --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 ```
-The resulting `diskio_sd.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+The resulting `diskio_sd.lib` file should be moved to `~/scz180/lib/newlib/sccz80` or `~/scz180/lib/newlib/sdcc_ix` or `~/scz180/lib/newlib/sdcc_iy` respectively.
 
 ## Documentation
 

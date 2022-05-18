@@ -3,7 +3,7 @@
 
 ReGIS interprets commands that allow you to simply and efficiently control a video monitor screen and draw pictures on the screen with lines, curves, and circles using a serial interface (USART). Also, ReGIS provides commands to include scalable text characters in pictures. The ReGIS graphics language is designed for conciseness and easy transport of code from the host to the ReGIS device. The language consists of commands that are modified by options.
 
-Compiled with sccz80 version 19027-7557a4792-20211229, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 19534-83d3302b4-20220518, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -38,23 +38,23 @@ z88dk-lib +zx -r -f libname1 libname2 ...
     5.profit.
 
 ### ZSDCC
-`zcc +rc2014 -subtype=cpm -v -m --list -llib/rc2014/regis --max-allocs-per-node100000 regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ### SCCZ80
-`zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -clib=new -O2 --opt-code-speed=inlineints -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ## Preparation
 
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```
-zcc +rc2014 --math32 -x -O2 -clib=new @regis.lst -o ../regis
+zcc +rc2014 --math32 -x -O2 --opt-code-speed=inlineints -clib=new @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 ```
-zcc +yaz180 --math32 -x -O2 -clib=new @regis.lst -o ../regis
+zcc +yaz180 --math32 -x -O2 --opt-code-speed=inlineints -clib=new @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```

@@ -3,7 +3,7 @@ The library for I2C_LCD.
 
 Visit all support files and product documents [click here](https://github.com/SparkingStudio/I2C_LCD) please.
 
-Compiled with sccz80 version 19027-7557a4792-20211229, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 19534-83d3302b4-20220518, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -38,19 +38,19 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 	5.profit
 
 ### ZSDCC
-`zcc +yaz180 -subtype=app -v -m -SO3 --list --math32_z180  -llib/yaz180/i2c_lcd --c-code-in-asm --max-allocs-per-node400000 @test.lst -o test -create-app`
+`zcc +yaz180 -subtype=app -SO3 --max-allocs-per-node400000 -v -m --list --math32 -llib/yaz180/i2c_lcd @test.lst -o test -create-app`
 
 ### SCCZ80
-`zcc +yaz180 -subtype=app -clib=new -v -m -SO3 --list --math32_z180 -llib/yaz180/i2c_lcd @test.lst -o test -create-app`
+`zcc +yaz180 -subtype=app -clib=new -O2 --opt-code-speed=inlineints -v -m --list --math32 -llib/yaz180/i2c_lcd @test.lst -o test -create-app`
 
 ## Preparation
 
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +yaz180 --math32 -x -O2 -clib=new @i2c_lcd.lst -o ../i2c_lcd
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @i2c_lcd.lst -o ../i2c_lcd
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @i2c_lcd.lst -o ../i2c_lcd
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @i2c_lcd.lst -o ../i2c_lcd
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @i2c_lcd.lst -o ../i2c_lcd
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @i2c_lcd.lst -o ../i2c_lcd
 ```
 
 The resulting `i2c_lcd.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.

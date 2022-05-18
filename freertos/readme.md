@@ -6,7 +6,7 @@ Current source version status is: 10.4.6. Snapshot 1 January 2022.
 
 Over the past few years freeRTOS development has become increasingly 32-bit orientated, with little change or improvement for the 8-bit world. As such I'm treating this 1st January 2022 10.4.6 snapshot as my LTS release.
 
-Compiled with sccz80 version 19027-7557a4792-20211229, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 19534-83d3302b4-20220518, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -44,9 +44,9 @@ A simple usage example, for the `+scz180` target.
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos main.c -o blink -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/yaz180/freertos main.c -o blink -create-app
 
-// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/scz180/freertos main.c -o blink -create-app
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/scz180/freertos main.c -o blink -create-app
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -154,14 +154,14 @@ The FreeRTOS library can be compiled using the following command lines in Linux,
 
 ```
 zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @freertos.lst -o ../freertos
-zcc +yaz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
-zcc +yaz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @freertos.lst -o ../freertos
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @freertos.lst -o ../freertos
 ```
 
 ```
 zcc +scz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @freertos.lst -o ../freertos
-zcc +scz180 -clib=sdcc_ix -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
-zcc +scz180 -clib=sdcc_iy -x -SO3 --math32 --max-allocs-per-node400000 @freertos.lst -o ../freertos
+zcc +scz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @freertos.lst -o ../freertos
+zcc +scz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @freertos.lst -o ../freertos
 ```
 
 The resulting `freertos.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
