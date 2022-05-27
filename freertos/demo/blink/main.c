@@ -30,13 +30,16 @@
 static void TaskBlinkRedLED(void *pvParameters);
 static void TaskBlinkGreenLED(void *pvParameters);
 
+#if __YAZ180
 static uint8_t portBstate;
+#endif
 
 /*-----------------------------------------------------------*/
 
 static void TaskBlinkRedLED(void *pvParameters)
 {
     (void) pvParameters;
+
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
@@ -46,7 +49,7 @@ static void TaskBlinkRedLED(void *pvParameters)
 
     for(;;)
     {
-
+#if __YAZ180
         portBstate |= 0x20;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
@@ -54,7 +57,9 @@ static void TaskBlinkRedLED(void *pvParameters)
         portBstate |= 0x50;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
-
+#else
+        xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+#endif
         printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
 
@@ -64,6 +69,7 @@ static void TaskBlinkRedLED(void *pvParameters)
 static void TaskBlinkGreenLED(void *pvParameters)
 {
     (void) pvParameters;
+
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
     count.  Note that this is the only time we access this variable.  From this
@@ -73,6 +79,7 @@ static void TaskBlinkGreenLED(void *pvParameters)
 
     for(;;)
     {
+#if __YAZ180
         portBstate |= 0x05;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
@@ -80,7 +87,9 @@ static void TaskBlinkGreenLED(void *pvParameters)
         portBstate |= 0x02;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
-
+#else
+        xTaskDelayUntil( &xLastWakeTime, ( 300 / portTICK_PERIOD_MS ) );
+#endif
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
         printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
@@ -90,14 +99,15 @@ static void TaskBlinkGreenLED(void *pvParameters)
 
 int main(void)
 {
-
+#if __YAZ180
     io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
     io_pio_port_b = 0x00;                   // on YAZ180 TIL311
+#endif
 
     xTaskCreate(
         TaskBlinkRedLED
         ,  "RedLED"
-        ,  48
+        ,  96
         ,  NULL
         ,  3
         ,  NULL ); //
@@ -105,9 +115,9 @@ int main(void)
     xTaskCreate(
         TaskBlinkGreenLED
         ,  "GreenLED"
-        ,  48
+        ,  96
         ,  NULL
-        ,  3
+        ,  2
         ,  NULL ); //
 
     vTaskStartScheduler();
