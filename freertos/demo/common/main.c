@@ -99,7 +99,7 @@
 #define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 6 )
 #define mainPRINT_TASK_PRIORITY             ( tskIDLE_PRIORITY + 7 )
 
-#define mainPRINT_STACK_SIZE                ( ( uint16_t ) 256 )
+#define mainPRINT_STACK_SIZE                ( ( uint16_t ) 512 )
 
 /* Task function for the "Print" task as described at the top of the file. */
 static void vErrorChecks( void *pvParameters );
@@ -132,7 +132,7 @@ int main( void )
 
     /* This task has to be created last as it keeps account of the number of tasks
     it expects to see running. */
-//  vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
     /* Set the scheduler running.  This function will not return unless a task
     calls vTaskEndScheduler(). */
@@ -155,17 +155,12 @@ const char * pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
     /* Stop warnings. */
     ( void ) pvParameters;
 
-    uint8_t count = 0;
-    io_pio_control = __IO_PIO_CNTL_00;
-
     /* Loop continuously, blocking, then checking all the other tasks are still
     running, before blocking once again.  This task blocks on the queue of messages
     that require displaying so will wake either by its time out expiring, or a
     message becoming available. */
     while(1)
     {
-
-        io_pio_port_b = count++;
 
         /* Calculate the time we will unblock if no messages are received
         on the queue.  This is used to check that we have not blocked for too long. */
