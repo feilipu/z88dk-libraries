@@ -76,176 +76,6 @@ typedef uint8_t                     UBaseType_t;
 
 /* Critical section management. */
 
-#ifdef __SCCZ80
-
-#define portENTER_CRITICAL()        \
-    do{                             \
-        asm(                        \
-            "ld a,i             \n" \
-            "di                 \n" \
-            "push af            \n" \
-            );                      \
-    }while(0)
-
-
-#define portEXIT_CRITICAL()         \
-    do{                             \
-        asm(                        \
-            "pop af             \n" \
-            "jp PO,ASMPC+4      \n" \
-            "ei                 \n" \
-            );                      \
-    }while(0)
-
-#define portDISABLE_INTERRUPTS()    \
-    do{                             \
-        asm(                        \
-            "di                 \n" \
-            );                      \
-    }while(0)
-
-#define portENABLE_INTERRUPTS()     \
-    do{                             \
-        asm(                        \
-            "ei                 \n" \
-            );                      \
-    }while(0)
-
-#define portNOP()                   \
-    do{                             \
-        asm(                        \
-            "nop                \n" \
-            );                      \
-    }while(0)
-
-/*
- * Macros to save all the registers, and save the stack pointer into the TCB.
- */
-
-#define portSAVE_CONTEXT()          \
-    do{                             \
-        asm(                        \
-            "push af            \n" \
-            "ld a,i             \n" \
-            "di                 \n" \
-            "push af ; iff1:iff2\n" \
-            "push bc            \n" \
-            "push de            \n" \
-            "push hl            \n" \
-            "exx                \n" \
-            "ex af,af           \n" \
-            "push af            \n" \
-            "push bc            \n" \
-            "push de            \n" \
-            "push hl            \n" \
-            "push ix            \n" \
-            "push iy            \n" \
-            "ld hl,0            \n" \
-            "add hl,sp          \n" \
-            "ld de,(_pxCurrentTCB)  \n"\
-            "ex de,hl           \n" \
-            "ld (hl),e          \n" \
-            "inc hl             \n" \
-            "ld (hl),d          \n" \
-            );                      \
-    }while(0)
-
-#define portRESTORE_CONTEXT()       \
-    do{                             \
-        asm(                        \
-            "ld hl,(_pxCurrentTCB)  \n" \
-            "ld e,(hl)          \n" \
-            "inc hl             \n" \
-            "ld d,(hl)          \n" \
-            "ex de,hl           \n" \
-            "ld sp,hl           \n" \
-            "pop iy             \n" \
-            "pop ix             \n" \
-            "pop hl             \n" \
-            "pop de             \n" \
-            "pop bc             \n" \
-            "pop af             \n" \
-            "ex af,af           \n" \
-            "exx                \n" \
-            "pop hl             \n" \
-            "pop de             \n" \
-            "pop bc             \n" \
-            "pop af  ; iff1:iff2\n" \
-            "jp PO,ASMPC+4      \n" \
-            "ei                 \n" \
-            "pop af             \n" \
-            "ret                \n" \
-            );                      \
-    }while(0)
-
-#define portSAVE_CONTEXT_IN_ISR()   \
-    do{                             \
-        asm(                        \
-            "PHASE "string(configISR_ORG)"  \n" \
-            "._timer_isr_start  \n" \
-            "push af            \n" \
-            "ld a,0x7F          \n" \
-            "inc a   ; set PE   \n" \
-            "push af ; iff1:iff2\n" \
-            "push bc            \n" \
-            "push de            \n" \
-            "push hl            \n" \
-            "exx                \n" \
-            "ex af,af           \n" \
-            "push af            \n" \
-            "push bc            \n" \
-            "push de            \n" \
-            "push hl            \n" \
-            "push ix            \n" \
-            "push iy            \n" \
-            "ld hl,0            \n" \
-            "add hl,sp          \n" \
-            "ld de,(_pxCurrentTCB)  \n" \
-            "ex de,hl           \n" \
-            "ld (hl),e          \n" \
-            "inc hl             \n" \
-            "ld (hl),d          \n" \
-            );                      \
-    }while(0)
-
-#define portRESTORE_CONTEXT_IN_ISR()\
-    do{                             \
-        asm(                        \
-            "ld hl,(_pxCurrentTCB)  \n" \
-            "ld e,(hl)          \n" \
-            "inc hl             \n" \
-            "ld d,(hl)          \n" \
-            "ex de,hl           \n" \
-            "ld sp,hl           \n" \
-            "pop iy             \n" \
-            "pop ix             \n" \
-            "pop hl             \n" \
-            "pop de             \n" \
-            "pop bc             \n" \
-            "pop af             \n" \
-            "ex af,af           \n" \
-            "exx                \n" \
-            "pop hl             \n" \
-            "pop de             \n" \
-            "pop bc             \n" \
-            "pop af  ; iff1:iff2\n" \
-            "jp PO,ASMPC+4      \n" \
-            "ei                 \n" \
-            "pop af             \n" \
-            "reti               \n" \
-            "._timer_isr_end    \n" \
-            "DEPHASE            \n" \
-            );                      \
-    }while(0)
-
-#endif
-
-/*-----------------------------------------------------------*/
-
-/* Critical section management. */
-
-#ifdef __SDCC
-
 #define portENTER_CRITICAL()        \
     do{                             \
         __asm                       \
@@ -406,15 +236,13 @@ typedef uint8_t                     UBaseType_t;
         __endasm;                   \
     }while(0)
 
-#endif
-
 /*-----------------------------------------------------------*/
 
 /* Kernel utilities. */
 /*
 extern void vPortYield( void );
  */
-extern void vPortYield(void);
+void vPortYield(void);
 
 #define portYIELD()                 vPortYield()
 
