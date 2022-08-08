@@ -25,17 +25,19 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/timers.h>
 
-//define task handles
-TaskHandle_t TaskBlink_Handler;
-TaskHandle_t TaskSerial_Handler;
-
 // define two tasks for Blink & Serial
 void TaskBlink( void *pvParameters );
 void TaskSerial(void* pvParameters);
 
+//define task handles
+static TaskHandle_t TaskBlink_Handle;
+static TaskHandle_t TaskSerial_Handle;
+
 int main(void) {
 
+#if __YAZ180
     io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
+#endif
 
   // Now set up two tasks to run independently.
     xTaskCreate(
@@ -43,16 +45,16 @@ int main(void) {
         ,  "Blink"   // A name just for humans
         ,  128  // This stack size can be checked & adjusted by reading the Stack Highwater
         ,  NULL //Parameters passed to the task function
-        ,  2  // Priority, with 2 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-        ,  &TaskBlink_Handler );//Task handle
+        ,  1  // Priority, with 2 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+        ,  &TaskBlink_Handle );//Task handle */
 
     xTaskCreate(
         TaskSerial
         ,  "Serial"
         ,  128  // Stack size
         ,  NULL //Parameters passed to the task function
-        ,  1  // Priority
-        ,  &TaskSerial_Handler );  //Task handle
+        ,  2  // Priority
+        ,  &TaskSerial_Handle );  //Task handle
 
     vTaskStartScheduler();
 
@@ -71,24 +73,26 @@ void TaskSerial(void* pvParameters){
 */
     (void) pvParameters;
 
-    uint8_t inChar = 0;
+    uint8_t inChar;
 
     for (;;) { // A Task shall never return or exit.
-        while( (inChar = getchar()) != 0) {
+        inChar = 0;
+        if( (inChar = (uint8_t)getchar()) != 0) {
             switch(inChar){
                 case 's':
-                  vTaskSuspend(TaskBlink_Handler); 
+                  vTaskSuspend(TaskBlink_Handle);
                   printf("Suspend!\n");
                   break;
                 case 'r':
-                  vTaskResume(TaskBlink_Handler);
+                  vTaskResume(TaskBlink_Handle);
                   printf("Resume!\n");
                   break;
                 default:
                   break;
             }
-            vTaskDelay(1);
         }
+        vTaskDelay(10);
+        printf("Serial HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
 }
 
@@ -96,9 +100,13 @@ void TaskBlink(void *pvParameters)  // This is a task.
 {
     (void) pvParameters;
 
-    io_pio_port_b = 0x00;                   // on YAZ180 TIL311
-
-    uint8_t portBstate;
+#if __YAZ180
+    uint8_t portBstate = 0x00;
+    io_pio_port_b = 0x00;                   // YAZ180 TIL311
+#elif __SCZ180
+    uint8_t io_led_state = 0x00;
+    io_led_status = 0x00;                   // SCZ180 Status LED
+#endif
 
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
@@ -109,6 +117,7 @@ void TaskBlink(void *pvParameters)  // This is a task.
 
     for (;;) // A Task shall never return or exit.
     {
+#if __YAZ180
         portBstate = 0x05;                  // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
@@ -117,5 +126,19 @@ void TaskBlink(void *pvParameters)  // This is a task.
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS )  );
 
+#elif __SCZ180
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+
+#else
+        xTaskDelayUntil( &xLastWakeTime, ( 1000 / portTICK_PERIOD_MS ) );
+
+#endif
+        printf("Blink HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
 }

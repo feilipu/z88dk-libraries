@@ -29,8 +29,8 @@
 
 // Define a struct
 struct portRead {
-  int port;
-  int value;
+  uint8_t port;
+  uint8_t value;
 };
 
 //Function Declaration
@@ -47,8 +47,10 @@ QueueHandle_t structQueue;
 
 int main() {
 
+#if __YAZ180
     io_pio_control = __IO_PIO_CNTL_00;      // enable the 82C55 for output on Port B.
-    
+#endif
+
     /**
     * Create a queue.
     * https://www.freertos.org/a00116.html
@@ -110,7 +112,14 @@ void TaskReadPortA(void *pvParameters)
         // Read the input on port 0:
 
         currentPortRead.port= 0;
+
+#if __YAZ180
+        // Read the input on port A
         currentPortRead.value = io_pio_port_a;
+#elif __SCZ180
+        // Read the input on DIO
+        currentPortRead.value = io_dio&0x0F;
+#endif
 
         /**
          * Post an item on a queue.
@@ -136,7 +145,14 @@ void TaskReadPortB(void *pvParameters)
         // Read the input on port 1:
 
         currentPortRead.port= 1;
+        
+#if __YAZ180
+        // Read the input on port B
         currentPortRead.value = io_pio_port_b;
+#elif __SCZ180
+        // Read the input on DIO
+        currentPortRead.value = (io_dio&0xF0) >> 4;
+#endif
 
         /**
          * Post an item on a queue.
@@ -177,9 +193,13 @@ void TaskBlink(void *pvParameters) { // This is a task.
 
     (void) pvParameters;
 
-    io_pio_port_b = 0x00;                   // on YAZ180 TIL311
-
-    uint8_t portBstate;
+#if __YAZ180
+    uint8_t portBstate = 0x00;
+    io_pio_port_b = 0x00;                   // YAZ180 TIL311
+#elif __SCZ180
+    uint8_t io_led_state = 0x00;
+    io_led_status = 0x00;                   // SCZ180 Status LED
+#endif
 
     TickType_t xLastWakeTime;
     /* The xLastWakeTime variable needs to be initialised with the current tick
@@ -190,6 +210,7 @@ void TaskBlink(void *pvParameters) { // This is a task.
 
     for (;;) // A Task shall never return or exit.
     {
+#if __YAZ180
         portBstate = 0x05;                  // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
@@ -198,5 +219,17 @@ void TaskBlink(void *pvParameters) { // This is a task.
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS )  );
 
+#elif __SCZ180
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+
+#else
+        xTaskDelayUntil( &xLastWakeTime, ( 1000 / portTICK_PERIOD_MS ) );
+#endif
     }
 }

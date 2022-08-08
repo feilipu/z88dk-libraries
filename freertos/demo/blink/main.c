@@ -34,6 +34,11 @@ static void TaskBlinkGreenLED(void *pvParameters);
 static uint8_t portBstate;
 #endif
 
+#if __SCZ180
+static uint8_t io_dio_state;
+static uint8_t io_led_state;
+#endif
+
 /*-----------------------------------------------------------*/
 
 static void TaskBlinkRedLED(void *pvParameters)
@@ -57,8 +62,19 @@ static void TaskBlinkRedLED(void *pvParameters)
         portBstate |= 0x50;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+
+#elif __SCZ180
+        io_dio_state ^= 0x01;               // SCZ180 DIO
+        io_dio = io_dio_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
+
+        io_dio_state ^= 0x01;               // SCZ180 DIO
+        io_dio = io_dio_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+
 #else
         xTaskDelayUntil( &xLastWakeTime, ( 500 / portTICK_PERIOD_MS ) );
+
 #endif
         printf("RedLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
@@ -87,6 +103,16 @@ static void TaskBlinkGreenLED(void *pvParameters)
         portBstate |= 0x02;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
+
+#elif __SCZ180
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
+
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+
 #else
         xTaskDelayUntil( &xLastWakeTime, ( 300 / portTICK_PERIOD_MS ) );
 #endif

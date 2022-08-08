@@ -36,6 +36,14 @@
 #include <freertos/timers.h>
 
 /*-----------------------------------------------------------*/
+
+#if __SCZ180
+static uint8_t io_dio_state;
+static uint8_t io_led_state;
+#endif
+
+/*-----------------------------------------------------------*/
+
 static void TaskFileCopy(void *pvParameters);
 static void TaskBlinkGreenLED(void *pvParameters);
 
@@ -67,7 +75,7 @@ static void TaskFileCopy(void *pvParameters)
 
         /* Check function/compatibility of the physical drive */
         /* for SCZ180 first parameter is logical drive our Unit. 0 = MD1 RAM Disk */
-        rc = test_diskio(2, 3, buffer, sizeof( buffer) );
+        rc = test_diskio(0, 3, buffer, sizeof( buffer) );
         if (rc) {
             printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work on this disk driver.\n", rc);
         } else {
@@ -93,16 +101,23 @@ static void TaskBlinkGreenLED(void *pvParameters)
 
     for(;;)
     {
-        xTaskDelayUntil( &xLastWakeTime, ( 50 ) );
+
+#if __SCZ180
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
+
+        io_led_state ^= 0x01;               // SCZ180 Status LED
+        io_led_status = io_led_state;
+        xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
+
+#else
+        xTaskDelayUntil( &xLastWakeTime, ( 300 / portTICK_PERIOD_MS ) );
+#endif
+
         printf("xTaskGetTickCount %u\r\n", xTaskGetTickCount());
-
-        xTaskDelayUntil( &xLastWakeTime, ( 50 )  );
-       printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
+        printf("GreenLED HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
-
-
-
-
 }
 
 /*-----------------------------------------------------------*/
@@ -402,7 +417,7 @@ int main(void)
         ,  "FileCopy"
         ,  128
         ,  NULL
-        ,  2
+        ,  1
         ,  NULL ); // */
 
     xTaskCreate(
@@ -410,7 +425,7 @@ int main(void)
         ,  "GreenLED"
         ,  128
         ,  NULL
-        ,  2
+        ,  3
         ,  NULL ); // */
 
     vTaskStartScheduler();
