@@ -4,10 +4,10 @@
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos TaskStatus.c -o TaskStatus -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list -pragma-define:CRT_ITERM_TERMINAL_FLAGS=0x0190 -pragma-define:TTY_ITERM_TERMINAL_FLAGS=0x0190 --max-allocs-per-node100000 -llib/yaz180/freertos TaskStatus.c -o TaskStatus -create-app
 // cat > /dev/ttyUSB0 < TaskStatus.ihx
 
-// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/scz180/freertos TaskStatus.c -o TaskStatus -create-app
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list -pragma-define:CRT_ITERM_TERMINAL_FLAGS=0x0190 -pragma-define:TTY_ITERM_TERMINAL_FLAGS=0x0190 --max-allocs-per-node100000 -llib/scz180/freertos TaskStatus.c -o TaskStatus -create-app
 // cat > /dev/ttyUSB0 < TaskStatus.ihx
 
 #include <stdlib.h>
@@ -45,7 +45,7 @@ int main(void) {
         ,  "Blink"   // A name just for humans
         ,  128  // This stack size can be checked & adjusted by reading the Stack Highwater
         ,  NULL //Parameters passed to the task function
-        ,  1  // Priority, with 2 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+        ,  2  // Priority, with 2 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
         ,  &TaskBlink_Handle );//Task handle */
 
     xTaskCreate(
@@ -53,7 +53,7 @@ int main(void) {
         ,  "Serial"
         ,  128  // Stack size
         ,  NULL //Parameters passed to the task function
-        ,  2  // Priority
+        ,  1  // Priority
         ,  &TaskSerial_Handle );  //Task handle
 
     vTaskStartScheduler();
@@ -69,29 +69,24 @@ void TaskSerial(void* pvParameters){
 /*
  Serial
  Send "s" or "r" through the serial port to control the suspend and resume of the LED light task.
+ The #pragmas above set the input to char-by-char mode (not line mode) for both CRT and TTY inputs.
  This example code is in the public domain.
 */
     (void) pvParameters;
 
-    uint8_t inChar;
-
     for (;;) { // A Task shall never return or exit.
-        inChar = 0;
-        if( (inChar = (uint8_t)getchar()) != 0) {
-            switch(inChar){
-                case 's':
-                  vTaskSuspend(TaskBlink_Handle);
-                  printf("Suspend!\n");
-                  break;
-                case 'r':
-                  vTaskResume(TaskBlink_Handle);
-                  printf("Resume!\n");
-                  break;
-                default:
-                  break;
-            }
+        switch((uint8_t)getchar()){
+            case 's':
+              vTaskSuspend(TaskBlink_Handle);
+              printf(" Suspend!\n");
+              break;
+            case 'r':
+              vTaskResume(TaskBlink_Handle);
+              printf(" Resume!\n");
+              break;
+            default:
+              break;
         }
-        vTaskDelay(10);
         printf("Serial HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
     }
 }

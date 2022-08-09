@@ -55,11 +55,11 @@ static void TaskBlinkRedLED(void *pvParameters)
     for(;;)
     {
 #if __YAZ180
-        portBstate |= 0x20;                 // YAZ180 TIL311
+        portBstate ^= 0x10;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 400 / portTICK_PERIOD_MS ) );
 
-        portBstate |= 0x50;                 // YAZ180 TIL311
+        portBstate ^= 0x10;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS ) );
 
@@ -96,11 +96,11 @@ static void TaskBlinkGreenLED(void *pvParameters)
     for(;;)
     {
 #if __YAZ180
-        portBstate |= 0x05;                 // YAZ180 TIL311
+        portBstate ^= 0x01;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 200 / portTICK_PERIOD_MS ) );
 
-        portBstate |= 0x02;                 // YAZ180 TIL311
+        portBstate ^= 0x01;                 // YAZ180 TIL311
         io_pio_port_b = portBstate;
         xTaskDelayUntil( &xLastWakeTime, ( 100 / portTICK_PERIOD_MS )  );
 
