@@ -150,6 +150,8 @@ extern "C" {
 #define configISR_ORG                   0xFB00
 #define configISR_IVT                   0xFF06
 
+#define configSWITCH_CONTEXT()          vTaskSwitchContext()
+
 #ifdef __SCCZ80
 
 #define configINCREMENT_TICK()                                  \
@@ -157,21 +159,12 @@ extern "C" {
         asm(                                                    \
             "EXTERN BBR                                     \n" \
             "in0 a,(BBR)                                    \n" \
-            "xor 0xF0                ; BBR for user TPA     \n" \
-            "call Z, xTaskIncrementTick                     \n" \
-            );                                                  \
-    }while(0)
-
-#define configSWITCH_CONTEXT()                                  \
-    do{                                                         \
-        asm(                                                    \
-            "EXTERN BBR                                     \n" \
-            "in0 a,(BBR)                                    \n" \
-            "xor 0xF0                ; BBR for user TPA     \n" \
-            "jr NZ,ASMPC+9                                  \n" \
+            "xor 0xF0            ; BBR for user TPA         \n" \
+            "jr NZ,ASMPC+14      ; after vTaskSwitchContext \n" \
             "ld hl,0x0100                                   \n" \
-            "add hl,sp               ; Check SP < 0xFFnn    \n" \
-            "call NC,vTaskSwitchContext                     \n" \
+            "add hl,sp           ; Check SP < 0xFFnn        \n" \
+            "jr C,ASMPC+8        ; after vTaskSwitchContext \n" \
+            "call xTaskIncrementTick                        \n" \
             );                                                  \
     }while(0)
 
@@ -181,7 +174,7 @@ extern "C" {
             "EXTERN __CPU_CLOCK                 \n" \
             "EXTERN RLDR1L, RLDR1H              \n" \
             "EXTERN TCR, TCR_TIE1, TCR_TDE1     \n" \
-            "ld hl,_timer_isr       ; move timer_isr() to a     \n" \
+            "ld hl,_timer_isr       ; move timer_isr() to a \n" \
             "ld de,_timer_isr_start ; destination above 0x8000  \n" \
             "push de                                        \n" \
             "ld bc,_timer_isr_end-_timer_isr_start          \n" \
@@ -230,20 +223,11 @@ extern "C" {
             EXTERN BBR                                          \
             in0 a,(BBR)                                         \
             xor 0xF0                ; BBR for user TPA          \
-            call Z,_xTaskIncrementTick                          \
-        __endasm;                                               \
-    }while(0)
-
-#define configSWITCH_CONTEXT()                                  \
-    do{                                                         \
-        __asm                                                   \
-            EXTERN BBR                                          \
-            in0 a,(BBR)                                         \
-            xor 0xF0                ; BBR for user TPA          \
-            jr NZ,ASMPC+9                                       \
+            jr NZ,ASMPC+14          ; after vTaskSwitchContext  \
             ld hl,0x0100                                        \
             add hl,sp               ; Check SP < 0xFFnn         \
-            call NC,_vTaskSwitchContext                         \
+            jr C,ASMPC+8            ; after vTaskSwitchContext  \
+            call _xTaskIncrementTick                            \
         __endasm;                                               \
     }while(0)
 
