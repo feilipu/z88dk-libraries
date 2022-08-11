@@ -240,7 +240,7 @@ typedef uint8_t                     UBaseType_t;
 
 /* Kernel utilities. */
 /*
-extern void vPortYield( void );
+void vPortYield( void );
  */
 void vPortYield(void);
 
