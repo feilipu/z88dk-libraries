@@ -150,8 +150,6 @@ extern "C" {
 #define configISR_ORG                   0xFB00
 #define configISR_IVT                   0xFF06
 
-#define configSWITCH_CONTEXT()          vTaskSwitchContext()
-
 #ifdef __SCCZ80
 
 #define configINCREMENT_TICK()                                  \
@@ -160,11 +158,23 @@ extern "C" {
             "EXTERN BBR                                     \n" \
             "in0 a,(BBR)                                    \n" \
             "xor 0xF0            ; BBR for user TPA         \n" \
-            "jr NZ,ASMPC+14      ; after vTaskSwitchContext \n" \
+            "jr NZ,ASMPC+9                                  \n" \
             "ld hl,0x0100                                   \n" \
             "add hl,sp           ; Check SP < 0xFFnn        \n" \
-            "jr C,ASMPC+8        ; after vTaskSwitchContext \n" \
-            "call xTaskIncrementTick                        \n" \
+            "call NC,xTaskIncrementTick                     \n" \
+            );                                                  \
+    }while(0)
+
+#define configSWITCH_CONTEXT()                                  \
+    do{                                                         \
+        asm(                                                    \
+            "EXTERN BBR                                     \n" \
+            "in0 a,(BBR)                                    \n" \
+            "xor 0xF0            ; BBR for user TPA         \n" \
+            "jr NZ,ASMPC+9                                  \n" \
+            "ld hl,0x0100                                   \n" \
+            "add hl,sp           ; Check SP < 0xFFnn        \n" \
+            "call NC,vTaskSwitchContext                     \n" \
             );                                                  \
     }while(0)
 
@@ -223,11 +233,23 @@ extern "C" {
             EXTERN BBR                                          \
             in0 a,(BBR)                                         \
             xor 0xF0                ; BBR for user TPA          \
-            jr NZ,ASMPC+14          ; after vTaskSwitchContext  \
+            jr NZ,ASMPC+9                                       \
             ld hl,0x0100                                        \
             add hl,sp               ; Check SP < 0xFFnn         \
-            jr C,ASMPC+8            ; after vTaskSwitchContext  \
-            call _xTaskIncrementTick                            \
+            call NC,_xTaskIncrementTick                         \
+        __endasm;                                               \
+    }while(0)
+
+#define configSWITCH_CONTEXT()                                  \
+    do{                                                         \
+        __asm                                                   \
+            EXTERN BBR                                          \
+            in0 a,(BBR)                                         \
+            xor 0xF0                ; BBR for user TPA          \
+            jr NZ,ASMPC+9                                       \
+            ld hl,0x0100                                        \
+            add hl,sp               ; Check SP < 0xFFnn         \
+            call NC,_vTaskSwitchContext                         \
         __endasm;                                               \
     }while(0)
 

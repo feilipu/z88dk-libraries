@@ -109,12 +109,11 @@ void vPortEndScheduler( void ) __preserves_regs(b,c,d,e,h,l,iyh,iyl)
 /*
  * Manual context switch. The first thing we do is save the registers so we
  * can use a naked attribute.
- * This is called by the application, so we don't have to check which bank is loaded.
  */
 void vPortYield( void ) __preserves_regs(a,b,c,d,e,h,l,iyh,iyl) __naked
 {
     portSAVE_CONTEXT();
-    vTaskSwitchContext();
+    configSWITCH_CONTEXT();
     portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
