@@ -26,8 +26,8 @@
 #include <freertos/timers.h>
 
 // define two tasks for Blink & Serial
-void TaskBlink( void *pvParameters );
-void TaskSerial(void* pvParameters);
+void TaskBlink( void * pvParameters );
+void TaskSerial(void * pvParameters);
 
 //define task handles
 static TaskHandle_t TaskBlink_Handle;
@@ -87,7 +87,8 @@ void TaskSerial(void* pvParameters){
             default:
               break;
         }
-        printf("Serial HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
+//      printf("Serial HighWater @ %u\r\n", uxTaskGetStackHighWaterMark(NULL));
+        vTaskDelay(0);
     }
 }
 

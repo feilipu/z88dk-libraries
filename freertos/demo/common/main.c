@@ -116,11 +116,11 @@ int main( void )
 
     /* CREATE ALL THE DEMO APPLICATION TASKS. */
 
-    vStartIntegerMathTasks( mainMATH_TASK_PRIORITY );
+//  vStartIntegerMathTasks( mainMATH_TASK_PRIORITY );
 //  vStartMathTasks( mainMATH_TASK_PRIORITY );
-    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+//  vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 //  vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
-    vStartSemaphoreTasks( mainSEMAPHORE_TASK_PRIORITY );
+//  vStartSemaphoreTasks( mainSEMAPHORE_TASK_PRIORITY );
 
 //  vStartCountingSemaphoreTasks();
 //  vStartDynamicPriorityTasks();
@@ -146,7 +146,7 @@ static void vErrorChecks( void *pvParameters )
 {
 TickType_t xExpectedWakeTime;
 const TickType_t xPrintRate = ( TickType_t ) 2000 / portTICK_PERIOD_MS;
-const TickType_t xMaxAllowableTimeDifference = 0;
+const TickType_t xMaxAllowableTimeDifference =  ( TickType_t ) 1000 / portTICK_PERIOD_MS;
 TickType_t xWakeTime;
 TickType_t xTimeDifference;
 const char * pcReceivedMessage;
@@ -213,7 +213,7 @@ static void prvCheckOtherTasksAreStillRunning( void )
 {
 BaseType_t xErrorHasOccurred = pdFALSE;
 
-    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+/*  if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Integer maths task count unchanged!\r\n" );
         xErrorHasOccurred = pdTRUE;
@@ -225,7 +225,7 @@ BaseType_t xErrorHasOccurred = pdFALSE;
         xErrorHasOccurred = pdTRUE;
     } // */
 
-    if( xArePollingQueuesStillRunning() != pdTRUE )
+/*  if( xArePollingQueuesStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Polling queue count unchanged!\r\n" );
         xErrorHasOccurred = pdTRUE;
@@ -237,7 +237,7 @@ BaseType_t xErrorHasOccurred = pdFALSE;
         xErrorHasOccurred = pdTRUE;
     } // */
 
-    if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+/*  if( xAreSemaphoreTasksStillRunning() != pdTRUE )
     {
         vDisplayMessage( "Semaphore take count unchanged!\r\n" );
         xErrorHasOccurred = pdTRUE;
