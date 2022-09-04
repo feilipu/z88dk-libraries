@@ -114,9 +114,10 @@ The ff library can be compiled from the `ff/source` directory using the followin
 
 ```
 zcc +rc2014 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
-zcc +rc2014 -clib=new -m8085 -x -O2 --opt-code-speed=inlineints -D__DISABLE_BUILTIN --math32 @ff.lst -o ../ff_85
 zcc +rc2014 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +rc2014 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
+
+zcc +rc2014 -clib=new -m8085 -x -O2 --opt-code-speed=inlineints -D__DISABLE_BUILTIN --math32 @ff.lst -o ../ff_85
 ```
 ```
 zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
