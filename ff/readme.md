@@ -113,20 +113,20 @@ Then configure the library to suit your requirements by adjusting the `source/ff
 The ff library can be compiled from the `ff/source` directory using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +rc2014 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
+zcc +rc2014 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @ff.lst -o ../ff
 zcc +rc2014 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +rc2014 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 
-zcc +rc2014 -clib=new -m8085 -x -O2 --opt-code-speed=inlineints -D__DISABLE_BUILTIN --math32 @ff.lst -o ../ff_85
+zcc +rc2014 -clib=new -m8085 -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints -D__DISABLE_BUILTIN --math32 @ff.lst -o ../ff_85
 ```
 ```
-zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @ff.lst -o ../ff
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```
 For any supported target.
 ```
-zcc +target -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ff.lst -o ../ff
+zcc +target -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @ff.lst -o ../ff
 zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 ```

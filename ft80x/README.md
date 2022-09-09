@@ -48,7 +48,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```sh
-zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @ft80x.lst -o ../ft80x
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @ft80x.lst -o ../ft80x
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
 ```

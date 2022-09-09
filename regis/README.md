@@ -48,13 +48,13 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```
-zcc +rc2014 --math32 -x -O2 --opt-code-speed=inlineints -clib=new @regis.lst -o ../regis
+zcc +rc2014 --math32 -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints -clib=new @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 ```
-zcc +yaz180 --math32 -x -O2 --opt-code-speed=inlineints -clib=new @regis.lst -o ../regis
+zcc +yaz180 --math32 -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints -clib=new @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```

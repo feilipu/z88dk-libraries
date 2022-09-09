@@ -53,7 +53,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 The library can be compiled using the following command --opt-code-speed=inlineints lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +yaz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @th02.lst -o ../th02
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @th02.lst -o ../th02
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @th02.lst -o ../th02
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @th02.lst -o ../th02
 ```

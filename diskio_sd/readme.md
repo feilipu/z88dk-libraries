@@ -94,12 +94,12 @@ void main (void)
 The diskio_sd library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +scz180 -clib=new -x -O2 --opt-code-speed=inlineints --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +scz180 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @diskio_sd.lst -o ../diskio_sd
 zcc +scz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 zcc +scz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 ```
 ```
-zcc +target -clib=new -x -02 --opt-code-speed=inlineints --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +target -clib=new -x -02 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @diskio_sd.lst -o ../diskio_sd
 zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 ```
