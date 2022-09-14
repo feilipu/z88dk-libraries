@@ -3,7 +3,7 @@ The library for FT80x EVE display controllers.
 
 Visit all support files and product documents click here.
 
-Compiled using zsdcc version 3.9.3 [r11369](https://sourceforge.net/p/sdcc/code/11369/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -49,8 +49,8 @@ The library can be compiled using the following command lines in Linux, with the
 
 ```sh
 zcc +yaz180 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @ft80x.lst -o ../ft80x
-zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
-zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --opt-code-speed --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --opt-code-speed --max-allocs-per-node400000 --math32 @ft80x.lst -o ../ft80x
 ```
 
 The resulting `ft80x.lib` file should be moved to `~/yaz180/lib/newlib/sccz80` or `~/yaz180/lib/newlib/sdcc_ix` or `~/yaz180/lib/newlib/sdcc_iy` respectively.
