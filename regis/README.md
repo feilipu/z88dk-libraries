@@ -48,15 +48,21 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```
-zcc +rc2014 --math32 -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints -clib=new @regis.lst -o ../regis
+zcc +rc2014 --math32 -x -O2  -clib=new --opt-code-speed=add32,sub32,sub16,inlineints @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 ```
-zcc +yaz180 --math32 -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints -clib=new @regis.lst -o ../regis
+zcc +yaz180 --math32 -x -O2  -clib=new --opt-code-speed=add32,sub32,sub16,inlineints @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
+```
+
+```
+zcc +cpm --math32 -x -O2 -clib=new --opt-code-speed=add32,sub32,sub16,inlineints @regis.lst -o ../regis
+zcc +cpm --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +cpm --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
@@ -127,4 +133,3 @@ For advising on how to get [ReGIS fonts in XTERM working](https://github.com/fei
 This library is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check the LICENSE file for more information.
 
 Contributing to this software is warmly welcomed. You can do this by [forking](https://help.github.com/articles/fork-a-repo), committing modifications and then [pull requests](https://help.github.com/articles/using-pull-requests).
-
