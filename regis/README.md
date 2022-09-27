@@ -100,6 +100,15 @@ Another alternative is using VT125 emulation.
 xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
+### Windows Subsystem for Linux
+
+WSL1 supports connection of Serial Devices via USB. WSL2 has some issues with this, particuarly with Windows 10.
+
+But, the supported picocom distribution for Ubuntu 22.04 Version 3.1 (for example), utilises some modern terminal capabilities that WSL does not support.
+So to avoid the use of these terminal system calls we have to use an older release of picocom. For example the [Version 2.2.2 provided with Ubuntu 18.04 LTS](https://manpages.ubuntu.com/manpages/bionic/man1/picocom.1.html). Be sure to use this older version of picocom if you are using WSL to run XTERM and picocom.
+
+The tested method of accessing XTERM on WSL is [MobaXterm](https://mobaxterm.mobatek.net/). This enhanced terminal for Windows includes an integrated Xserver. If MobaXterm is used to access WSL XTERM, its window will automatically connect to the Windows desktop.
+
 ## Demonstration
 
 There is a demonstration program, which should produce the below result (subject to improvement).
