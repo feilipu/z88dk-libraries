@@ -38,9 +38,19 @@ z88dk-lib +zx -r -f libname1 libname2 ...
     5.profit.
 
 ### ZSDCC
+
+For CP/M<br>
+`zcc +cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
+
+For RC2014<br>
 `zcc +rc2014 -subtype=cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ### SCCZ80
+
+For CP/M<br>
+`zcc +cpm -clib=new -O2 --opt-code-speed=inlineints -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
+
+For RC2014<br>
 `zcc +rc2014 -subtype=cpm -clib=new -O2 --opt-code-speed=inlineints -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ## Preparation
