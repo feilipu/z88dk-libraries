@@ -102,12 +102,12 @@ Adding the `--send-cmd` option will allow the use of `xmodem` or `sx` to send bi
 
 And, finally together with VT340 emulation.
 ``` sh
-xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Another alternative is using VT125 emulation.
 ``` sh
-xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 ### Windows Subsystem for Linux
