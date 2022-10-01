@@ -46,9 +46,9 @@
 /****************************************************************************/
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee;
+void appendstring(window_t * win, char const * text) __z88dk_callee;
 #endif
 
 /****************************************************************************/
@@ -56,7 +56,7 @@ void appendstring(window_t * win, char * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Relative move offset direction */
-void draw_ofs(window_t * win,uint16_t d,offset_t offset)
+void draw_ofs(window_t * win, uint16_t d, offset_t offset)
 {
     char s[14];
     uint16_t hypot;
@@ -68,14 +68,14 @@ void draw_ofs(window_t * win,uint16_t d,offset_t offset)
 
     switch (offset)
     {
-        case EE: win->x += d; break;
-        case NE: win->y -= hypot; win->x += hypot; break;
-        case NN: win->y -= d; break;
-        case NW: win->y -= hypot; win->x -= hypot; break;
-        case WW: win->x -= d; break;
-        case SW: win->y += hypot; win->x -= hypot; break;
-        case SS: win->y += d; break;
-        case SE: win->y += hypot; win->x += hypot; break;
+        case _EE: win->x += d; break;
+        case _NE: win->y -= hypot; win->x += hypot; break;
+        case _NN: win->y -= d; break;
+        case _NW: win->y -= hypot; win->x -= hypot; break;
+        case _WW: win->x -= d; break;
+        case _SW: win->y += hypot; win->x -= hypot; break;
+        case _SS: win->y += d; break;
+        case _SE: win->y += hypot; win->x += hypot; break;
     }
 }
 

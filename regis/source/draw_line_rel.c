@@ -46,9 +46,9 @@
 /****************************************************************************/
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee;
+void appendstring(window_t * win, char const * text) __z88dk_callee;
 #endif
 
 /****************************************************************************/
@@ -56,7 +56,7 @@ void appendstring(window_t * win, char * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Draw a line to relative position */
-void draw_line_rel(window_t * win,int16_t dx,int16_t dy)
+void draw_line_rel(window_t * win, int16_t dx, int16_t dy)
 {
     char s[16];
     sprintf(s, "V[][%+.3d,%+.3d]", dx, dy);

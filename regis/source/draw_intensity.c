@@ -46,9 +46,9 @@
 /****************************************************************************/
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee;
+void appendstring(window_t * win, char const * text) __z88dk_callee;
 #endif
 
 /****************************************************************************/
@@ -56,20 +56,20 @@ void appendstring(window_t * win, char * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Set writing intensity (colour) */
-void draw_intensity(window_t * win,intensity_t intensity)
+void draw_intensity(window_t * win, intensity_t intensity)
 {
     char s[8];
 
     switch (intensity)
     {
-        case D: sprintf(s,"W(I(D))"); break;
-        case B: sprintf(s,"W(I(B))"); break;
-        case R: sprintf(s,"W(I(R))"); break;
-        case M: sprintf(s,"W(I(M))"); break;
-        case G: sprintf(s,"W(I(G))"); break;
-        case C: sprintf(s,"W(I(C))"); break;
-        case Y: sprintf(s,"W(I(Y))"); break;
-        case W: sprintf(s,"W(I(W))"); break;
+        case _D: sprintf(s,"W(I(D))"); break;
+        case _B: sprintf(s,"W(I(B))"); break;
+        case _R: sprintf(s,"W(I(R))"); break;
+        case _M: sprintf(s,"W(I(M))"); break;
+        case _G: sprintf(s,"W(I(G))"); break;
+        case _C: sprintf(s,"W(I(C))"); break;
+        case _Y: sprintf(s,"W(I(Y))"); break;
+        case _W: sprintf(s,"W(I(W))"); break;
     }
 
     appendstring(win, s);

@@ -46,9 +46,9 @@
 /****************************************************************************/
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee;
+void appendstring(window_t * win, char const * text) __z88dk_callee;
 #endif
 
 /****************************************************************************/
@@ -56,16 +56,16 @@ void appendstring(window_t * win, char * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Set writing mode */
-void draw_mode(window_t * win,mode_t mode)
+void draw_mode(window_t * win, mode_t mode)
 {
     char s[6];
 
     switch (mode)
     {
-        case REP: sprintf(s,"W(R)"); break;
-        case ERA: sprintf(s,"W(E)"); break;
-        case OVL: sprintf(s,"W(V)"); break;
-        case CPL: sprintf(s,"W(C)"); break;
+        case _REP: sprintf(s,"W(R)"); break;
+        case _ERA: sprintf(s,"W(E)"); break;
+        case _OVL: sprintf(s,"W(V)"); break;
+        case _CPL: sprintf(s,"W(C)"); break;
     }
 
     appendstring(win, s);

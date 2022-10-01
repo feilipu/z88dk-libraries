@@ -46,9 +46,9 @@
 /****************************************************************************/
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee;
+void appendstring(window_t * win, char const * text) __z88dk_callee;
 #endif
 
 /****************************************************************************/
@@ -56,7 +56,7 @@ void appendstring(window_t * win, char * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Erase a filled box from current position */
-void draw_unbox_fill(window_t * win,int16_t width,int16_t height)
+void draw_unbox_fill(window_t * win, int16_t width, int16_t height)
 {
     char s[40];
     sprintf(s, "V(W(S1,E))(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width);

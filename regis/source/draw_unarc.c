@@ -46,9 +46,9 @@
 /****************************************************************************/
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee;
+void appendstring(window_t * win, char const * text) __z88dk_callee;
 #endif
 
 /****************************************************************************/
@@ -56,7 +56,7 @@ void appendstring(window_t * win, char * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Erase an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
-void draw_unarc(window_t * win,uint16_t radius,int16_t arc)
+void draw_unarc(window_t * win, uint16_t radius, int16_t arc)
 {
     char s[20];
     sprintf(s, "C(W(E))(A%+.3d)[%+.3d]", arc, radius);

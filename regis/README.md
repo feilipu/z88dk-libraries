@@ -1,6 +1,8 @@
 ## ReGIS - Remote Graphics Instruction Set
 ------------
 
+Read here for a full description on [how to enable ReGIS for Windows 10 and Linux desktop machines](https://feilipu.me/2022/09/28/regis-serial-graphics-for-arduino-rc2014/).
+
 ReGIS interprets commands that allow you to simply and efficiently control a video monitor screen and draw pictures on the screen with lines, curves, and circles using a serial interface (USART). Also, ReGIS provides commands to include scalable text characters in pictures. The ReGIS graphics language is designed for conciseness and easy transport of code from the host to the ReGIS device. The language consists of commands that are modified by options.
 
 Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
@@ -58,19 +60,19 @@ For RC2014<br>
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```
-zcc +rc2014 --math32 -x -O2  -clib=new --opt-code-speed=add32,sub32,sub16,inlineints @regis.lst -o ../regis
+zcc +rc2014 --math32 -x -O2  -clib=new --opt-code-speed=all @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 ```
-zcc +yaz180 --math32 -x -O2  -clib=new --opt-code-speed=add32,sub32,sub16,inlineints @regis.lst -o ../regis
+zcc +yaz180 --math32 -x -O2  -clib=new --opt-code-speed=all @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 ```
-zcc +cpm --math32 -x -O2 -clib=new --opt-code-speed=add32,sub32,sub16,inlineints @regis.lst -o ../regis
+zcc +cpm --math32 -x -O2 -clib=new --opt-code-speed=all @regis.lst -o ../regis
 zcc +cpm --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +cpm --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
@@ -81,13 +83,13 @@ The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` 
 
 XTERM is the only known software solution supporting ReGIS commands (to be improved I'm sure). But it doesn't support ReGIS in the default build. You'll need to enable ReGIS yourself.
 ``` sh
-% sudo apt install -y libxaw7-dev libncurses-dev libxft-dev
-% wget https://invisible-island.net/datafiles/release/xterm.tar.gz
-% tar xf xterm.tar.gz
-% cd xterm-373
-% ./configure --enable-regis-graphics
-% make
-% sudo make install
+$ sudo apt install -y libxaw7-dev libncurses-dev libxft-dev
+$ wget https://invisible-island.net/datafiles/release/xterm.tar.gz
+$ tar xf xterm.tar.gz
+$ cd xterm-373
+$ ./configure --enable-regis-graphics
+$ make
+$ sudo make install
 ```
 
 As XTERM has no serial interface itself, so you'll need to use one. A suggestion is to use picocom.<br>
@@ -96,18 +98,18 @@ It is also useful for working with retrocomputers generally. First test that you
 Adding the `--send-cmd` option will allow the use of `xmodem` or `sx` to send binary files to the RC2014 CP/M `xmodem` from within picocom.
 
 ``` sh
-% sudo apt install -y picocom
-% picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+$ sudo apt install -y picocom
+$ picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 And, finally together with VT340 emulation.
 ``` sh
-xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Another alternative is using VT125 emulation.
 ``` sh
-xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 ### Windows Subsystem for Linux
@@ -118,6 +120,8 @@ But, the supported picocom distribution for Ubuntu 22.04 Version 3.1 (for exampl
 So to avoid the use of these terminal system calls we have to use an older release of picocom. For example the [Version 2.2.2 provided with Ubuntu 18.04 LTS](https://manpages.ubuntu.com/manpages/bionic/man1/picocom.1.html). Be sure to use this older version of picocom if you are using WSL to run XTERM and picocom.
 
 The tested method of accessing XTERM on WSL is [MobaXterm](https://mobaxterm.mobatek.net/). This enhanced terminal for Windows includes an integrated Xserver. If MobaXterm is used to access WSL XTERM, its window will automatically connect to the Windows desktop.
+
+Read here for a full description on [how to enable ReGIS for Windows 10 and Linux desktop machines](https://feilipu.me/2022/09/28/regis-serial-graphics-for-arduino-rc2014/).
 
 ## Demonstration
 

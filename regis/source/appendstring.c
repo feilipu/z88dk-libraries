@@ -46,15 +46,15 @@
 /****************************************************************************/
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee;
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee;
+void appendstring(window_t * win, char const * text) __z88dk_callee;
 #endif
 
 #if __SCCZ80
-void __LIB__ appendstring(window_t * win, char * text) __smallc __z88dk_callee
+void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee
 #elif __SDCC
-void appendstring(window_t * win, char * text) __z88dk_callee
+void appendstring(window_t * win, char const * text) __z88dk_callee
 #endif
 {
     int l = strlen(win->command) + strlen(text) + 1;
