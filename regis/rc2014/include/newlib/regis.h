@@ -32,7 +32,7 @@ undefine(`m4_SCCZ80_NOLIB')
 #define _REGIS_H
 
 #ifdef __cplusplus
-"C" {
+extern "C" {
 #endif
 
 #include <stdint.h>
