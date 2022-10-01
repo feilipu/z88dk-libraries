@@ -27,32 +27,32 @@ int main(void)
 
     window_new( &mywindow, 768, 480 );
 
-    draw_intensity( &mywindow, M);
+    draw_intensity( &mywindow, _M);
 
     draw_abs( &mywindow, 600, 200 );
     draw_line_rel( &mywindow, -200, 200 );
     draw_line_abs( &mywindow, 400, 100);
 
-    draw_intensity( &mywindow, G);
+    draw_intensity( &mywindow, _G);
 
     draw_abs( &mywindow, 700, 100 );
     draw_box( &mywindow, 50, 50);
     draw_box_fill( &mywindow, -100, -50);
     draw_unbox_fill( &mywindow, -50, -25);
 
-    draw_intensity( &mywindow, C);
+    draw_intensity( &mywindow, _C);
 
     draw_abs( &mywindow, 200, 100 );
     draw_arc( &mywindow, 100, -180);
     draw_arc( &mywindow, 50, 180);
 
-    draw_intensity( &mywindow, B);
+    draw_intensity( &mywindow, _B);
 
     draw_abs( &mywindow, 200, 300 );
     draw_circle_fill( &mywindow, 100);
     draw_uncircle_fill( &mywindow, 50);
 
-    draw_intensity( &mywindow, W);
+    draw_intensity( &mywindow, _W);
 
     draw_text( &mywindow, "hello world", 2);
 
