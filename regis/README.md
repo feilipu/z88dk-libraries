@@ -84,9 +84,9 @@ The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` 
 XTerm is the only known software solution supporting ReGIS commands (to be improved I'm sure). But it doesn't support ReGIS in the default build. You'll need to enable ReGIS yourself.
 ``` sh
 $ sudo apt install -y libxaw7-dev libncurses-dev libxft-dev
-$ wget https://invisible-island.net/datafiles/release/XTerm.tar.gz
-$ tar xf XTerm.tar.gz
-$ cd XTerm-373
+$ wget https://invisible-island.net/datafiles/release/xterm.tar.gz
+$ tar xf xterm.tar.gz
+$ cd xterm-373
 $ ./configure --enable-regis-graphics
 $ make
 $ sudo make install
@@ -104,12 +104,12 @@ $ picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 
 And, finally together with VT340 emulation.
 ``` sh
-XTerm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Another alternative is using VT125 emulation.
 ``` sh
-XTerm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 ### Windows Subsystem for Linux
