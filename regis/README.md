@@ -5,6 +5,8 @@ ReGIS interprets commands that allow you to simply and efficiently control a vid
 
 Read here for a full description on [how to enable ReGIS for Windows 10 and Linux desktop machines](https://feilipu.me/2022/09/28/regis-serial-graphics-for-arduino-rc2014/).
 
+There is a [Programmer Reference Manual for VT330/VT340 Terminals](https://vt100.net/docs/vt3xx-gp/) describing how to use ReGIS, as well as the [VT125 Primer](https://github.com/feilipu/z88dk-libraries/blob/master/regis/doc/EK-VT125-GI-001_VT125_ReGIS_Primer_May82.pdf) document provided here.
+
 Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
 
 ## Installation
@@ -104,12 +106,12 @@ $ picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 
 And, finally together with VT340 emulation.
 ``` sh
-xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+$ xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Another alternative is using VT125 emulation.
 ``` sh
-xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+$ xterm +u8 -geometry 132x50 -ti 125 -tn 125 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 ### Windows Subsystem for Linux
