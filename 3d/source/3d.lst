@@ -1,0 +1,14 @@
+./dot_v.c
+./mult_v.c
+./scale_v.c
+./unit_v.c
+
+./identity_m.c
+./mult_m.c
+./rotx_m.c
+./roty_m.c
+./rotz_m.c
+./scale_m.c
+./shear_m.c
+./translate_m.c
+

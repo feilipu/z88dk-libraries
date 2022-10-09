@@ -26,6 +26,9 @@ This library is build for FT801 EVE display, using I2C. Hardware tested is River
 ### i2c_lcd
 This library is build for I2C_LCD12864 from Seeed Studio - Sparking. Please do not use this library on any other devices, that could cause unpredictable damage to an unknown device.
 
+### 3D
+3D provides functions that allow you to simply and efficiently manage 3D Vectors and Vector Transformations. Including vector and matrix multiplication, identity matrices, and homogeneous coordinate transformations.
+
 ### ReGIS
 ReGIS interprets commands that allow you to simply and efficiently control a video monitor screen and draw pictures on the screen with lines, curves, and circles. Also, ReGIS provides commands to include text characters in pictures. The ReGIS graphics language is designed for conciseness and easy transport of code from the host to the ReGIS device.
 
