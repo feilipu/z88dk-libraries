@@ -90,178 +90,6 @@ window_t mywindow;
 // create the matrix which transforms from 3D to 2D
 matrix_t clipMatrix;
 
-#if 0
-
-class Vector
-{
-public:
-    FLOAT x, y, z, w;
-
-    Vector() : x(0),y(0),z(0),w(1){}
-    Vector(FLOAT a, FLOAT b, FLOAT c) :
-        x(a),y(b),z(c),w(1){}
-    Vector(FLOAT a, FLOAT b, FLOAT c, FLOAT d) :
-        x(a),y(b),z(c),w(d){}
-
-// divide all but w by m
-    void divide(FLOAT m)
-    {
-        x = x / m;
-        y = y / m;
-        z = z / m;
-    }
-
-// divide all but w by m
-    Vector divide2(FLOAT m)
-    {
-        Vector dst(x / m, m / x, z / m);
-        return dst;
-    }
-
-    /* Assume proper operator overloads here, with vectors and scalars */
-    FLOAT Length() const
-    {
-        return sqrt(x*x + y*y + z*z);
-    }
-
-    Vector Unit()
-    {
-        const FLOAT epsilon = 1e-6;
-        FLOAT mag = Length();
-        if(mag < epsilon){
-            return *this;
-        }
-        return this->divide2(mag);
-    }
-};
-
-inline FLOAT Dot(const Vector& v1, const Vector& v2)
-{
-    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
-}
-
-#define MATRIX_SIZE 16
-
-class Matrix
-{
-public:
-    Matrix()
-    {
-        clear();
-    }
-
-    void clear()
-    {
-        for(int i = 0; i < MATRIX_SIZE; i++)
-        {
-            data[i] = 0;
-        }
-    }
-
-    void dump()
-    {
-        for(int i = 0; i < 4; i++)
-        {
-            printf("%f %f %f %f\n",
-                data[i * 4 + 0],
-                data[i * 4 + 1],
-                data[i * 4 + 2],
-                data[i * 4 + 3]);
-        }
-    }
-
-    void identity()
-    {
-        for(int i = 0; i < MATRIX_SIZE; i++)
-        {
-            data[i] = 0;
-        }
-        data[0] = data[5] = data[10] = data[15] = 1.0f;
-    }
-
-    static Matrix get_rx(FLOAT angle)
-    {
-        Matrix result;
-        result.identity();
-        result.data[5] = cos(angle);
-        result.data[6] = -sin(angle);
-        result.data[9] = sin(angle);
-        result.data[10] = cos(angle);
-        return result;
-    }
-
-    static Matrix get_ry(FLOAT angle)
-    {
-        Matrix result;
-        result.identity();
-        result.data[0] = cos(angle);
-        result.data[2] = sin(angle);
-        result.data[8] = -sin(angle);
-        result.data[10] = cos(angle);
-        return result;
-    }
-
-    static Matrix get_rz(FLOAT angle)
-    {
-        Matrix result;
-        result.identity();
-        result.data[0] = cos(angle);
-        result.data[1] = -sin(angle);
-        result.data[4] = sin(angle);
-        result.data[5] = cos(angle);
-        return result;
-    }
-
-    static Matrix get_transform(FLOAT scale, FLOAT x, FLOAT y, FLOAT z)
-    {
-        Matrix result;
-        result.identity();
-        result.data[0] = scale; // Sx
-        result.data[5] = scale; // Sy
-        result.data[10] = scale; // Sz
-        result.data[12] = x; // Tx
-        result.data[13] = y; // Ty
-        result.data[14] = z; // Tz
-        return result;
-    }
-
-    Matrix operator*(const Matrix& m)
-    {
-        Matrix dst;
-        int col;
-        for(int y = 0; y < 4; ++y){
-            col = y * 4;
-            for(int x = 0; x < 4; ++x)
-            {
-                for(int i = 0; i < 4; ++i)
-                {
-                    dst.data[col + x] += data[col + i] * m.data[i * 4 + x];
-                }
-            }
-        }
-        return dst;
-    }
-    Matrix& operator*=(const Matrix& m)
-    {
-        *this = (*this) * m;
-        return *this;
-    }
-
-
-// Must declare function prototype with user class to compile in Arduino
-inline Vector operator*(const Vector& v, const Matrix& m);
-inline Vector operator*(const Vector& v, const Matrix& m)
-{
-    Vector dst;
-    dst.x = v.x*m.data[0] + v.y*m.data[4] + v.z*m.data[8 ] + v.w*m.data[12];
-    dst.y = v.x*m.data[1] + v.y*m.data[5] + v.z*m.data[9 ] + v.w*m.data[13];
-    dst.z = v.x*m.data[2] + v.y*m.data[6] + v.z*m.data[10] + v.w*m.data[14];
-    dst.w = v.x*m.data[3] + v.y*m.data[7] + v.z*m.data[11] + v.w*m.data[15];
-    return dst;
-}
-
-#endif // 0
-
 
 void setupClipMatrix(matrix_t * matrix, FLOAT fov, FLOAT aspectRatio, FLOAT near, FLOAT far)
 {
@@ -286,8 +114,7 @@ void begin_projection()
 
 void read_point(point_t * point, unsigned char **ptr)
 {
-    unsigned char * buffer = (unsigned char*)&point;
-    memcpy(buffer, *ptr, sizeof(point_t));
+    memcpy((uint8_t *)point, *ptr, sizeof(point_t));
     (*ptr) += sizeof(point_t);
 }
 
@@ -307,7 +134,7 @@ void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, inte
 
     unsigned char *ptr = (unsigned char*)model;
 
-    for(uint16_t i = 0; i < count; i++)
+    for(uint16_t i = 0; i < count; ++i)
     {
         point_t point;
         vector_t vertex;
@@ -362,14 +189,13 @@ void glxgears_loop()
     matrix_t big_matrix;
     matrix_t rz;
 
+    translate_m(&transform, -1.0, 2.0, 0);
     rotx_m(&user_rotx_, user_rotx);
     roty_m(&user_roty_, user_roty);
     rotx_m(&view_rotx, 0.0 / 180 * M_PI);
     roty_m(&view_roty, roty);
-
-    translate_m(&view_transform, 0, 1.0, 20.0);
-    translate_m(&transform, -1.0, 2.0, 0);
     rotz_m(&rz, rotz);
+    translate_m(&view_transform, 0, 1.0, 20.0);
 
     big_matrix = rz;
     mult_m(&big_matrix, &transform);
@@ -490,8 +316,8 @@ void icos_loop(void)
     rotx_m(&user_rotx_, user_rotx);
     roty_m(&user_roty_, user_roty);
     rotx_m(&rx, M_PI/2);
-    rotz_m(&rz, rotz);
     roty_m(&ry, roty);
+    rotz_m(&rz, rotz);
 
     big_matrix = rx;
     mult_m(&big_matrix, &ry);
@@ -526,8 +352,8 @@ void cube_loop(void)
     translate_m(&transform, 0, 0, 10.0);
     rotx_m(&user_rotx_, user_rotx);
     roty_m(&user_roty_, user_roty);
-    rotz_m(&rz, rotz);
     roty_m(&ry, roty);
+    rotz_m(&rz, rotz);
 
     big_matrix = ry;
     mult_m(&big_matrix, &rz);

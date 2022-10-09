@@ -64,7 +64,7 @@ void shear_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 {
     FLOAT invx = INV(x);
     FLOAT invy = INV(y);
-    FLOAT invz = INV(Z);
+    FLOAT invz = INV(z);
 
     identity_m( matrix );
 

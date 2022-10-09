@@ -140,7 +140,7 @@ __OPROTO(,,void,,scale_v,vector_t * vect,FLOAT scale)
 __OPROTO(,,void,,unit_v,vector_t * vect)
 
 /* Produce a dot product between vectors */
-__OPROTO(,,void,,dot_v,vector_t * vect1,vector_t * vect2)
+__OPROTO(,,FLOAT,,dot_v,vector_t * vect1,vector_t * vect2)
 
 /* Vector Matrix Multiplication */
 __OPROTO(,,void,,mult_v,vector_t * vect,matrix_t * multiplier)

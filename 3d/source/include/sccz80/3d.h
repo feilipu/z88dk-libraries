@@ -146,7 +146,7 @@ void __LIB__ unit_v(vector_t * vect) __smallc;
 
 
 /* Produce a dot product between vectors */
-void __LIB__ dot_v(vector_t * vect1,vector_t * vect2) __smallc;
+FLOAT __LIB__ dot_v(vector_t * vect1,vector_t * vect2) __smallc;
 
 
 

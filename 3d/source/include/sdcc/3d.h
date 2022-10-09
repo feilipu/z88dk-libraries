@@ -144,7 +144,7 @@ void unit_v(vector_t * vect);
 
 
 /* Produce a dot product between vectors */
-void dot_v(vector_t * vect1,vector_t * vect2);
+FLOAT dot_v(vector_t * vect1,vector_t * vect2);
 
 
 /* Vector Matrix Multiplication */

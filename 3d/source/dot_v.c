@@ -60,9 +60,7 @@
 
 
 /* Produce a dot product between vectors */
-void dot_v(vector_t * vect1,vector_t * vect2)
+FLOAT dot_v(vector_t * vect1,vector_t * vect2)
 {
-    vect1->x *= vect2->x;
-    vect1->y *= vect2->y;
-    vect1->z *= vect2->z;
+    return vect1->x * vect2->x + vect1->y * vect2->y + vect1->z * vect2->z;
 }
