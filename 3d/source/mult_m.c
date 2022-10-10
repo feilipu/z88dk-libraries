@@ -26,8 +26,6 @@
  */
 
 /*
- *
- * 
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
@@ -45,7 +43,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <math.h>
+#include <string.h>
 
 #if __SCCZ80
 #include "include/sccz80/3d.h"
@@ -62,8 +60,9 @@
 /* Matrix Multiplication */
 void mult_m(matrix_t * multiplicand,matrix_t * multiplier)
 {
-
     matrix_t result;
+
+    memset(&result, 0, sizeof(FLOAT)*MATRIX_ORDER*MATRIX_ORDER);
 
     for(uint8_t y = 0; y < MATRIX_ORDER; ++y) {
         uint8_t col = y * MATRIX_ORDER;

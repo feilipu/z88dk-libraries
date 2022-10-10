@@ -26,8 +26,6 @@
  */
 
 /*
- *
- * 
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
@@ -45,7 +43,6 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <math.h>
 
 #if __SCCZ80
 #include "include/sccz80/3d.h"
@@ -68,4 +65,3 @@ void translate_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
     matrix->e[13] = y;
     matrix->e[14] = z;
 }
-

@@ -26,8 +26,6 @@
  */
 
 /*
- *
- * 
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
@@ -46,7 +44,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 #if __SCCZ80
 #include "include/sccz80/3d.h"
@@ -63,10 +60,9 @@
 /* Produce an identity matrix */
 void identity_m(matrix_t * matrix)
 {
-    uint8_t i = 0;
-
     memset(matrix, 0, sizeof(FLOAT)*MATRIX_ORDER*MATRIX_ORDER);
 
+    uint8_t i = 0;
     do{
         matrix->e[i] = 1.0;
     }while( (i += (MATRIX_ORDER+1)) < (MATRIX_ORDER*MATRIX_ORDER) );

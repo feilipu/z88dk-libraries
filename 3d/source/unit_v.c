@@ -26,8 +26,6 @@
  */
 
 /*
- *
- * 
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
@@ -67,4 +65,5 @@ void unit_v(vector_t * vect)
     vect->x *= inv_magnitude;
     vect->y *= inv_magnitude;
     vect->z *= inv_magnitude;
+    vect->w  = 1.0;
 }
