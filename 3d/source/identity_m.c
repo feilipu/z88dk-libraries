@@ -69,5 +69,5 @@ void identity_m(matrix_t * matrix)
 
     do{
         matrix->e[i] = 1.0;
-    }while( (i+=(MATRIX_ORDER+1)) < (MATRIX_ORDER*MATRIX_ORDER) );
+    }while( (i += (MATRIX_ORDER+1)) < (MATRIX_ORDER*MATRIX_ORDER) );
 }

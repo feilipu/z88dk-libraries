@@ -63,6 +63,7 @@
 void scale_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 {
     identity_m( matrix );
+
     matrix->e[0] = x;
     matrix->e[5] = y;
     matrix->e[10] = z;

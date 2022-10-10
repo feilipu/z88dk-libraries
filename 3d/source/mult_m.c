@@ -65,10 +65,8 @@ void mult_m(matrix_t * multiplicand,matrix_t * multiplier)
 
     matrix_t result;
 
-    uint8_t col;
-
     for(uint8_t y = 0; y < MATRIX_ORDER; ++y) {
-        col = y * MATRIX_ORDER;
+        uint8_t col = y * MATRIX_ORDER;
         for(uint8_t x = 0; x < MATRIX_ORDER; ++x) {
             for(uint8_t i = 0; i < MATRIX_ORDER; ++i) {
                 result.e[col + x] += multiplicand->e[col + i] * multiplier->e[i * MATRIX_ORDER + x];

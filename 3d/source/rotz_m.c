@@ -62,9 +62,13 @@
 /* Rotation in z dimension */
 void rotz_m(matrix_t * matrix,FLOAT angle)
 {
+    FLOAT cos_angle = COS(angle);
+    FLOAT sin_angle = SIN(angle);
+
     identity_m( matrix );
-    matrix->e[0] = cos(angle);
-    matrix->e[1] = -sin(angle);
-    matrix->e[4] = sin(angle);
-    matrix->e[5] = cos(angle);
+
+    matrix->e[0]  =  cos_angle;
+    matrix->e[1]  = -sin_angle;
+    matrix->e[4]  =  sin_angle;
+    matrix->e[5]  =  cos_angle;
 }

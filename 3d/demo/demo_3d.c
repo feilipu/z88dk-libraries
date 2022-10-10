@@ -38,7 +38,7 @@
  */
 
 // ZSDCC compile
-// zcc +cpm -clib=sdcc_iy -v -m --list -llib/cpm/regis -llib/cpm/3d --math32 --max-allocs-per-node100000 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
 
 // SCCZ80 compile
 // zcc +cpm -clib=new -v -m -O2 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
@@ -46,6 +46,10 @@
 // SCCZ80 compile with math16 (16-bit floating point)
 // zcc +cpm -clib=new -v -m -O2 --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3d -create-app
 
+// display using XTerm & picocom
+// xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+
+#pragma printf = "%s %c %d %04f"     // enables %s, %c, %d, %f only
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -84,35 +88,48 @@ FLOAT user_roty = 0;
 FLOAT halfWidth;
 FLOAT halfHeight;
 
-// REGIS library
-window_t mywindow;
-
 // create the matrix which transforms from 3D to 2D
 matrix_t clipMatrix;
 
+// set up the display window for REGIS library
+window_t mywindow;
+
+// print the contents of a 4x4 matrix
+void dump_m(matrix_t * matrix)
+{
+    for(uint8_t i = 0; i < 4; ++i)
+    {
+        printf("%.09f %.09f %.09f %.09f\n",
+            matrix->e[i * 4 + 0],
+            matrix->e[i * 4 + 1],
+            matrix->e[i * 4 + 2],
+            matrix->e[i * 4 + 3]);
+    }
+    printf("\n");
+}
 
 void setupClipMatrix(matrix_t * matrix, FLOAT fov, FLOAT aspectRatio, FLOAT near, FLOAT far)
 {
-    FLOAT f = 1.0/TAN(fov * 0.5f);
+    FLOAT f = 1.0/TAN(fov * 0.5);
 
     identity_m( matrix );
 
     matrix->e[0] = f * aspectRatio;
     matrix->e[5] = f;
     matrix->e[10] = (far + near) / (far - near);
-    matrix->e[11] = 1.0f; /* this 'plugs' the old z into w */
-    matrix->e[14] = (2.0f * near * far) / (near - far);
-    matrix->e[15] = 0.0f;
+    matrix->e[11] = 1.0; /* this 'plugs' the old z into w */
+    matrix->e[14] = (near * far * 2.0) / (near - far);
+    matrix->e[15] = 0.0;
 }
 
 void begin_projection()
 {
-    halfWidth = (FLOAT)W * 0.5f;
-    halfHeight = (FLOAT)H * 0.5f;
-    setupClipMatrix(&clipMatrix, FOV * (M_PI / 180.0f), (FLOAT)W/(FLOAT)H, NEAR, FAR);
+    halfWidth = (FLOAT)WIDTH_MAX * 0.5;
+    halfHeight = (FLOAT)HEIGHT_MAX * 0.5;
+    setupClipMatrix(&clipMatrix, FOV * (M_PI / 180.0), (FLOAT)W/(FLOAT)H, NEAR, FAR);
 }
 
-void read_point(point_t * point, unsigned char **ptr)
+void read_point(point_t * point, unsigned char ** ptr)
 {
     memcpy((uint8_t *)point, *ptr, sizeof(point_t));
     (*ptr) += sizeof(point_t);
@@ -141,17 +158,29 @@ void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, inte
 
         read_point(&point, &ptr);
 
+//      printf("%.04f %.04f %.04f %1d\n", point.x, point.y, point.z, point.begin_poly);
+
         vertex.x = point.x;
         vertex.y = point.y;
         vertex.z = point.z;
+        vertex.w = 1.0;
+
+//      printf("%.04f %.04f %.04f %.04f\n", vertex.x, vertex.y, vertex.z, vertex.w);
 
         mult_v(&vertex,transform);
+
+//      printf("%.04f %.04f %.04f %.04f\n", vertex.x, vertex.y, vertex.z, vertex.w);
+
         scale_v(&vertex, 1.0/(vertex.w));
+
+//      printf("%.04f %.04f %.04f %.04f\n", vertex.x, vertex.y, vertex.z, vertex.w);
 
 /* TODO: Clipping here */
 
-        vertex.x = (vertex.x * (FLOAT)W) / (2.0f * vertex.w) + halfWidth;
-        vertex.y = (vertex.y * (FLOAT)H) / (2.0f * vertex.w) + halfHeight;
+        vertex.x = (vertex.x * (FLOAT)W) / (vertex.w * 2.0) + halfWidth;
+        vertex.y = (vertex.y * (FLOAT)H) / (vertex.w * 2.0) + halfHeight;
+
+//      printf("plot point: %.04f %.04f %.04f %.04f\n\n", vertex.x, vertex.y, vertex.z, vertex.w);
 
         if(point.begin_poly)
         {
@@ -248,7 +277,7 @@ void glxgears_loop()
     if(animate)
     {
         rotz += 2.0 / 180 * M_PI;
-//      roty += step;
+        roty += step;
         if((step > 0 && roty >= 45.0 / 180 * M_PI) ||
             (step < 0 && roty <= -45.0 / 180 * M_PI))
         {
@@ -289,7 +318,7 @@ void gear_loop()
     if(animate)
     {
         rotz += 2.0 / 360 * M_PI * 2;
-//      roty += step2;
+        roty += step2;
         if((step2 > 0 && roty >= 45.0 / 180 * M_PI) ||
             (step2 < 0 && roty <= -45.0 / 180 * M_PI))
         {
@@ -331,7 +360,7 @@ void icos_loop(void)
 
     if(animate)
     {
-//      rotz += .25 / 360 * M_PI * 2;
+        rotz += 0.25 / 360 * M_PI * 2;
         roty += 2.0 / 360 * M_PI * 2;
     }
 }
@@ -355,38 +384,69 @@ void cube_loop(void)
     roty_m(&ry, roty);
     rotz_m(&rz, rotz);
 
+    dump_m(&transform);
+    dump_m(&user_rotx_);
+    dump_m(&user_roty_);
+    dump_m(&ry);
+    dump_m(&rz);
+
     big_matrix = ry;
+
+    printf("ry to big_matrix\n");
+    dump_m(&big_matrix);
+
     mult_m(&big_matrix, &rz);
+
+    printf("ry * rz to big_matrix\n");
+    dump_m(&big_matrix);
+
     mult_m(&big_matrix, &user_rotx_);
+
+    printf("user_rotx_ multiply to big_matrix\n");
+    dump_m(&big_matrix);
+
     mult_m(&big_matrix, &user_roty_);
+
+    printf("user_roty_ multiply to big_matrix\n");
+    dump_m(&big_matrix);
+
     mult_m(&big_matrix, &transform);
+
+    printf("transform multiply to big_matrix\n");
+    dump_m(&big_matrix);
+
     mult_m(&big_matrix, &clipMatrix);
+
+    printf("clipMatrix multiply to big_matrix\n");
+    dump_m(&big_matrix);
 
     regis_plot(cube, sizeof(cube) / sizeof(point_t), &big_matrix, _W, 1);
 
     if(animate)
     {
         rotz += 2.0 / 360 * M_PI * 2;
-//      roty += .5 / 360 * M_PI * 2;
+        roty += 0.5 / 360 * M_PI * 2;
     }
 }
 
 
 void loop(void) {
-    uint8_t key;
-    if( key = getc(stdin) != 0 ) demo = key;
     switch(demo)
     {
         case CUBE:
+            printf("\ncube\n");
             cube_loop();
             break;
         case ICOS:
+            printf("\nicos\n");
             icos_loop();
             break;
         case GEAR:
+            printf("\ngear\n");
             gear_loop();
             break;
         case GLXGEARS:
+            printf("\nglxgears\n");
             glxgears_loop();
             break;
         default:
@@ -396,6 +456,7 @@ void loop(void) {
 
 int main(void)
 {
+    printf("\e[2J");        // clear screen
     begin_projection();
 
     while(1)

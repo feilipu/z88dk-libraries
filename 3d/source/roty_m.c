@@ -62,9 +62,13 @@
 /* Rotation in y dimension */
 void roty_m(matrix_t * matrix,FLOAT angle)
 {
+    FLOAT cos_angle = COS(angle);
+    FLOAT sin_angle = SIN(angle);
+
     identity_m( matrix );
-    matrix->e[0] = cos(angle);
-    matrix->e[2] = sin(angle);
-    matrix->e[8] = -sin(angle);
-    matrix->e[10] = cos(angle);
+
+    matrix->e[0]  =  cos_angle;
+    matrix->e[2]  =  sin_angle;
+    matrix->e[8]  = -sin_angle;
+    matrix->e[10] =  cos_angle;
 }

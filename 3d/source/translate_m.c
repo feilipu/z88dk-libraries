@@ -63,6 +63,7 @@
 void translate_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 {
     identity_m( matrix );
+
     matrix->e[12] = x;
     matrix->e[13] = y;
     matrix->e[14] = z;
