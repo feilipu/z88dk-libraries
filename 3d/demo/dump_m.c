@@ -1,5 +1,5 @@
 /*
- * mult_m.c
+ * dump_m.c
  *
  * Copyright (c) 2022 Phillip Stevens
  * Create Time: October 2022
@@ -43,36 +43,33 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include <stdio.h>
 
 #if __SCCZ80
-#include "include/sccz80/3d.h"
+#include <lib/cpm/3d.h>
+void dump_m(matrix_t * matrix) __smallc;
 #elif __SDCC
-#include "include/sdcc/3d.h"
+#include <lib/cpm/3d.h>
+void dump_m(matrix_t * matrix);
 #endif
 
+#pragma printf = "%06f"     // enables %f only
 
 /****************************************************************************/
 /***       Function                                                       ***/
 /****************************************************************************/
 
 
-/* Matrix Multiplication */
-void mult_m(matrix_t * multiplicand,matrix_t * multiplier)
+/* Print the contents of a 4x4 matrix */
+void dump_m(matrix_t * matrix)
 {
-    matrix_t result;
-
-    memset(&result, 0, sizeof(FLOAT)*MATRIX_ORDER*MATRIX_ORDER);
-
-    for(uint8_t y = 0; y < MATRIX_ORDER; ++y) {
-        uint8_t col = y * MATRIX_ORDER;
-        for(uint8_t x = 0; x < MATRIX_ORDER; ++x) {
-            for(uint8_t i = 0; i < MATRIX_ORDER; ++i) {
-                result.e[col + x] += multiplicand->e[col + i] * multiplier->e[i * MATRIX_ORDER + x];
-            }
-        }
+    for(uint8_t i = 0; i < MATRIX_ORDER; ++i)
+    {
+        fprintf(stdout,"%.06f %.06f %.06f %.06f\n",
+            matrix->e[i * MATRIX_ORDER + 0],
+            matrix->e[i * MATRIX_ORDER + 1],
+            matrix->e[i * MATRIX_ORDER + 2],
+            matrix->e[i * MATRIX_ORDER + 3]);
     }
-
-    *multiplicand = result;
+    fprintf(stdout,"\n");
 }

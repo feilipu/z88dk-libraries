@@ -43,6 +43,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #if __SCCZ80
 #include "include/sccz80/3d.h"

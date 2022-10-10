@@ -25,7 +25,7 @@
 
 /*
  *
- * 
+ *
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
@@ -39,24 +39,23 @@
 
 // ZSDCC compile
 // zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
 // SCCZ80 compile
-// zcc +cpm -clib=new -v -m -O2 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
 // SCCZ80 compile with math16 (16-bit floating point)
-// zcc +cpm -clib=new -v -m -O2 --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
 
 // display using XTerm & picocom
 // xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
-
-#pragma printf = "%s %c %d %04f"     // enables %s, %c, %d, %f only
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-
 
 // REGIS library
 #include <lib/cpm/regis.h>
@@ -79,7 +78,7 @@
 #define GLXGEARS '4'
 
 // select an initial demonstration from above options
-uint8_t demo = CUBE;
+uint8_t demo = GLXGEARS;
 
 uint8_t animate = 1;
 FLOAT user_rotx = 0;
@@ -94,19 +93,6 @@ matrix_t clipMatrix;
 // set up the display window for REGIS library
 window_t mywindow;
 
-// print the contents of a 4x4 matrix
-void dump_m(matrix_t * matrix)
-{
-    for(uint8_t i = 0; i < 4; ++i)
-    {
-        printf("%.09f %.09f %.09f %.09f\n",
-            matrix->e[i * 4 + 0],
-            matrix->e[i * 4 + 1],
-            matrix->e[i * 4 + 2],
-            matrix->e[i * 4 + 3]);
-    }
-    printf("\n");
-}
 
 void setupClipMatrix(matrix_t * matrix, FLOAT fov, FLOAT aspectRatio, FLOAT near, FLOAT far)
 {
@@ -158,29 +144,19 @@ void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, inte
 
         read_point(&point, &ptr);
 
-//      printf("%.04f %.04f %.04f %1d\n", point.x, point.y, point.z, point.begin_poly);
-
         vertex.x = point.x;
         vertex.y = point.y;
         vertex.z = point.z;
         vertex.w = 1.0;
 
-//      printf("%.04f %.04f %.04f %.04f\n", vertex.x, vertex.y, vertex.z, vertex.w);
-
         mult_v(&vertex,transform);
 
-//      printf("%.04f %.04f %.04f %.04f\n", vertex.x, vertex.y, vertex.z, vertex.w);
-
         scale_v(&vertex, 1.0/(vertex.w));
-
-//      printf("%.04f %.04f %.04f %.04f\n", vertex.x, vertex.y, vertex.z, vertex.w);
 
 /* TODO: Clipping here */
 
         vertex.x = (vertex.x * (FLOAT)W) / (vertex.w * 2.0) + halfWidth;
         vertex.y = (vertex.y * (FLOAT)H) / (vertex.w * 2.0) + halfHeight;
-
-//      printf("plot point: %.04f %.04f %.04f %.04f\n\n", vertex.x, vertex.y, vertex.z, vertex.w);
 
         if(point.begin_poly)
         {
@@ -384,41 +360,12 @@ void cube_loop(void)
     roty_m(&ry, roty);
     rotz_m(&rz, rotz);
 
-    dump_m(&transform);
-    dump_m(&user_rotx_);
-    dump_m(&user_roty_);
-    dump_m(&ry);
-    dump_m(&rz);
-
     big_matrix = ry;
-
-    printf("ry to big_matrix\n");
-    dump_m(&big_matrix);
-
     mult_m(&big_matrix, &rz);
-
-    printf("ry * rz to big_matrix\n");
-    dump_m(&big_matrix);
-
     mult_m(&big_matrix, &user_rotx_);
-
-    printf("user_rotx_ multiply to big_matrix\n");
-    dump_m(&big_matrix);
-
     mult_m(&big_matrix, &user_roty_);
-
-    printf("user_roty_ multiply to big_matrix\n");
-    dump_m(&big_matrix);
-
     mult_m(&big_matrix, &transform);
-
-    printf("transform multiply to big_matrix\n");
-    dump_m(&big_matrix);
-
     mult_m(&big_matrix, &clipMatrix);
-
-    printf("clipMatrix multiply to big_matrix\n");
-    dump_m(&big_matrix);
 
     regis_plot(cube, sizeof(cube) / sizeof(point_t), &big_matrix, _W, 1);
 
@@ -434,19 +381,15 @@ void loop(void) {
     switch(demo)
     {
         case CUBE:
-            printf("\ncube\n");
             cube_loop();
             break;
         case ICOS:
-            printf("\nicos\n");
             icos_loop();
             break;
         case GEAR:
-            printf("\ngear\n");
             gear_loop();
             break;
         case GLXGEARS:
-            printf("\nglxgears\n");
             glxgears_loop();
             break;
         default:

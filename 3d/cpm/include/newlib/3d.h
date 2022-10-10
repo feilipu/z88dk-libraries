@@ -27,8 +27,6 @@
  */
 
 /*
- *
- * 
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
@@ -80,7 +78,7 @@ extern "C" {
     #define COS(x)      cos(x)
     #define SIN(x)      sin(x)
     #define TAN(x)      tan(x)
-    
+
 #elif __MATH_MATH16
 
     #define FLOAT       _Float16
@@ -93,7 +91,7 @@ extern "C" {
     #define COS(x)      cosf16(x)
     #define SIN(x)      sinf16(x)
     #define TAN(x)      tanf16(x)
-    
+
 #else
 
     #define FLOAT       float_t
@@ -106,7 +104,7 @@ extern "C" {
     #define COS(x)      cos(x)
     #define SIN(x)      sin(x)
     #define TAN(x)      tan(x)
-    
+
 #endif
 
 
