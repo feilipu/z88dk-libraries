@@ -57,7 +57,7 @@ For RC2014<br>
 
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
-```
+```sh
 zcc +rc2014 --math32 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3d
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @3d.lst -o ../3d
 zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -o ../3d
@@ -65,7 +65,7 @@ zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -
 zcc +rc2014 --math16 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3df16
 ```
 
-```
+```sh
 zcc +yaz180 --math32 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3d
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @3d.lst -o ../3d
 zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -o ../3d
@@ -73,7 +73,7 @@ zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -
 zcc +yaz180 --math16 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3df16
 ```
 
-```
+```sh
 zcc +cpm --math32 -x -O2 -clib=new --opt-code-speed=all @3d.lst -o ../3d
 zcc +cpm --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @3d.lst -o ../3d
 zcc +cpm --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -o ../3d
@@ -86,9 +86,23 @@ The resulting `3d.lib` files should be moved to `~/target/lib/newlib/sccz80` or 
 
 ## Demonstration
 
-TBA
+```C
+// ZSDCC compile from demo directory
+// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
-There is a demonstration program, which should produce the below result.
+// SCCZ80 compile from demo directory
+// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
+
+// SCCZ80 compile from demo directory with math16 (16-bit floating point)
+// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
+
+// display ReGIS output using XTerm & picocom
+// xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+```
+
+Which should produce the below result.
 
 <div>
 <table style="border: 2px solid #cccccc;">
