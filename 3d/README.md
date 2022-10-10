@@ -88,16 +88,16 @@ The resulting `3d.lib` files should be moved to `~/target/lib/newlib/sccz80` or 
 
 TBA
 
-There is a demonstration program, which should produce the below result (subject to improvement).
+There is a demonstration program, which should produce the below result.
 
 <div>
 <table style="border: 2px solid #cccccc;">
 <tbody>
 <tr>
-<td style="border: 1px solid #cccccc; padding: 6px;"><a href="https://github.com/feilipu/z88dk-libraries/blob/master/regis/demo/regis_demo.png" target="_blank"><img src="https://github.com/feilipu/z88dk-libraries/blob/master/regis/demo/regis_demo.png"/></a></td>
+<td style="border: 1px solid #cccccc; padding: 6px;"><a href="https://github.com/feilipu/z88dk-libraries/blob/master/3d/doc/z80gears.png" target="_blank"><img src="https://github.com/feilipu/z88dk-libraries/blob/master/3d/doc/z80gears.png"/></a></td>
 </tr>
 <tr>
-<th style="border: 1px solid #cccccc; padding: 6px;"><centre>RC2014 ReGIS - Picocom in XTerm<center></th>
+<th style="border: 1px solid #cccccc; padding: 6px;"><centre>RC2014 ReGIS - GLXGEARS<center></th>
 </tr>
 </tbody>
 </table>
