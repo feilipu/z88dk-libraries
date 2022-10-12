@@ -55,6 +55,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <input.h>
 #include <math.h>
 
 // REGIS library
@@ -254,8 +255,8 @@ void gear_loop()
     matrix_t transform;
 
     identity_m(&transform);
-    roty_m(&transform, roty);
     rotz_m(&transform, rotz);
+    roty_m(&transform, roty);
     rotx_m(&transform, user_rotx);
     roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 8.0);
@@ -284,9 +285,9 @@ void icos_loop(void)
     matrix_t transform;
 
     identity_m(&transform);
-    rotx_m(&transform, M_PI/2);
-    roty_m(&transform, roty);
     rotz_m(&transform, rotz);
+    roty_m(&transform, roty);
+    rotx_m(&transform, M_PI/2);
     rotx_m(&transform, user_rotx);
     roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 8.0);
@@ -310,8 +311,8 @@ void cube_loop(void)
     matrix_t transform;
 
     identity_m(&transform);
-    roty_m(&transform, roty);
     rotz_m(&transform, rotz);
+    roty_m(&transform, roty);
     rotx_m(&transform, user_rotx);
     roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 10.0);
@@ -327,7 +328,8 @@ void cube_loop(void)
 }
 
 
-void loop(void) {
+void loop(void)
+{
     switch(demo)
     {
         case CUBE:
@@ -343,7 +345,7 @@ void loop(void) {
             glxgears_loop();
             break;
         default:
-            exit(0);
+            break;
     }
 }
 
@@ -355,6 +357,7 @@ int main(void)
     while(1)
     {
         loop();
+        if( in_test_key() ) exit(0);
     }
 
     return 0;
