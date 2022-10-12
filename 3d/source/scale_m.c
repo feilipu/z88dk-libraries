@@ -59,9 +59,13 @@
 /* Produce a transformation (scale) matrix */
 void scale_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 {
-    identity_m( matrix );
+    matrix_t scale;
 
-    matrix->e[0] = x;
-    matrix->e[5] = y;
-    matrix->e[10] = z;
+    identity_m( &scale );
+
+    scale.e[0] = x;
+    scale.e[5] = y;
+    scale.e[10] = z;
+
+    mult_m( matrix, &scale );
 }

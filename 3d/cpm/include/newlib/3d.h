@@ -30,8 +30,11 @@
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
- * project 3D coords onto 2D screen:
+ * project 3D coords onto 2D screen
  * https://stackoverflow.com/questions/724219/how-to-convert-a-3d-point-into-2d-perspective-projection
+ *
+ * 3D Clipping in Homogeneous Coordinates
+ * https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/
  *
  * transformation matrix:
  * https://www.tutorialspoint.com/computer_graphics/3d_transformation.htm
@@ -131,11 +134,13 @@ typedef struct matrix_s // homogeneous coordinate system
 /***        Function Definitions                                          ***/
 /****************************************************************************/
 
-/* Scale a vector by m, but don't touch w dimension */
-__OPROTO(,,void,,scale_v,vector_t * vect,FLOAT scale)
+
 
 /* Produce a unit vector */
 __OPROTO(,,void,,unit_v,vector_t * vect)
+
+/* Scale a vector by m, but don't touch w dimension */
+__OPROTO(,,void,,scale_v,vector_t * vect,FLOAT scale)
 
 /* Produce a dot product between vectors */
 __OPROTO(,,FLOAT,,dot_v,vector_t * vect1,vector_t * vect2)
@@ -146,13 +151,13 @@ __OPROTO(,,void,,mult_v,vector_t * vect,matrix_t * multiplier)
 /* Produce an identity matrix */
 __OPROTO(,,void,,identity_m,matrix_t * matrix)
 
-/* Produce a transformation (translation) matrix */
+/* Produce a transformation (translation) */
 __OPROTO(,,void,,translate_m,matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 
-/* Produce a transformation (scale) matrix */
+/* Produce a transformation (scale) */
 __OPROTO(,,void,,scale_m,matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 
-/* Produce a transformation (shear) matrix */
+/* Produce a transformation (shear) */
 __OPROTO(,,void,,shear_m,matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 
 /* Rotation in x dimension */
@@ -166,7 +171,6 @@ __OPROTO(,,void,,rotz_m,matrix_t * matrix,FLOAT angle)
 
 /* Matrix Multiplication */
 __OPROTO(,,void,,mult_m,matrix_t * multiplicand,matrix_t * multiplier)
-
 
 #ifdef __cplusplus
 }

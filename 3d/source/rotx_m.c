@@ -60,13 +60,17 @@
 /* Rotation in x dimension */
 void rotx_m(matrix_t * matrix,FLOAT angle)
 {
+    matrix_t rotx;
+
     FLOAT cos_angle = COS(angle);
     FLOAT sin_angle = SIN(angle);
 
-    identity_m( matrix );
+    identity_m( &rotx );
 
-    matrix->e[5]  =  cos_angle;
-    matrix->e[6]  = -sin_angle;
-    matrix->e[9]  =  sin_angle;
-    matrix->e[10] =  cos_angle;
+    rotx.e[5]  =  cos_angle;
+    rotx.e[6]  = -sin_angle;
+    rotx.e[9]  =  sin_angle;
+    rotx.e[10] =  cos_angle;
+
+    mult_m( matrix, &rotx );
 }

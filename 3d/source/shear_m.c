@@ -60,16 +60,20 @@
 /* Produce a transformation (shear) matrix */
 void shear_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 {
+    matrix_t shear;
+
     FLOAT invx = INV(x);
     FLOAT invy = INV(y);
     FLOAT invz = INV(z);
 
-    identity_m( matrix );
+    identity_m( &shear );
 
-    matrix->e[1] = y*invx;
-    matrix->e[2] = z*invx;
-    matrix->e[4] = x*invy;
-    matrix->e[6] = z*invy;
-    matrix->e[8] = x*invz;
-    matrix->e[9] = y*invz;
+    shear.e[1] = y*invx;
+    shear.e[2] = z*invx;
+    shear.e[4] = x*invy;
+    shear.e[6] = z*invy;
+    shear.e[8] = x*invz;
+    shear.e[9] = y*invz;
+
+    mult_m( matrix, &shear );
 }

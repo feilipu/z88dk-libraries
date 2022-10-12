@@ -60,13 +60,17 @@
 /* Rotation in y dimension */
 void roty_m(matrix_t * matrix,FLOAT angle)
 {
+    matrix_t roty;
+
     FLOAT cos_angle = COS(angle);
     FLOAT sin_angle = SIN(angle);
 
-    identity_m( matrix );
+    identity_m( &roty );
 
-    matrix->e[0]  =  cos_angle;
-    matrix->e[2]  =  sin_angle;
-    matrix->e[8]  = -sin_angle;
-    matrix->e[10] =  cos_angle;
+    roty.e[0]  =  cos_angle;
+    roty.e[2]  =  sin_angle;
+    roty.e[8]  = -sin_angle;
+    roty.e[10] =  cos_angle;
+
+    mult_m( matrix, &roty );
 }

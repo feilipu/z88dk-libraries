@@ -133,13 +133,15 @@ typedef struct matrix_s // homogeneous coordinate system
 /***        Function Definitions                                          ***/
 /****************************************************************************/
 
-/* Scale a vector by m, but don't touch w dimension */
-void __LIB__ scale_v(vector_t * vect,FLOAT scale) __smallc;
-
 
 
 /* Produce a unit vector */
 void __LIB__ unit_v(vector_t * vect) __smallc;
+
+
+
+/* Scale a vector by m, but don't touch w dimension */
+void __LIB__ scale_v(vector_t * vect,FLOAT scale) __smallc;
 
 
 
@@ -158,17 +160,17 @@ void __LIB__ identity_m(matrix_t * matrix) __smallc;
 
 
 
-/* Produce a transformation (translation) matrix */
+/* Produce a transformation (translation) */
 void __LIB__ translate_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z) __smallc;
 
 
 
-/* Produce a transformation (scale) matrix */
+/* Produce a transformation (scale) */
 void __LIB__ scale_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z) __smallc;
 
 
 
-/* Produce a transformation (shear) matrix */
+/* Produce a transformation (shear) */
 void __LIB__ shear_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z) __smallc;
 
 
@@ -190,7 +192,6 @@ void __LIB__ rotz_m(matrix_t * matrix,FLOAT angle) __smallc;
 
 /* Matrix Multiplication */
 void __LIB__ mult_m(matrix_t * multiplicand,matrix_t * multiplier) __smallc;
-
 
 
 

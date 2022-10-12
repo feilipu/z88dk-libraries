@@ -56,12 +56,16 @@
 /****************************************************************************/
 
 
-/* Produce a transformation (translation) matrix */
+/* Produce a transformation (translation) */
 void translate_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
 {
-    identity_m( matrix );
+    matrix_t translation;
 
-    matrix->e[12] = x;
-    matrix->e[13] = y;
-    matrix->e[14] = z;
+    identity_m( &translation );
+
+    translation.e[12] = x;
+    translation.e[13] = y;
+    translation.e[14] = z;
+
+    mult_m( matrix, &translation );
 }

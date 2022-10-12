@@ -84,23 +84,23 @@ uint8_t animate = 1;
 FLOAT user_rotx = 0;
 FLOAT user_roty = 0;
 
-FLOAT halfWidth;
-FLOAT halfHeight;
+FLOAT half_width;
+FLOAT half_height;
 
 // create the matrix which transforms from 3D to 2D
-matrix_t clipMatrix;
+matrix_t clip_matrix;
 
 // set up the display window for REGIS library
-window_t mywindow;
+window_t my_window;
 
 
-void setupClipMatrix(matrix_t * matrix, FLOAT fov, FLOAT aspectRatio, FLOAT near, FLOAT far)
+void setupclip_matrix(matrix_t * matrix, FLOAT fov, FLOAT aspect_ratio, FLOAT near, FLOAT far)
 {
     FLOAT f = 1.0/TAN(fov * 0.5);
 
     identity_m( matrix );
 
-    matrix->e[0] = f * aspectRatio;
+    matrix->e[0] = f * aspect_ratio;
     matrix->e[5] = f;
     matrix->e[10] = (far + near) / (far - near);
     matrix->e[11] = 1.0; /* this 'plugs' the old z into w */
@@ -108,12 +108,14 @@ void setupClipMatrix(matrix_t * matrix, FLOAT fov, FLOAT aspectRatio, FLOAT near
     matrix->e[15] = 0.0;
 }
 
+
 void begin_projection()
 {
-    halfWidth = (FLOAT)WIDTH_MAX * 0.5;
-    halfHeight = (FLOAT)HEIGHT_MAX * 0.5;
-    setupClipMatrix(&clipMatrix, FOV * (M_PI / 180.0), (FLOAT)W/(FLOAT)H, NEAR, FAR);
+    half_width = (FLOAT)WIDTH_MAX * 0.5;
+    half_height = (FLOAT)HEIGHT_MAX * 0.5;
+    setupclip_matrix(&clip_matrix, FOV * (M_PI / 180.0), (FLOAT)W/(FLOAT)H, NEAR, FAR);
 }
+
 
 void read_point(point_t * point, unsigned char ** ptr)
 {
@@ -123,17 +125,15 @@ void read_point(point_t * point, unsigned char ** ptr)
 
 
 // draw the model
-void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, intensity_t intensity, uint8_t do_init);
-
 void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, intensity_t intensity, uint8_t do_init)
 {
     if(do_init)
     {
-        window_new( &mywindow, H, W );
-        window_clear ( &mywindow );
+        window_new(&my_window, H, W);
+        window_clear(&my_window);
     }
 
-    draw_intensity( &mywindow, intensity );
+    draw_intensity(&my_window, intensity);
 
     unsigned char *ptr = (unsigned char*)model;
 
@@ -155,23 +155,23 @@ void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, inte
 
 /* TODO: Clipping here */
 
-        vertex.x = (vertex.x * (FLOAT)W) / (vertex.w * 2.0) + halfWidth;
-        vertex.y = (vertex.y * (FLOAT)H) / (vertex.w * 2.0) + halfHeight;
+        vertex.x = (vertex.x * (FLOAT)W) / (vertex.w * 2.0) + half_width;
+        vertex.y = (vertex.y * (FLOAT)H) / (vertex.w * 2.0) + half_height;
 
         if(point.begin_poly)
         {
-            draw_abs( &mywindow, (uint16_t)vertex.x, (uint16_t)vertex.y );
+            draw_abs(&my_window, (uint16_t)vertex.x, (uint16_t)vertex.y);
         }
         else
         {
-            draw_line_abs( &mywindow, (uint16_t)vertex.x, (uint16_t)vertex.y );
+            draw_line_abs(&my_window, (uint16_t)vertex.x, (uint16_t)vertex.y);
         }
     }
 
     if(do_init)
     {
-        window_write( &mywindow );
-        window_close( &mywindow );
+        window_write(&my_window);
+        window_close(&my_window);
     }
 }
 
@@ -182,73 +182,55 @@ void glxgears_loop()
     static FLOAT roty = 30.0 / 180 * M_PI;
     static FLOAT step = -1.0 / 180 * M_PI;
 
-    window_new( &mywindow, H, W );
-    window_clear ( &mywindow );
-
-    matrix_t transform;
-    matrix_t user_rotx_;
-    matrix_t user_roty_;
-    matrix_t view_rotx;
-    matrix_t view_roty;
     matrix_t view_transform;
-    matrix_t big_matrix;
-    matrix_t rz;
+    matrix_t transform;
 
+    window_new(&my_window, H, W);
+    window_clear(&my_window);
+
+    identity_m(&view_transform);
+    rotx_m(&transform, user_rotx);
+    roty_m(&transform, user_roty);
+    translate_m(&view_transform, 0, 1.0, 20.0);      // view transform
+
+    identity_m(&transform);
+    rotz_m(&transform, rotz);
     translate_m(&transform, -1.0, 2.0, 0);
-    rotx_m(&user_rotx_, user_rotx);
-    roty_m(&user_roty_, user_roty);
-    rotx_m(&view_rotx, 0.0 / 180 * M_PI);
-    roty_m(&view_roty, roty);
-    rotz_m(&rz, rotz);
-    translate_m(&view_transform, 0, 1.0, 20.0);
+    roty_m(&transform, roty);
+//  rotx_m(&transform, 0.0 / 180 * M_PI);
+    mult_m(&transform, &view_transform);
+    mult_m(&transform, &clip_matrix);
 
-    big_matrix = rz;
-    mult_m(&big_matrix, &transform);
-    mult_m(&big_matrix, &view_roty);
-    mult_m(&big_matrix, &view_rotx);
-    mult_m(&big_matrix, &user_rotx_);
-    mult_m(&big_matrix, &user_roty_);
-    mult_m(&big_matrix, &view_transform);
-    mult_m(&big_matrix, &clipMatrix);
+    regis_plot(glxgear1, sizeof(glxgear1) / sizeof(point_t), &transform, _R, 0);
 
-    regis_plot(glxgear1, sizeof(glxgear1) / sizeof(point_t), &big_matrix, _R, 0);
+    window_write(&my_window);
+    window_reset(&my_window);
 
-    window_write( &mywindow );
-    window_reset( &mywindow );
-
+    identity_m(&transform);
+    rotz_m(&transform, -2.0 * rotz + 9.0 / 180 * M_PI);
     translate_m(&transform, 5.2, 2.0, 0);
-    rotz_m(&rz, -2.0 * rotz + 9.0 / 180 * M_PI);
+    roty_m(&transform, roty);
+//  rotx_m(&transform, 0.0 / 180 * M_PI);
+    mult_m(&transform, &view_transform);
+    mult_m(&transform, &clip_matrix);
 
-    big_matrix = rz;
-    mult_m(&big_matrix, &transform);
-    mult_m(&big_matrix, &view_roty);
-    mult_m(&big_matrix, &view_rotx);
-    mult_m(&big_matrix, &user_rotx_);
-    mult_m(&big_matrix, &user_roty_);
-    mult_m(&big_matrix, &view_transform);
-    mult_m(&big_matrix, &clipMatrix);
+    regis_plot(glxgear2, sizeof(glxgear2) / sizeof(point_t), &transform, _G, 0);
 
-    regis_plot(glxgear2, sizeof(glxgear2) / sizeof(point_t), &big_matrix, _G, 0);
+    window_write(&my_window);
+    window_reset(&my_window);
 
-    window_write( &mywindow );
-    window_reset( &mywindow );
-
+    identity_m(&transform);
+    rotz_m(&transform, -2.0 * rotz + 30.0 / 180 * M_PI);
     translate_m(&transform, -1.1, -4.2, 0);
-    rotz_m(&rz, -2.0 * rotz + 30.0 / 180 * M_PI);
+    roty_m(&transform, roty);
+//  rotx_m(&transform, 0.0 / 180 * M_PI);
+    mult_m(&transform, &view_transform);
+    mult_m(&transform, &clip_matrix);
 
-    big_matrix = rz;
-    mult_m(&big_matrix, &transform);
-    mult_m(&big_matrix, &view_roty);
-    mult_m(&big_matrix, &view_rotx);
-    mult_m(&big_matrix, &user_rotx_);
-    mult_m(&big_matrix, &user_roty_);
-    mult_m(&big_matrix, &view_transform);
-    mult_m(&big_matrix, &clipMatrix);
+    regis_plot(glxgear3, sizeof(glxgear3) / sizeof(point_t), &transform, _B, 0);
 
-    regis_plot(glxgear3, sizeof(glxgear3) / sizeof(point_t), &big_matrix, _B, 0);
-
-    window_write( &mywindow );
-    window_close( &mywindow );
+    window_write(&my_window);
+    window_close(&my_window);
 
     if(animate)
     {
@@ -270,26 +252,16 @@ void gear_loop()
     static FLOAT step2 = 1.0 / 180 * M_PI;
 
     matrix_t transform;
-    matrix_t user_rotx_;
-    matrix_t user_roty_;
-    matrix_t ry;
-    matrix_t rz;
-    matrix_t big_matrix;
 
+    identity_m(&transform);
+    roty_m(&transform, roty);
+    rotz_m(&transform, rotz);
+    rotx_m(&transform, user_rotx);
+    roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 8.0);
-    rotx_m(&user_rotx_, user_rotx);
-    roty_m(&user_roty_, user_roty);
-    roty_m(&ry, roty);
-    rotz_m(&rz, rotz);
+    mult_m(&transform, &clip_matrix);
 
-    big_matrix = ry;
-    mult_m(&big_matrix, &rz);
-    mult_m(&big_matrix, &user_rotx_);
-    mult_m(&big_matrix, &user_roty_);
-    mult_m(&big_matrix, &transform);
-    mult_m(&big_matrix, &clipMatrix);
-
-    regis_plot(gear, sizeof(gear) / sizeof(point_t), &big_matrix, _W, 1);
+    regis_plot(gear, sizeof(gear) / sizeof(point_t), &transform, _W, 1);
 
     if(animate)
     {
@@ -310,29 +282,17 @@ void icos_loop(void)
     static FLOAT roty = 0;
 
     matrix_t transform;
-    matrix_t user_rotx_;
-    matrix_t user_roty_;
-    matrix_t rx;
-    matrix_t rz;
-    matrix_t ry;
-    matrix_t big_matrix;
 
+    identity_m(&transform);
+    rotx_m(&transform, M_PI/2);
+    roty_m(&transform, roty);
+    rotz_m(&transform, rotz);
+    rotx_m(&transform, user_rotx);
+    roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 8.0);
-    rotx_m(&user_rotx_, user_rotx);
-    roty_m(&user_roty_, user_roty);
-    rotx_m(&rx, M_PI/2);
-    roty_m(&ry, roty);
-    rotz_m(&rz, rotz);
+    mult_m(&transform, &clip_matrix);
 
-    big_matrix = rx;
-    mult_m(&big_matrix, &ry);
-    mult_m(&big_matrix, &rz);
-    mult_m(&big_matrix, &user_rotx_);
-    mult_m(&big_matrix, &user_roty_);
-    mult_m(&big_matrix, &transform);
-    mult_m(&big_matrix, &clipMatrix);
-
-    regis_plot(icos, sizeof(icos) / sizeof(point_t), &big_matrix, _W, 1);
+    regis_plot(icos, sizeof(icos) / sizeof(point_t), &transform, _W, 1);
 
     if(animate)
     {
@@ -348,26 +308,16 @@ void cube_loop(void)
     static FLOAT roty = 0;
 
     matrix_t transform;
-    matrix_t user_rotx_;
-    matrix_t user_roty_;
-    matrix_t ry;
-    matrix_t rz;
-    matrix_t big_matrix;
 
+    identity_m(&transform);
+    roty_m(&transform, roty);
+    rotz_m(&transform, rotz);
+    rotx_m(&transform, user_rotx);
+    roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 10.0);
-    rotx_m(&user_rotx_, user_rotx);
-    roty_m(&user_roty_, user_roty);
-    roty_m(&ry, roty);
-    rotz_m(&rz, rotz);
+    mult_m(&transform, &clip_matrix);
 
-    big_matrix = ry;
-    mult_m(&big_matrix, &rz);
-    mult_m(&big_matrix, &user_rotx_);
-    mult_m(&big_matrix, &user_roty_);
-    mult_m(&big_matrix, &transform);
-    mult_m(&big_matrix, &clipMatrix);
-
-    regis_plot(cube, sizeof(cube) / sizeof(point_t), &big_matrix, _W, 1);
+    regis_plot(cube, sizeof(cube) / sizeof(point_t), &transform, _W, 1);
 
     if(animate)
     {
