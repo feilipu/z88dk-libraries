@@ -24,15 +24,16 @@
  */
 
 /*
- *
- *
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
- * project 3D coords onto 2D screen:
+ * 3D Clipping in Homogeneous Coordinates
+ * https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/
+ *
+ * project 3D coords onto 2D screen
  * https://stackoverflow.com/questions/724219/how-to-convert-a-3d-point-into-2d-perspective-projection
  *
- * transformation matrix:
+ * transformation matrix
  * https://www.tutorialspoint.com/computer_graphics/3d_transformation.htm
  *
  */

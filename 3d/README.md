@@ -121,10 +121,21 @@ Which should produce the below result.
 
 ## Credits
 
-TBA
+[GLX Gears for Arduino](https://github.com/heroineworshiper/3d_arduino/blob/main/3d_arduino.ino)
+
+[3D homogeneous coordinate definition](https://en.wikipedia.org/wiki/Homogeneous_coordinates)
+
+[3D Clipping in Homogeneous Coordinates](https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/)
+
+[Project 3D coords onto 2D screen](https://stackoverflow.com/questions/724219/how-to-convert-a-3d-point-into-2d-perspective-projection)
+
+[Transformation matrix](https://www.tutorialspoint.com/computer_graphics/3d_transformation.htm)
+
 
 ## License
 
 This library is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check the LICENSE file for more information.
+
+## Contributing
 
 Contributing to this software is warmly welcomed. You can do this by [forking](https://help.github.com/articles/fork-a-repo), committing modifications and then [pull requests](https://help.github.com/articles/using-pull-requests).
