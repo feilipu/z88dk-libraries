@@ -191,8 +191,8 @@ void glxgears_loop()
     window_clear(&my_window);
 
     identity_m(&view_transform);
-    rotx_m(&transform, user_rotx);
-    roty_m(&transform, user_roty);
+    rotx_m(&view_transform, user_rotx);
+    roty_m(&view_transform, user_roty);
     translate_m(&view_transform, 0, 1.0, 20.0);      // view transform
 
     identity_m(&transform);
