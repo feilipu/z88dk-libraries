@@ -33,25 +33,30 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 ## Usage
     1.git clone this repository.
     2.use `z88dk-lib` to import this library into z88k.
-    3.open the demo `3d_demo.c` to test your success.
+    3.open the demo `demo_3d.c` to test your success.
     4.compile the demonstration using the incantation(s) below.
     5.profit.
 
 ### ZSDCC
 
 For CP/M<br>
-`zcc +cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/3d 3d_demo.c -o 3d -create-app`
+`zcc +cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app`
 
 For RC2014<br>
-`zcc +rc2014 -subtype=cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/3d 3d_demo.c -o 3d -create-app`
+`zcc +rc2014 -subtype=cpm -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/regis -llib/rc2014/3d --math32 demo_3d.c -o 3d -create-app`
 
 ### SCCZ80
 
 For CP/M<br>
-`zcc +cpm -clib=new -O2 --opt-code-speed=inlineints -v -m --list -llib/rc2014/3d 3d_demo.c -o 3d -create-app`
+`zcc +cpm -clib=new -O2 --opt-code-speed=all -v -m --list -llib/rc2014/3d demo_3d.c -o 3d -create-app`
 
 For RC2014<br>
-`zcc +rc2014 -subtype=cpm -clib=new -O2 --opt-code-speed=inlineints -v -m --list -llib/rc2014/3d 3d_demo.c -o 3d -create-app`
+`zcc +rc2014 -subtype=cpm -clib=new -O2 --opt-code-speed=all -v -m --list -llib/rc2014/regis -llib/rc2014/3d --math32 demo_3d.c -o 3d -create-app`
+`zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/rc2014/regis -llib/rc2014/3df16 --math16 demo_3d.c -o 3df16 -create-app`
+
+For YAZ180<br>
+`zcc +yaz180 -subtype=cpm -clib=new -O2 --opt-code-speed=all -v -m --list -llib/yaz180/regis -llib/yaz180/3d --math32 demo_3d.c -o 3d -create-app`
+`zcc +yaz180 -subtype=cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/yaz180/regis -llib/yaz180/3df16 --math16 demo_3d.c -o 3df16 -create-app`
 
 ## Preparation
 
@@ -86,20 +91,20 @@ The resulting `3d.lib` files should be moved to `~/target/lib/newlib/sccz80` or 
 
 ## Demonstration
 
-```C
-// ZSDCC compile from demo directory
-// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
-// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
+```sh
+#  ZSDCC compile from demo directory
+>  zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+>  zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
-// SCCZ80 compile from demo directory
-// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
-// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
+#  SCCZ80 compile from demo directory
+>  zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+>  zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
-// SCCZ80 compile from demo directory with math16 (16-bit floating point)
-// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
+#  SCCZ80 compile from demo directory with math16 (16-bit floating point)
+>  zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
 
-// display ReGIS output using XTerm & picocom
-// xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+#  display ReGIS output using XTerm & picocom
+>  xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Which should produce the below result.
