@@ -37,71 +37,54 @@ z88dk-lib +zx -r -f libname1 libname2 ...
     4.compile the demonstration using the incantation(s) below.
     5.profit.
 
-### ZSDCC
-
-For CP/M<br>
-`zcc +cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app`
-
-For RC2014<br>
-`zcc +rc2014 -subtype=cpm -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/regis -llib/rc2014/3d --math32 demo_3d.c -o 3d -create-app`
-
-### SCCZ80
-
-For CP/M<br>
-`zcc +cpm -clib=new -O2 --opt-code-speed=all -v -m --list -llib/rc2014/3d demo_3d.c -o 3d -create-app`
-
-For RC2014<br>
-`zcc +rc2014 -subtype=cpm -clib=new -O2 --opt-code-speed=all -v -m --list -llib/rc2014/regis -llib/rc2014/3d --math32 demo_3d.c -o 3d -create-app`
-`zcc +rc2014 -subtype=cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/rc2014/regis -llib/rc2014/3df16 --math16 demo_3d.c -o 3df16 -create-app`
-
-For YAZ180<br>
-`zcc +yaz180 -subtype=cpm -clib=new -O2 --opt-code-speed=all -v -m --list -llib/yaz180/regis -llib/yaz180/3d --math32 demo_3d.c -o 3d -create-app`
-`zcc +yaz180 -subtype=cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/yaz180/regis -llib/yaz180/3df16 --math16 demo_3d.c -o 3df16 -create-app`
-
 ## Preparation
 
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```sh
-zcc +rc2014 --math32 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3d
-zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @3d.lst -o ../3d
-zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -o ../3d
+zcc +rc2014 -x -clib=new -O2 --opt-code-speed=all --math32 @3d.lst -o ../3d
+zcc +rc2014 -x -clib=sdcc_ix -SO3 --max-allocs-per-node400000 --math32 @3d.lst -o ../3d
+zcc +rc2014 -x -clib=sdcc_iy -SO3 --max-allocs-per-node400000 --math32 @3d.lst -o ../3d
 
-zcc +rc2014 --math16 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3df16
+zcc +rc2014 -x -clib=new -O2 --opt-code-speed=all --math16 @3d.lst -o ../3df16
 ```
 
 ```sh
-zcc +yaz180 --math32 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3d
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @3d.lst -o ../3d
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -o ../3d
+zcc +yaz180 -x -clib=new -O2 --opt-code-speed=all --math32 @3d.lst -o ../3d
+zcc +yaz180 -x -clib=sdcc_ix -SO3 --max-allocs-per-node400000 --math32 @3d.lst -o ../3d
+zcc +yaz180 -x -clib=sdcc_iy -SO3 --max-allocs-per-node400000 --math32 @3d.lst -o ../3d
 
-zcc +yaz180 --math16 -x -O2  -clib=new --opt-code-speed=all @3d.lst -o ../3df16
+zcc +yaz180 -x -O2 -clib=new --opt-code-speed=all --math16 @3d.lst -o ../3df16
 ```
 
 ```sh
-zcc +cpm --math32 -x -O2 -clib=new --opt-code-speed=all @3d.lst -o ../3d
-zcc +cpm --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @3d.lst -o ../3d
-zcc +cpm --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @3d.lst -o ../3d
+zcc +cpm -x -clib=new -O2 --opt-code-speed=all --math32 @3d.lst -o ../3d
+zcc +cpm -x -clib=sdcc_ix -SO3 --max-allocs-per-node400000 --math32 @3d.lst -o ../3d
+zcc +cpm -x -clib=sdcc_iy -SO3 --max-allocs-per-node400000 --math32 @3d.lst -o ../3d
 
-zcc +cpm --math16 -x -O2 -clib=new --opt-code-speed=all @3d.lst -o ../3df16
+zcc +cpm -x -clib=new -O2 --opt-code-speed=all --math16 @3d.lst -o ../3df16
 ```
 
-The resulting `3d.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+The resulting `3d.lib` or `3df16.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+
+Note that the 16-bit math16 library will also need to be copied manually into the correct z88dk library as `z88dk-lib` can only handle one library file per tree.
 
 
 ## Demonstration
 
+### CP/M
+
 ```sh
 #  ZSDCC compile from demo directory
->  zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
->  zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
+>  zcc +cpm -clib=sdcc_iy -v -m --list -SO3 --max-allocs-per-node100000 -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+>  zcc +cpm -clib=sdcc_iy -v -m --list -SO3 --max-allocs-per-node100000 -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
 #  SCCZ80 compile from demo directory
->  zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
->  zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
+>  zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+>  zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
 #  SCCZ80 compile from demo directory with math16 (16-bit floating point)
->  zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
+>  zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
 
 #  display ReGIS output using XTerm & picocom
 >  xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
@@ -122,7 +105,27 @@ Which should produce the below result.
 </table>
 </div>
 
+### RC2014 CP/M
 
+For SDCC<br>
+`zcc +rc2014 -subtype=cpm -v -m --list -SO3 --max-allocs-per-node100000 -llib/rc2014/regis -llib/rc2014/3d --math32 demo_3d.c -o 3d -create-app`
+`zcc +rc2014 -subtype=cpm -v -m --list -SO3 --max-allocs-per-node100000 -llib/rc2014/regis -llib/rc2014/3d --am9511 demo_3d.c -o 3dapu -create-app`
+
+For SCCZ80<br>
+`zcc +rc2014 -subtype=cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/rc2014/regis -llib/rc2014/3d --math32 demo_3d.c -o 3d -create-app`
+`zcc +rc2014 -subtype=cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/rc2014/regis -llib/rc2014/3d --am9511 demo_3d.c -o 3dapu -create-app`
+`zcc +rc2014 -subtype=cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/rc2014/regis -llib/rc2014/3df16 --math16 demo_3d.c -o 3df16 -create-app`
+
+### YAZ180 CP/M
+
+For SDCC<br>
+`zcc +yaz180 -subtype=cpm -v -m --list -SO3 --max-allocs-per-node100000 -llib/yaz180/regis -llib/yaz180/3d --math32 demo_3d.c -o 3d -create-app`
+`zcc +yaz180 -subtype=cpm -v -m --list -SO3 --max-allocs-per-node100000 -llib/yaz180/regis -llib/yaz180/3d --am9511 demo_3d.c -o 3dapu -create-app`
+
+For SCCZ80<br>
+`zcc +yaz180 -subtype=cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/yaz180/regis -llib/yaz180/3d --math32 demo_3d.c -o 3d -create-app`
+`zcc +yaz180 -subtype=cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/yaz180/regis -llib/yaz180/3d --am9511 demo_3d.c -o 3dapu -create-app`
+`zcc +yaz180 -subtype=cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/yaz180/regis -llib/yaz180/3df16 --math16 demo_3d.c -o 3df16 -create-app`
 
 ## Credits
 

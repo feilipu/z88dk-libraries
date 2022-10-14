@@ -39,31 +39,44 @@
  */
 
 // ZSDCC compile
-// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
-// zcc +cpm -clib=sdcc_iy -v -m -SO3 --max-allocs-per-node100000 --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
+// zcc +cpm -clib=sdcc_iy -v -m --list -SO3 --max-allocs-per-node100000 -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=sdcc_iy -v -m --list -SO3 --max-allocs-per-node100000 -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
 // SCCZ80 compile
-// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
-// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
+// zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3d --math32 demo_3d.c -o 3d -create-app
+// zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3d --am9511 demo_3d.c -o 3dapu -create-app
 
 // SCCZ80 compile with math16 (16-bit floating point)
-// zcc +cpm -clib=new -v -m -O2 --opt-code-speed=all --list -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
+// zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
+
 
 // display using XTerm & picocom
 // xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+
+
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <input.h>
 #include <math.h>
 
-// REGIS library
-#include <lib/cpm/regis.h>
+#ifdef __CPM
+#include <lib/cpm/regis.h>      // REGIS library
+#include <lib/cpm/3d.h>         // 3D library
+#elif __RC2014
+#include <lib/rc2014/regis.h>   // REGIS library
+#include <lib/rc2014/3d.h>      // 3D library
+#elif __YAZ180
+#include <lib/yaz180/regis.h>   // REGIS library
+#include <lib/yaz180/3d.h>      // 3D library
+#endif
 
-// 3D library
-#include <lib/cpm/3d.h>
+#ifndef __CPM
+#define __CPM
+#endif
+
+#include <input.h>              // CP/M BDOS input library
 
 #define W 480
 #define H 480
@@ -79,10 +92,8 @@
 #define GEAR '3'
 #define GLXGEARS '4'
 
-// select an initial demonstration from above options
-uint8_t demo = GLXGEARS;
-
 uint8_t animate = 1;
+
 FLOAT user_rotx = 0;
 FLOAT user_roty = 0;
 
@@ -191,8 +202,8 @@ void glxgears_loop()
     window_clear(&my_window);
 
     identity_m(&view_transform);
-    rotx_m(&view_transform, user_rotx);
-    roty_m(&view_transform, user_roty);
+    if(user_rotx != 0) rotx_m(&view_transform, user_rotx);
+    if(user_roty != 0) roty_m(&view_transform, user_roty);
     translate_m(&view_transform, 0, 1.0, 20.0);      // view transform
 
     identity_m(&transform);
@@ -258,8 +269,8 @@ void gear_loop()
     identity_m(&transform);
     rotz_m(&transform, rotz);
     roty_m(&transform, roty);
-    rotx_m(&transform, user_rotx);
-    roty_m(&transform, user_roty);
+    if(user_rotx != 0) rotx_m(&transform, user_rotx);
+    if(user_roty != 0) roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 8.0);
     mult_m(&transform, &clip_matrix);
 
@@ -289,8 +300,8 @@ void icos_loop(void)
     rotz_m(&transform, rotz);
     roty_m(&transform, roty);
     rotx_m(&transform, M_PI/2);
-    rotx_m(&transform, user_rotx);
-    roty_m(&transform, user_roty);
+    if(user_rotx != 0) rotx_m(&transform, user_rotx);
+    if(user_roty != 0) roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 8.0);
     mult_m(&transform, &clip_matrix);
 
@@ -314,8 +325,8 @@ void cube_loop(void)
     identity_m(&transform);
     rotz_m(&transform, rotz);
     roty_m(&transform, roty);
-    rotx_m(&transform, user_rotx);
-    roty_m(&transform, user_roty);
+    if(user_rotx != 0) rotx_m(&transform, user_rotx);
+    if(user_roty != 0) roty_m(&transform, user_roty);
     translate_m(&transform, 0, 0, 10.0);
     mult_m(&transform, &clip_matrix);
 
@@ -329,36 +340,40 @@ void cube_loop(void)
 }
 
 
-void loop(void)
+int main(int argc, char **argv)
 {
-    switch(demo)
-    {
-        case CUBE:
-            cube_loop();
-            break;
-        case ICOS:
-            icos_loop();
-            break;
-        case GEAR:
-            gear_loop();
-            break;
-        case GLXGEARS:
-            glxgears_loop();
-            break;
-        default:
-            break;
-    }
-}
+                                // '1' CUBE, '2' ISOC, '3' GEAR, '4' GLXGEARS
+    uint8_t demo = CUBE;        // select a default demonstration from above options
 
-int main(void)
-{
-    printf("\e[2J");        // clear screen
+    printf("%c[2J", ASCII_ESC); // clear screen
+
+    if(argc > 1) {
+        demo = (argv[1])[0];    // get which demo is desired:
+    }
+
     begin_projection();
 
     while(1)
     {
-        loop();
-        if( in_test_key() ) exit(0);
+        switch(demo)
+        {
+            case CUBE:
+                cube_loop();
+                break;
+            case ICOS:
+                icos_loop();
+                break;
+            case GEAR:
+                gear_loop();
+                break;
+            case GLXGEARS:
+                glxgears_loop();
+                break;
+            default:
+                exit(0);
+        }
+
+        if( in_test_key() ) break;
     }
 
     return 0;
