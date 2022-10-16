@@ -58,7 +58,7 @@
 
 
 /* Produce a transformation (shear) matrix */
-void shear_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
+void shear_m(matrix_t * matrix, FLOAT x, FLOAT y, FLOAT z)
 {
     matrix_t shear;
 

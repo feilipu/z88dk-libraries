@@ -57,7 +57,7 @@
 
 
 /* Produce a transformation (translation) */
-void translate_m(matrix_t * matrix,FLOAT x,FLOAT y,FLOAT z)
+void translate_m(matrix_t * matrix, FLOAT x, FLOAT y, FLOAT z)
 {
     matrix_t translation;
 

@@ -1,5 +1,5 @@
 /*
- * scale_m.c
+ * projection_w3woody_m.c
  *
  * Copyright (c) 2022 Phillip Stevens
  * Create Time: October 2022
@@ -29,6 +29,9 @@
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
+ * Goodbye Far Clipping Plane.
+ * https://chaosinmotion.com/2010/09/06/goodbye-far-clipping-plane/
+ *
  * project 3D coords onto 2D screen:
  * https://stackoverflow.com/questions/724219/how-to-convert-a-3d-point-into-2d-perspective-projection
  *
@@ -43,6 +46,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #if __SCCZ80
 #include "include/sccz80/3d.h"
@@ -56,16 +60,17 @@
 /****************************************************************************/
 
 
-/* Produce a transformation (scale) matrix */
-void scale_m(matrix_t * matrix, FLOAT x, FLOAT y, FLOAT z)
+/* Set up Projection W3Woody */
+void projection_w3woody_m(matrix_t * matrix, FLOAT fov, FLOAT aspect_ratio, FLOAT near, FLOAT far)
 {
-    matrix_t scale;
+    FLOAT f = 1.0/TAN(fov * 0.5);
 
-    identity_m( &scale );
+    identity_m( matrix );
 
-    scale.e[0] = x;
-    scale.e[5] = y;
-    scale.e[10] = z;
-
-    mult_m( matrix, &scale );
+    matrix->e[0]  =  f * aspect_ratio;
+    matrix->e[5]  =  f;
+    matrix->e[10] =  0.0;
+    matrix->e[11] = -1.0;
+    matrix->e[14] = -near;
+    matrix->e[15] =  0.0;
 }

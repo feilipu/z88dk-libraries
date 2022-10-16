@@ -1,5 +1,5 @@
 /*
- * scale_m.c
+ * projection_opengl_m.c
  *
  * Copyright (c) 2022 Phillip Stevens
  * Create Time: October 2022
@@ -43,6 +43,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #if __SCCZ80
 #include "include/sccz80/3d.h"
@@ -56,16 +57,17 @@
 /****************************************************************************/
 
 
-/* Produce a transformation (scale) matrix */
-void scale_m(matrix_t * matrix, FLOAT x, FLOAT y, FLOAT z)
+/* Set up projection OpenGL */
+void projection_opengl_m(matrix_t * matrix, FLOAT fov, FLOAT aspect_ratio, FLOAT near, FLOAT far)
 {
-    matrix_t scale;
+    FLOAT f = 1.0/TAN(fov * 0.5);
 
-    identity_m( &scale );
+    identity_m( matrix );
 
-    scale.e[0] = x;
-    scale.e[5] = y;
-    scale.e[10] = z;
-
-    mult_m( matrix, &scale );
+    matrix->e[0]  =  f * aspect_ratio;
+    matrix->e[5]  =  f;
+    matrix->e[10] = -(far + near) / (far - near);
+    matrix->e[11] = -1.0;
+    matrix->e[14] = -(far * near * 2.0) / (far - near);
+    matrix->e[15] =  0.0;
 }

@@ -11,3 +11,6 @@
 ./scale_m.c
 ./shear_m.c
 ./translate_m.c
+
+./projection_opengl_m.c
+./projection_w3woody_m.c

@@ -58,7 +58,7 @@
 
 
 /* Rotation in z dimension */
-void rotz_m(matrix_t * matrix,FLOAT angle)
+void rotz_m(matrix_t * matrix, FLOAT angle)
 {
     matrix_t rotz;
 

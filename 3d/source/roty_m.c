@@ -58,7 +58,7 @@
 
 
 /* Rotation in y dimension */
-void roty_m(matrix_t * matrix,FLOAT angle)
+void roty_m(matrix_t * matrix, FLOAT angle)
 {
     matrix_t roty;
 

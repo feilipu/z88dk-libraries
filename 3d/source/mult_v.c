@@ -58,7 +58,7 @@
 
 
 /* Vector Matrix Multiplication */
-void mult_v(vector_t * vect,matrix_t * multiplier)
+void mult_v(vector_t * vect, matrix_t * multiplier)
 {
     vector_t result;
 

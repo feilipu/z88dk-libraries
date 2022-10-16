@@ -30,8 +30,11 @@
  * 3D homogeneous coordinate definition
  * https://en.wikipedia.org/wiki/Homogeneous_coordinates
  *
- * project 3D coords onto 2D screen:
+ * project 3D coords onto 2D screen
  * https://stackoverflow.com/questions/724219/how-to-convert-a-3d-point-into-2d-perspective-projection
+ *
+ * 3D Clipping in Homogeneous Coordinates
+ * https://chaosinmotion.com/2016/05/22/3d-clipping-in-homogeneous-coordinates/
  *
  * transformation matrix:
  * https://www.tutorialspoint.com/computer_graphics/3d_transformation.htm
@@ -187,6 +190,16 @@ void __LIB__ roty_m(matrix_t * matrix,FLOAT angle) __smallc;
 
 /* Rotation in z dimension */
 void __LIB__ rotz_m(matrix_t * matrix,FLOAT angle) __smallc;
+
+
+
+/* Set up projection OpenGL */
+void __LIB__ projection_opengl_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far) __smallc;
+
+
+
+/* Set up projection W3Woody */
+void __LIB__ projection_w3woody_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far) __smallc;
 
 
 

@@ -57,7 +57,7 @@
 
 
 /* Scale a vector, but don't touch w dimension */
-void scale_v(vector_t * vect,FLOAT scale)
+void scale_v(vector_t * vect, FLOAT scale)
 {
     vect->x *= scale;
     vect->y *= scale;

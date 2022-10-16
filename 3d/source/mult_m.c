@@ -59,7 +59,7 @@
 
 
 /* Matrix Multiplication */
-void mult_m(matrix_t * multiplicand,matrix_t * multiplier)
+void mult_m(matrix_t * multiplicand, matrix_t * multiplier)
 {
     matrix_t result;
 
