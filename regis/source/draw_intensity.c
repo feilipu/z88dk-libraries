@@ -56,7 +56,7 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Set writing intensity (colour) */
-void draw_intensity(window_t * win, intensity_t intensity)
+void draw_intensity(window_t * win, w_intensity_t intensity)
 {
     char s[8];
 

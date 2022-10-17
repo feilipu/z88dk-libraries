@@ -56,7 +56,7 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Set writing pattern */
-void draw_pattern(window_t * win, pattern_t pattern)
+void draw_pattern(window_t * win, w_pattern_t pattern)
 {
     char s[6];
 

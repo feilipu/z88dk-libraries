@@ -82,16 +82,16 @@ typedef enum offset_e
 } offset_t;
 
 /* writing mode */
-typedef enum mode_e
+typedef enum w_mode_e
 {
     _REP = 0,           // (R) Replace Mode (standard mode)
     _ERA = 1,           // (E) Erase Mode - NOR
     _OVL = 2,           // (V) Overlay Mode - OR
     _CPL = 3            // (C) Complement Mode - XOR
-} mode_t;
+} w_mode_t;
 
 /* writing pattern */
-typedef enum pattern_e
+typedef enum w_pattern_e
 {
     _P0  = 0,           // blank
     _P1  = 1,           // solid
@@ -103,10 +103,10 @@ typedef enum pattern_e
     _P7  = 7,
     _P8  = 8,
     _P9  = 9
-} pattern_t;
+} w_pattern_t;
 
 /* intensity (colour) I(c) */
-typedef enum intensity_e
+typedef enum w_intensity_e
 {
     _D   = 0,           // Dark (black)
     _B   = 1,           // Blue
@@ -116,7 +116,7 @@ typedef enum intensity_e
     _C   = 5,           // Cyan
     _Y   = 6,           // Yellow
     _W   = 7            // White
-} intensity_t;
+} w_intensity_t;
 
 /* Structure to use when opening a window - as per usual,if type <> 0
  * then open graphics window number with width (in pixels) width.
@@ -130,9 +130,6 @@ typedef struct window_s {
 
     uint16_t width;     // desired window width  (ReGIS maximum 768)
     uint16_t height;    // desired window height (ReGIS maximum 480)
-
-    pattern_t pattern;  // current writing pattern
-    mode_t mode;        // current writing mode
 } window_t;
 
 /****************************************************************************/
@@ -155,13 +152,13 @@ __OPROTO(,,void,,window_clear,window_t * win)
 __OPROTO(,,void,,window_close,window_t * win)
 
 /* Set writing mode */
-__OPROTO(,,void,,draw_mode,window_t * win,mode_t mode)
+__OPROTO(,,void,,draw_mode,window_t * win,w_mode_t mode)
 
 /* Set writing pattern */
-__OPROTO(,,void,,draw_pattern,window_t * win,pattern_t pattern)
+__OPROTO(,,void,,draw_pattern,window_t * win,w_pattern_t pattern)
 
 /* Set writing intensity (colour) */
-__OPROTO(,,void,,draw_intensity,window_t * win,intensity_t intensity)
+__OPROTO(,,void,,draw_intensity,window_t * win,w_intensity_t intensity)
 
 /* Relative move position */
 __OPROTO(,,void,,draw_rel,window_t * win,int16_t dx,int16_t dy)

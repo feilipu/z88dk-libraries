@@ -56,7 +56,7 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /****************************************************************************/
 
 /* Set writing mode */
-void draw_mode(window_t * win, mode_t mode)
+void draw_mode(window_t * win, w_mode_t mode)
 {
     char s[6];
 

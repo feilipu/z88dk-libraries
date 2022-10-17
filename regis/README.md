@@ -62,21 +62,23 @@ For RC2014<br>
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```
-zcc +rc2014 --math32 -x -O2  -clib=new --opt-code-speed=all @regis.lst -o ../regis
-zcc +rc2014 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
-zcc +rc2014 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +rc2014  -clib=new  --math32 -x -O2--opt-code-speed=all @regis.lst -o ../regis
+zcc +rc2014 -clib=sdcc_ix --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +rc2014 -clib=sdcc_iy --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 ```
-zcc +yaz180 --math32 -x -O2  -clib=new --opt-code-speed=all @regis.lst -o ../regis
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
-zcc +yaz180 --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +yaz180 -clib=new --math32 -x -O2 --opt-code-speed=all @regis.lst -o ../regis
+zcc +yaz180 -clib=sdcc_ix --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +yaz180 -clib=sdcc_iy --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
 ```
 
 ```
-zcc +cpm --math32 -x -O2 -clib=new --opt-code-speed=all @regis.lst -o ../regis
-zcc +cpm --math32 -x -SO3 -clib=sdcc_ix --max-allocs-per-node400000 @regis.lst -o ../regis
-zcc +cpm --math32 -x -SO3 -clib=sdcc_iy --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +cpm -clib=new --math32 -x -O2 --opt-code-speed=all @regis.lst -o ../regis
+zcc +cpm -clib=sdcc_ix --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +cpm -clib=sdcc_iy --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
+
+zcc +cpm -clib=8085 --math-am9511_8085 -x -O2 --opt-code-speed=all @regis.lst -o ../regis85
 ```
 
 The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
