@@ -49,10 +49,11 @@
 // SCCZ80 compile with math16 (16-bit floating point)
 // zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
 
+// SCCZ80 compile for 8085 with Am9511 APU (32-bit floating piont)
+// zcc +cpm -clib=8085 -v -m --list -O2 --opt-code-speed=all -DAMALLOC -lregis_8085 -l3d_8085 --math-am9511_8085 demo_3d.c -o 3d-8085 -create-app
 
 // display using XTerm & picocom
 // xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
-
 
 
 #include <stdint.h>
@@ -63,8 +64,12 @@
 #include <input.h>
 
 #if defined ( __CPM ) && defined ( __8085__ )
-#include <regis.h>              // REGIS library
-#include <3d.h>                 // 3D library
+#pragma output noprotectmsdos
+#pragma printf = "%s %c %03d"                       // for classic enables %s, %c, %03d only
+#pragma scanf  = "%s %c"                            // for classic enables %s, %c only
+#define  in_test_key()  getk()
+#include <_DEVELOPMENT/sccz80/lib/cpm/regis.h>      // REGIS library
+#include <_DEVELOPMENT/sccz80/lib/cpm/3d.h>         // 3D library
 #elif __CPM
 #include <lib/cpm/regis.h>      // REGIS library
 #include <lib/cpm/3d.h>         // 3D library

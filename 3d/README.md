@@ -138,11 +138,11 @@ The resulting `3d.lib` or `3df16.lib` files should be moved to `~/target/lib/new
 #  SCCZ80 compile from demo directory with math16 (16-bit floating point)
 >  zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
 
-#  SCCZ80 compile from demo directory with for 8085 with Am9511 APU
->  zcc +cpm -clib=8085  -v -m --list -O2 --opt-code-speed=all -llib/clibs/regis_8085 -llib/clibs/3d_8085 --math-am9511_8085 demo_3d.c -o 3d-8085 -create-app
+#  SCCZ80 compile from demo directory for 8085 with Am9511 APU
+>  zcc +cpm -clib=8085 -v -m --list -O2 --opt-code-speed=all -DAMALLOC -lregis_8085 -l3d_8085 --math-am9511_8085 demo_3d.c -o 3d-8085 -create-app
 
 #  display ReGIS output using XTerm & picocom
->  xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
+>  xterm +u8 -geometry 132x50 -ti 340 -tn 340 -T "ReGIS" -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
 ```
 
 Which should produce the below result.
