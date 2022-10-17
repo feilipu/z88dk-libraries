@@ -78,7 +78,7 @@ zcc +cpm -clib=new --math32 -x -O2 --opt-code-speed=all @regis.lst -o ../regis
 zcc +cpm -clib=sdcc_ix --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
 zcc +cpm -clib=sdcc_iy --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
 
-zcc +cpm -clib=8085 --math-am9511_8085 -x -O2 --opt-code-speed=all @regis.lst -o ../regis85
+zcc +cpm -clib=8085 --math-am9511_8085 -x -O2 --opt-code-speed=all @regis.lst -o ../regis_8085
 ```
 
 The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.

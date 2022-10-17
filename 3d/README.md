@@ -116,6 +116,8 @@ The library can be compiled using the following command lines in Linux, with the
 >  zcc +cpm -x -clib=sdcc_iy -SO3 --max-allocs-per-node400000 --math32 @3d.lst -o ../3d
 
 >  zcc +cpm -x -clib=new -O2 --opt-code-speed=all --math16 @3d.lst -o ../3df16
+
+>  zcc +cpm -x -clib=8085 -O2 --opt-code-speed=all --math-am9511_8085 @3d.lst -o ../3d_8085
 ```
 
 The resulting `3d.lib` or `3df16.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
@@ -135,6 +137,9 @@ The resulting `3d.lib` or `3df16.lib` files should be moved to `~/target/lib/new
 
 #  SCCZ80 compile from demo directory with math16 (16-bit floating point)
 >  zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
+
+#  SCCZ80 compile from demo directory with for 8085 with Am9511 APU
+>  zcc +cpm -clib=8085  -v -m --list -O2 --opt-code-speed=all -llib/clibs/regis_8085 -llib/clibs/3d_8085 --math-am9511_8085 demo_3d.c -o 3d-8085 -create-app
 
 #  display ReGIS output using XTerm & picocom
 >  xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"

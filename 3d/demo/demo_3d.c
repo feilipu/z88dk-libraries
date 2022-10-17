@@ -60,8 +60,12 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include <input.h>
 
-#ifdef __CPM
+#if defined ( __CPM ) && defined ( __8085__ )
+#include <regis.h>              // REGIS library
+#include <3d.h>                 // 3D library
+#elif __CPM
 #include <lib/cpm/regis.h>      // REGIS library
 #include <lib/cpm/3d.h>         // 3D library
 #elif __RC2014
@@ -124,7 +128,7 @@ void read_point(point_t * point, unsigned char ** ptr)
 
 
 // draw the model
-void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, intensity_t intensity, uint8_t do_init)
+void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, w_intensity_t intensity, uint8_t do_init)
 {
     if(do_init)
     {
