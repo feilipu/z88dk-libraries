@@ -1,3 +1,12 @@
+R0.15p1 (Nov 11, 2022)
+  Changed user provided synchronization functions in order to completely eliminate the platform dependency from FatFs code.
+  Fixed a potential error in f_mount when FF_FS_REENTRANT.
+  Fixed file lock control FF_FS_LOCK is not mutal excluded when FF_FS_REENTRANT && FF_VOLUMES > 1 is true.
+  Fixed f_mkfs creates broken exFAT volume when the size of volume is >= 2^32 sectors.
+  Fixed string functions cannot write the unicode characters not in BMP when FF_LFN_UNICODE == 2 (UTF-8).
+  Fixed a compatibility issue in identification of GPT header.
+
+
 R0.14b (April 17, 2021)
   Made FatFs uses standard library <string.h> for copy, compare and search instead of built-in string functions.
   Added support for long long integer and floating point to f_printf(). (FF_STRF_LLI and FF_STRF_FP)
