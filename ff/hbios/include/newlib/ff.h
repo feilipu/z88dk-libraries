@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem module  R0.14b                              /
+/  FatFs - Generic FAT Filesystem module  R0.15                               /
 /-----------------------------------------------------------------------------/
 /
-/ Copyright (C) 2021, ChaN, all right reserved.
+/ Copyright (C) 2022, ChaN, all right reserved.
 /
 / FatFs module is an open source software. Redistribution and use of FatFs in
 / source and binary forms, with or without modification, are permitted provided
@@ -22,7 +22,7 @@ include(__link__.m4)
 define(`m4_SCCZ80_NOLIB', 1)
 
 #ifndef FF_DEFINED
-#define FF_DEFINED      86631   /* Revision ID */
+#define FF_DEFINED    80286    /* Revision ID */
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,7 +40,7 @@ typedef unsigned __int64 QWORD;
 #define isnan(v) _isnan(v)
 #define isinf(v) (!_finite(v))
 
-#elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__cplusplus)	/* C99 or later */
+#elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__cplusplus)    /* C99 or later */
 #define FF_INTDEF 2
 #include <stdint.h>
 typedef unsigned char   BYTE;   /* char must be 8-bit */
@@ -136,10 +136,11 @@ extern const char* VolumeStr[FF_VOLUMES];    /* User defined volume ID */
 
 typedef struct {
     BYTE    fs_type;            /* Filesystem type (0:not mounted) */
-    BYTE    pdrv;               /* Associated physical drive */
+    BYTE    pdrv;               /* Volume hosting physical drive */
+    BYTE    ldrv;               /* Logical drive number (used only when FF_FS_REENTRANT) */
     BYTE    n_fats;             /* Number of FATs (1 or 2) */
-    BYTE    wflag;              /* win[] flag (b0:dirty) */
-    BYTE    fsi_flag;           /* FSINFO flags (b7:disabled, b0:dirty) */
+    BYTE    wflag;              /* win[] status (b0:dirty) */
+    BYTE    fsi_flag;           /* FSINFO status (b7:disabled, b0:dirty) */
     WORD    id;                 /* Volume mount ID */
     WORD    n_rootdir;          /* Number of root directory entries (FAT12/16) */
     WORD    csize;              /* Cluster size [sectors] */
@@ -152,9 +153,6 @@ typedef struct {
 #if FF_FS_EXFAT
     BYTE*    dirbuf;            /* Directory entry block scratchpad buffer for exFAT */
 #endif
-#if FF_FS_REENTRANT
-    FF_SYNC_t    sobj;          /* Identifier of sync object */
-#endif
     DWORD    last_clst;         /* Last allocated cluster */
     DWORD    free_clst;         /* Number of free clusters */
 #if FF_FS_RPATH
@@ -166,10 +164,10 @@ typedef struct {
 #endif
 #endif
     DWORD    n_fatent;          /* Number of FAT entries (number of clusters + 2) */
-    DWORD    fsize;             /* Size of an FAT [sectors] */
+    DWORD    fsize;             /* Number of sectors per FAT */
     LBA_t    volbase;           /* Volume base sector */
     LBA_t    fatbase;           /* FAT base sector */
-    LBA_t    dirbase;           /* Root directory base sector/cluster */
+    LBA_t    dirbase;           /* Root directory base sector (FAT12/16) or cluster (FAT32/exFAT) */
     LBA_t    database;          /* Data base sector */
 #if FF_FS_EXFAT
     LBA_t    bitbase;           /* Allocation bitmap base sector */
@@ -301,8 +299,10 @@ typedef enum {
 
 
 
+
 /*--------------------------------------------------------------*/
-/* FatFs module application interface                           */
+/* FatFs Module Application Interface                           */
+/*--------------------------------------------------------------*/
 
          //FRESULT f_open (FIL* fp,const TCHAR* path,BYTE mode);            /* Open or create a file */
 __OPROTO(,,FRESULT,,f_open,FIL* fp,const TCHAR* path,BYTE mode)
@@ -374,6 +374,7 @@ __OPROTO(,,int,,f_printf,FIL* fp,const TCHAR* str,...)
          //TCHAR* f_gets (TCHAR* buff,int len,FIL* fp);                     /* Get a string from the file */
 __OPROTO(,,TCHAR,*,f_gets,TCHAR* buff,int len,FIL* fp)
 
+/* Some API functions are implemented as macro */
 
 #define f_eof(fp) ((int)((fp)->fptr == (fp)->obj.objsize))
 #define f_error(fp) ((fp)->err)
@@ -388,38 +389,50 @@ __OPROTO(,,TCHAR,*,f_gets,TCHAR* buff,int len,FIL* fp)
 
 
 /*--------------------------------------------------------------*/
-/* Additional user defined functions                            */
+/* Additional Functions                                         */
+/*--------------------------------------------------------------*/
 
-/* RTC function */
+/* RTC function (provided by user) */
 #if !FF_FS_READONLY && !FF_FS_NORTC
-DWORD get_fattime (void);
+        //DWORD get_fattime (void);    /* Get current time */
+__OPROTO(,,DWORD,,get_fattime,void)
 #endif
 
-/* LFN support functions */
-#if FF_USE_LFN >= 1                         /* Code conversion (defined in unicode.c) */
+
+/* LFN support functions (defined in ffunicode.c) */
+
+#if FF_USE_LFN >= 1
 WCHAR ff_oem2uni (WCHAR oem, WORD cp);      /* OEM code to Unicode conversion */
 WCHAR ff_uni2oem (DWORD uni, WORD cp);      /* Unicode to OEM code conversion */
 DWORD ff_wtoupper (DWORD uni);              /* Unicode upper-case conversion */
 #endif
-#if FF_USE_LFN == 3                         /* Dynamic memory allocation */
-void* ff_memalloc (UINT msize);             /* Allocate memory block */
-void ff_memfree (void* mblock);             /* Free memory block */
-#endif
 
-/* Sync functions */
-#if FF_FS_REENTRANT
-int16_t ff_cre_syncobj (BYTE vol, FF_SYNC_t* sobj);	    /* Create a sync object */
-int16_t ff_req_grant (FF_SYNC_t sobj);		            /* Lock sync object */
-void ff_rel_grant (FF_SYNC_t sobj);		                /* Unlock sync object */
-int16_t ff_del_syncobj (FF_SYNC_t sobj);	            /* Delete a sync object */
+
+/* O/S dependent functions (samples available in ffsystem.c) */
+
+#if FF_USE_LFN == 3                         /* Dynamic memory allocation */
+        //void* ff_memalloc (UINT msize);             /* Allocate memory block */
+__OPROTO(,,void,*,ff_memalloc,UINT msize)
+        //void ff_memfree (void* mblock);             /* Free memory block */
+__OPROTO(,,void,,ff_memfree,void* mblock)
+#endif
+#if FF_FS_REENTRANT    /* Sync functions */
+        //int ff_mutex_create (int vol);          /* Create a sync object */
+__OPROTO(,,int,,ff_mutex_create,int vol)
+        //void ff_mutex_delete (int vol);         /* Delete a sync object */
+__OPROTO(,,void,,ff_mutex_delete,int vol)
+        //int ff_mutex_take (int vol);            /* Lock sync object */
+__OPROTO(,,int,,ff_mutex_take,int vol)
+        //void ff_mutex_give (int vol);           /* Unlock sync object */
+__OPROTO(,,void,,ff_mutex_give,int vol)
 #endif
 
 
 
 
 /*--------------------------------------------------------------*/
-/* Flags and offset address                                     */
-
+/* Flags and Offset Address                                     */
+/*--------------------------------------------------------------*/
 
 /* File access mode and open method flags (3rd argument of f_open) */
 #define FA_READ                 0x01
