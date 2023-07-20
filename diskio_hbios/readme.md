@@ -2,7 +2,7 @@
 
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
-Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
 
 #### Features
 
@@ -95,12 +95,12 @@ void main (void)
 
 The diskio_hbios library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 ```
-zcc +hbios -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @diskio_hbios.lst -o ../diskio_hbios
+zcc +hbios -clib=new -x -O2 --opt-code-speed=all --math32 @diskio_hbios.lst -o ../diskio_hbios
 zcc +hbios -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_hbios.lst -o ../diskio_hbios
 zcc +hbios -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_hbios.lst -o ../diskio_hbios
 ```
 ```
-zcc +target -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @diskio_hbios.lst -o diskio_hbios
+zcc +target -clib=new -x -O2 --opt-code-speed=all --math32 @diskio_hbios.lst -o diskio_hbios
 zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_hbios.lst -o diskio_hbios
 zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_hbios.lst -o diskio_hbios
 ```
