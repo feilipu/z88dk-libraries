@@ -3,7 +3,8 @@
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
 Current source version status is: 0.15, November 11, 2022.<br>
-Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+
+Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
 
 #### Features
 
