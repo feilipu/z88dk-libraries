@@ -8,7 +8,7 @@
 
 This is a multifunctional sensor that gives you temperature and relative humidity information at the same time. It utilizes a TH02 sensor that can meet measurement needs of general purposes. It provides reliable readings when environment humidity condition inbetween 0-80% RH, and temperature condition inbetween 0-70°C, covering needs in most home and daily applications that don't contain extreme conditions.
 
-Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -46,14 +46,14 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 `zcc +yaz180 -subtype=app -SO3 --max-allocs-per-node400000 -v -m --list --math32 -llib/yaz180/th02 @test.lst -o test -create-app`
 
 ### SCCZ80
-`zcc +yaz180 -subtype=app -clib=new -O2 --opt-code-speed=inlineints -v -m --list --math32 -llib/yaz180/th02 @test.lst -o test -create-app`
+`zcc +yaz180 -subtype=app -clib=new -O2 --opt-code-speed=all -v -m --list --math32 -llib/yaz180/th02 @test.lst -o test -create-app`
 
 ## Preparation
 
 The library can be compiled using the following command --opt-code-speed=inlineints lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +yaz180 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @th02.lst -o ../th02
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=all --math32 @th02.lst -o ../th02
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @th02.lst -o ../th02
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @th02.lst -o ../th02
 ```
