@@ -3,7 +3,7 @@
 
 3D provides functions that allow you to simply and efficiently manage 3D Vectors and Matrices.
 
-Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -117,7 +117,7 @@ The library can be compiled using the following command lines in Linux, with the
 
 >  zcc +cpm -x -clib=new -O2 --opt-code-speed=all --math16 @3d.lst -o ../3df16
 
->  zcc +cpm -x -clib=8085 -O2 --opt-code-speed=all --math-am9511_8085 @3d.lst -o ../3d_8085
+>  zcc +cpm -x -clib=8085 -O2 --opt-code-speed=all --math-am9511 @3d.lst -o ../3d_8085
 ```
 
 The resulting `3d.lib` or `3df16.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
@@ -139,7 +139,7 @@ The resulting `3d.lib` or `3df16.lib` files should be moved to `~/target/lib/new
 >  zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
 
 #  SCCZ80 compile from demo directory for 8085 with Am9511 APU
->  zcc +cpm -clib=8085 -v -m --list -O2 --opt-code-speed=all -DAMALLOC -lregis_8085 -l3d_8085 --math-am9511_8085 demo_3d.c -o 3d-8085 -create-app
+>  zcc +cpm -clib=8085 -v -m --list -O2 --opt-code-speed=all -DAMALLOC -lregis_8085 -l3d_8085 --math-am9511 demo_3d.c -o 3d-8085 -create-app
 
 #  display ReGIS output using XTerm & picocom
 >  xterm +u8 -geometry 132x50 -ti 340 -tn 340 -T "ReGIS" -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
