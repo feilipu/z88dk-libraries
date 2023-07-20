@@ -3,7 +3,7 @@ The library for I2C_LCD.
 
 Visit all support files and product documents [click here](https://github.com/SparkingStudio/I2C_LCD) please.
 
-Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -48,7 +48,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +yaz180 -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @i2c_lcd.lst -o ../i2c_lcd
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=all --math32 @i2c_lcd.lst -o ../i2c_lcd
 zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @i2c_lcd.lst -o ../i2c_lcd
 zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @i2c_lcd.lst -o ../i2c_lcd
 ```
