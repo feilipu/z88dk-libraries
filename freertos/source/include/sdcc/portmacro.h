@@ -86,7 +86,6 @@ typedef uint8_t                     UBaseType_t;
             );                      \
     }while(0)
 
-
 #define portEXIT_CRITICAL()         \
     do{                             \
         __asm__(                    \

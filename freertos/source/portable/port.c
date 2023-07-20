@@ -98,7 +98,7 @@ BaseType_t xPortStartScheduler( void ) __preserves_regs(a,b,c,d,e,iyh,iyl) __nak
 
 void vPortEndScheduler( void ) __preserves_regs(b,c,d,e,h,l,iyh,iyl)
 {
-    /* 
+    /*
      * It is unlikely that the Z180 port will get stopped.
      * If required simply disable the tick interrupt here.
      */

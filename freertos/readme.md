@@ -6,7 +6,7 @@ Current source version status is: 10.5.1+, release 3 May 2023.
 
 Over the past few years freeRTOS development has become increasingly 32-bit orientated, with little change or improvement for the 8-bit world. As such I'm treating this 3 May 2023 10.5.1+ release as my LTS release.
 
-Compiled with sccz80 version 20909-b704fff25-20230504, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
 
 ## Installation
 
