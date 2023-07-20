@@ -35,7 +35,7 @@ In addition to C standard functions, re-entrant versions of `ctime()`, `asctime(
 
 Along with the usual smattering of utility functions, such as `is_leap_year()`, this library includes a set of functions related the sun and moon, as well as sidereal time functions.
 
-Compiled with sccz80 version 19569-078eaec31-20220528, and using zsdcc version 4.2.0 [r13131](https://sourceforge.net/p/sdcc/code/13131/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -143,7 +143,7 @@ See the `set_dst()` function for more information about Daylight Saving.
 The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
-zcc +target -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @time.lst -o ../time
+zcc +target -clib=new -x -O2 --opt-code-speed=all --math32 @time.lst -o ../time
 zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @time.lst -o ../time
 zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @time.lst -o ../time
 ```
