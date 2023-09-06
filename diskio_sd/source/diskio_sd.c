@@ -265,7 +265,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     BYTE *ptr;
     BYTE n;
 
-    if (cmd != CMD0 || cmd != CMD12) {          /* Long wait for ready except to to initialise or stop multiple block read */
+    if (cmd != CMD0 || cmd != CMD12) {          /* Long wait for ready except to initialise or to stop multiple block read */
         wait_ready(true);                       /* Wait while SD busy (0x00 signal) */
     }
 
