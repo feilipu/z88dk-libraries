@@ -265,7 +265,7 @@ WORD send_cmd (         /* Returns command response (bit7==1:Send failed)*/
     BYTE *ptr;
     BYTE n;
 
-    if (cmd != CMD0 || cmd != CMD12) {          /* Long wait for ready except to initialise or to stop multiple block read */
+    if (cmd != CMD0 && cmd != CMD12) {          /* Long wait for ready except to initialise or to stop multiple block read */
         wait_ready(true);                       /* Wait while SD busy (0x00 signal) */
     }
 
@@ -418,7 +418,7 @@ DSTATUS disk_initialize (
                 currentTime = hbios( BF_SYSGET<<8|BF_SYSGET_TIMER );
             } while ( endTime > currentTime );
 
-            if (resp = R1_READY_STATE) {                    /* SDv1 */
+            if (resp == R1_READY_STATE) {                   /* SDv1 */
                 CardType = CT_SD1;
 
             } else {                                        /* MMCv3 ?? */
