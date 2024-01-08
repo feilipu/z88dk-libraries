@@ -1593,8 +1593,8 @@ BaseType_t __LIB__ xQueueSemaphoreTake(QueueHandle_t xQueue,TickType_t xTicksToW
 #endif
 
 /*
- * For internal use only.  Use xSemaphoreTakeMutexRecursive() or
- * xSemaphoreGiveMutexRecursive() instead of calling these functions directly.
+ * For internal use only.  Use xSemaphoreTakeRecursive() or
+ * xSemaphoreGiveRecursive() instead of calling these functions directly.
  */
 /*
 BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex,
