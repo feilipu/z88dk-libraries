@@ -48,6 +48,13 @@
 
 #include "include/stack_macros.h"
 
+/* The default definitions are only available for non-MPU ports. The
+ * reason is that the stack alignment requirements vary for different
+ * architectures.*/
+#if ( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configKERNEL_PROVIDED_STATIC_MEMORY == 1 ) && ( portUSING_MPU_WRAPPERS != 0 ) )
+    #error configKERNEL_PROVIDED_STATIC_MEMORY cannot be set to 1 when using an MPU port. The vApplicationGet*TaskMemory() functions must be provided manually.
+#endif
+
 /* The MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined
  * for the header files above, but not in this file, in order to generate the
  * correct privileged Vs unprivileged linkage and placement. */
@@ -748,7 +755,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
     static TCB_t * prvCreateTask( TaskFunction_t pxTaskCode,
                                   const char * const pcName,
-                                  const configSTACK_DEPTH_TYPE usStackDepth,
+                                  const configSTACK_DEPTH_TYPE uxStackDepth,
                                   void * const pvParameters,
                                   UBaseType_t uxPriority,
                                   TaskHandle_t * const pxCreatedTask ) PRIVILEGED_FUNCTION;
@@ -2111,29 +2118,9 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
                     mtCOVERAGE_TEST_MARKER();
                 }
 
-                if( ( pxNewTCB->uxTaskAttributes & taskATTRIBUTE_IS_IDLE ) != 0U )
-                {
-                    BaseType_t xCoreID;
-
-                    /* Check if a core is free. */
-                    for( xCoreID = ( BaseType_t ) 0; xCoreID < ( BaseType_t ) configNUMBER_OF_CORES; xCoreID++ )
-                    {
-                        if( pxCurrentTCBs[ xCoreID ] == NULL )
-                        {
-                            pxNewTCB->xTaskRunState = xCoreID;
-                            pxCurrentTCBs[ xCoreID ] = pxNewTCB;
-                            break;
-                        }
-                        else
-                        {
-                            mtCOVERAGE_TEST_MARKER();
-                        }
-                    }
-                }
-                else
-                {
-                    mtCOVERAGE_TEST_MARKER();
-                }
+                /* All the cores start with idle tasks before the SMP scheduler
+                 * is running. Idle tasks are assigned to cores when they are
+                 * created in prvCreateIdleTasks(). */
             }
 
             uxTaskNumber++;
@@ -2206,6 +2193,7 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
     void vTaskDelete( TaskHandle_t xTaskToDelete )
     {
         TCB_t * pxTCB;
+        BaseType_t xDeleteTCBInIdleTask = pdFALSE;
 
         traceENTER_vTaskDelete( xTaskToDelete );
 
@@ -2263,6 +2251,9 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
                  * portPRE_TASK_DELETE_HOOK() does not return in the Win32 port. */
                 traceTASK_DELETE( pxTCB );
 
+                /* Delete the task TCB in idle task. */
+                xDeleteTCBInIdleTask = pdTRUE;
+
                 /* The pre-delete hook is primarily for the Windows simulator,
                  * in which Windows specific clean up operations are performed,
                  * after which it is not possible to yield away from this task -
@@ -2284,61 +2275,56 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
                 prvResetNextTaskUnblockTime();
             }
         }
+        taskEXIT_CRITICAL();
 
-        #if ( configNUMBER_OF_CORES == 1 )
+        /* If the task is not deleting itself, call prvDeleteTCB from outside of
+         * critical section. If a task deletes itself, prvDeleteTCB is called
+         * from prvCheckTasksWaitingTermination which is called from Idle task. */
+        if( xDeleteTCBInIdleTask != pdTRUE )
         {
-            taskEXIT_CRITICAL();
+            prvDeleteTCB( pxTCB );
+        }
 
-            /* If the task is not deleting itself, call prvDeleteTCB from outside of
-             * critical section. If a task deletes itself, prvDeleteTCB is called
-             * from prvCheckTasksWaitingTermination which is called from Idle task. */
-            if( pxTCB != pxCurrentTCB )
-            {
-                prvDeleteTCB( pxTCB );
-            }
-
-            /* Force a reschedule if it is the currently running task that has just
-             * been deleted. */
-            if( xSchedulerRunning != pdFALSE )
+        /* Force a reschedule if it is the currently running task that has just
+         * been deleted. */
+        if( xSchedulerRunning != pdFALSE )
+        {
+            #if ( configNUMBER_OF_CORES == 1 )
             {
                 if( pxTCB == pxCurrentTCB )
                 {
                     configASSERT( uxSchedulerSuspended == 0 );
-                    portYIELD_WITHIN_API();
+                    taskYIELD_WITHIN_API();
                 }
                 else
                 {
                     mtCOVERAGE_TEST_MARKER();
                 }
             }
-        }
-        #else /* #if ( configNUMBER_OF_CORES == 1 ) */
-        {
-            /* If a running task is not deleting itself, call prvDeleteTCB. If a running
-             * task deletes itself, prvDeleteTCB is called from prvCheckTasksWaitingTermination
-             * which is called from Idle task. */
-            if( pxTCB->xTaskRunState == taskTASK_NOT_RUNNING )
+            #else /* #if ( configNUMBER_OF_CORES == 1 ) */
             {
-                prvDeleteTCB( pxTCB );
-            }
-
-            /* Force a reschedule if the task that has just been deleted was running. */
-            if( ( xSchedulerRunning != pdFALSE ) && ( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE ) )
-            {
-                if( pxTCB->xTaskRunState == ( BaseType_t ) portGET_CORE_ID() )
+                /* It is important to use critical section here because
+                 * checking run state of a task must be done inside a
+                 * critical section. */
+                taskENTER_CRITICAL();
                 {
-                    configASSERT( uxSchedulerSuspended == 0 );
-                    vTaskYieldWithinAPI();
+                    if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
+                    {
+                        if( pxTCB->xTaskRunState == ( BaseType_t ) portGET_CORE_ID() )
+                        {
+                            configASSERT( uxSchedulerSuspended == 0 );
+                            taskYIELD_WITHIN_API();
+                        }
+                        else
+                        {
+                            prvYieldCore( pxTCB->xTaskRunState );
+                        }
+                    }
                 }
-                else
-                {
-                    prvYieldCore( pxTCB->xTaskRunState );
-                }
+                taskEXIT_CRITICAL();
             }
-
-            taskEXIT_CRITICAL();
+            #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
         }
-        #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 
         traceRETURN_vTaskDelete();
     }
@@ -3124,10 +3110,6 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
     {
         TCB_t * pxTCB;
 
-        #if ( configNUMBER_OF_CORES > 1 )
-            BaseType_t xTaskRunningOnCore;
-        #endif
-
         traceENTER_vTaskSuspend( xTaskToSuspend );
 
         taskENTER_CRITICAL();
@@ -3137,10 +3119,6 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
             pxTCB = prvGetTCBFromHandle( xTaskToSuspend );
 
             traceTASK_SUSPEND( pxTCB );
-
-            #if ( configNUMBER_OF_CORES > 1 )
-                xTaskRunningOnCore = pxTCB->xTaskRunState;
-            #endif
 
             /* Remove task from the ready/delayed list and place in the
              * suspended list. */
@@ -3181,26 +3159,25 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
             }
             #endif /* if ( configUSE_TASK_NOTIFICATIONS == 1 ) */
         }
+        taskEXIT_CRITICAL();
+
+        if( xSchedulerRunning != pdFALSE )
+        {
+            /* Reset the next expected unblock time in case it referred to the
+             * task that is now in the Suspended state. */
+            taskENTER_CRITICAL();
+            {
+                prvResetNextTaskUnblockTime();
+            }
+            taskEXIT_CRITICAL();
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
 
         #if ( configNUMBER_OF_CORES == 1 )
         {
-            taskEXIT_CRITICAL();
-
-            if( xSchedulerRunning != pdFALSE )
-            {
-                /* Reset the next expected unblock time in case it referred to the
-                 * task that is now in the Suspended state. */
-                taskENTER_CRITICAL();
-                {
-                    prvResetNextTaskUnblockTime();
-                }
-                taskEXIT_CRITICAL();
-            }
-            else
-            {
-                mtCOVERAGE_TEST_MARKER();
-            }
-
             if( pxTCB == pxCurrentTCB )
             {
                 if( xSchedulerRunning != pdFALSE )
@@ -3235,47 +3212,39 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
         }
         #else /* #if ( configNUMBER_OF_CORES == 1 ) */
         {
-            if( xSchedulerRunning != pdFALSE )
+            /* Enter critical section here to check run state of a task. */
+            taskENTER_CRITICAL();
             {
-                /* Reset the next expected unblock time in case it referred to the
-                 * task that is now in the Suspended state. */
-                prvResetNextTaskUnblockTime();
-            }
-            else
-            {
-                mtCOVERAGE_TEST_MARKER();
-            }
-
-            if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
-            {
-                if( xSchedulerRunning != pdFALSE )
+                if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
                 {
-                    if( xTaskRunningOnCore == ( BaseType_t ) portGET_CORE_ID() )
+                    if( xSchedulerRunning != pdFALSE )
                     {
-                        /* The current task has just been suspended. */
-                        configASSERT( uxSchedulerSuspended == 0 );
-                        vTaskYieldWithinAPI();
+                        if( pxTCB->xTaskRunState == ( BaseType_t ) portGET_CORE_ID() )
+                        {
+                            /* The current task has just been suspended. */
+                            configASSERT( uxSchedulerSuspended == 0 );
+                            vTaskYieldWithinAPI();
+                        }
+                        else
+                        {
+                            prvYieldCore( pxTCB->xTaskRunState );
+                        }
                     }
                     else
                     {
-                        prvYieldCore( xTaskRunningOnCore );
+                        /* This code path is not possible because only Idle tasks are
+                         * assigned a core before the scheduler is started ( i.e.
+                         * taskTASK_IS_RUNNING is only true for idle tasks before
+                         * the scheduler is started ) and idle tasks cannot be
+                         * suspended. */
+                        mtCOVERAGE_TEST_MARKER();
                     }
                 }
                 else
                 {
-                    /* This code path is not possible because only Idle tasks are
-                     * assigned a core before the scheduler is started ( i.e.
-                     * taskTASK_IS_RUNNING is only true for idle tasks before
-                     * the scheduler is started ) and idle tasks cannot be
-                     * suspended. */
                     mtCOVERAGE_TEST_MARKER();
                 }
             }
-            else
-            {
-                mtCOVERAGE_TEST_MARKER();
-            }
-
             taskEXIT_CRITICAL();
         }
         #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
@@ -3648,7 +3617,17 @@ static BaseType_t prvCreateIdleTasks( void )
         }
         else
         {
-            mtCOVERAGE_TEST_MARKER();
+            #if ( configNUMBER_OF_CORES == 1 )
+            {
+                mtCOVERAGE_TEST_MARKER();
+            }
+            #else
+            {
+                /* Assign idle task to each core before SMP scheduler is running. */
+                xIdleTaskHandles[ xCoreID ]->xTaskRunState = xCoreID;
+                pxCurrentTCBs[ xCoreID ] = xIdleTaskHandles[ xCoreID ];
+            }
+            #endif
         }
     }
 
@@ -6236,21 +6215,25 @@ static void prvCheckTasksWaitingTermination( void )
                             }
                             else
                             {
-                                BaseType_t x;
-
-                                /* The task does not appear on the event list item of
-                                 * and of the RTOS objects, but could still be in the
-                                 * blocked state if it is waiting on its notification
-                                 * rather than waiting on an object.  If not, is
-                                 * suspended. */
-                                for( x = ( BaseType_t ) 0; x < ( BaseType_t ) configTASK_NOTIFICATION_ARRAY_ENTRIES; x++ )
+                                #if ( configUSE_TASK_NOTIFICATIONS == 1 )
                                 {
-                                    if( pxTCB->ucNotifyState[ x ] == taskWAITING_NOTIFICATION )
+                                    BaseType_t x;
+
+                                    /* The task does not appear on the event list item of
+                                     * and of the RTOS objects, but could still be in the
+                                     * blocked state if it is waiting on its notification
+                                     * rather than waiting on an object.  If not, is
+                                     * suspended. */
+                                    for( x = ( BaseType_t ) 0; x < ( BaseType_t ) configTASK_NOTIFICATION_ARRAY_ENTRIES; x++ )
                                     {
-                                        pxTaskStatus->eCurrentState = eBlocked;
-                                        break;
+                                        if( pxTCB->ucNotifyState[ x ] == taskWAITING_NOTIFICATION )
+                                        {
+                                            pxTaskStatus->eCurrentState = eBlocked;
+                                            break;
+                                        }
                                     }
                                 }
+                                #endif /* if ( configUSE_TASK_NOTIFICATIONS == 1 ) */
                             }
                         }
                         ( void ) xTaskResumeAll();
