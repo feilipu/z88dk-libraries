@@ -35,7 +35,7 @@ In addition to C standard functions, re-entrant versions of `ctime()`, `asctime(
 
 Along with the usual smattering of utility functions, such as `is_leap_year()`, this library includes a set of functions related the sun and moon, as well as sidereal time functions.
 
-Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 22168-da9bcc8cc0-20240130, and using zsdcc version 4.4.0 [r14648](https://sourceforge.net/p/sdcc/code/14648/log/?path=/trunk/sdcc).
 
 ## Installation
 
