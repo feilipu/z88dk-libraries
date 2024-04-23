@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V11.0.1
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V11.1.0
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -1378,7 +1378,11 @@ TickType_t xTimerGetPeriod(TimerHandle_t xTimer);
  * will next expire is returned.  If the timer is not running then the return
  * value is undefined.
  */
+/*
 TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+ */
+TickType_t xTimerGetExpiryTime(TimerHandle_t xTimer);
+
 
 /**
  * BaseType_t xTimerGetStaticBuffer( TimerHandle_t xTimer,
@@ -1490,7 +1494,7 @@ BaseType_t xTimerGenericCommandFromISR(TimerHandle_t xTimer,const BaseType_t xCo
  * void vApplicationDaemonTaskStartupHook( void );
  * @endcode
  *
- * This hook function is called from the timer task once the task starts running.
+ * This hook function is called from the timer task when the task starts running.
  */
     /* MISRA Ref 8.6.1 [External linkage] */
     /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-86 */
@@ -1502,6 +1506,16 @@ BaseType_t xTimerGenericCommandFromISR(TimerHandle_t xTimer,const BaseType_t xCo
 
 
 #endif
+
+/*
+ * This function resets the internal state of the timer module. It must be called
+ * by the application before restarting the scheduler.
+ */
+/*
+void vTimerResetState( void ) PRIVILEGED_FUNCTION;
+ */
+void vTimerResetState(void);
+
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
