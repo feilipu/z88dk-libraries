@@ -4,7 +4,7 @@ Developed in partnership with the world’s leading chip companies over a 15 yea
 
 Current source version status is: 11.1.0, release 22 April 2024.
 
-Over the past few years freeRTOS development has become increasingly 32-bit orientated, with little change or improvement for the 8-bit world. As such I'm treating this 30 January 2024 11.0.1 release as my LTS release.
+Over the past few years freeRTOS development has become increasingly 32-bit orientated, with little change or improvement for the 8-bit world. As such I'm treating this 22 April 2024 11.1.0 release as my LTS release.
 
 Compiled with sccz80 version: 22309-5b13a4917f-20240417, and using zsdcc version 4.4.0 [r14648](https://sourceforge.net/p/sdcc/code/14648/log/?path=/trunk/sdcc).
 
