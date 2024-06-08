@@ -85,9 +85,9 @@ volatile uint16_t *pusTaskCheckVariable;
 volatile float fAnswer;
 BaseType_t sError = pdFALSE;
 
-    f1 = 123.4567F;
-    f2 = 2345.6789F;
-    f3 = -918.222F;
+    f1 = 123.4567;
+    f2 = 2345.6789;
+    f3 = -918.222;
 
     fAnswer = ( f1 + f2 ) * f3;
 
@@ -98,9 +98,9 @@ BaseType_t sError = pdFALSE;
     /* Keep performing a calculation and checking the result against a constant. */
     for(;;)
     {
-        f1 = 123.4567F;
-        f2 = 2345.6789F;
-        f3 = -918.222F;
+        f1 = 123.4567;
+        f2 = 2345.6789;
+        f3 = -918.222;
 
         f4 = ( f1 + f2 ) * f3;
 
@@ -110,7 +110,7 @@ BaseType_t sError = pdFALSE;
 
         /* If the calculation does not match the expected constant, stop the
         increment of the check variable. */
-        if( fabs( f4 - fAnswer ) > 0.01F )
+        if( fabs( f4 - fAnswer ) > 0.01 )
         {
             sError = pdTRUE;
         }
@@ -137,9 +137,9 @@ volatile uint16_t *pusTaskCheckVariable;
 volatile float fAnswer;
 BaseType_t sError = pdFALSE;
 
-    f1 = -389.38F;
-    f2 = 32498.2F;
-    f3 = -2.0001F;
+    f1 = -389.38;
+    f2 = 32498.2;
+    f3 = -2.0001;
 
     fAnswer = ( f1 / f2 ) * f3;
 
@@ -151,9 +151,9 @@ BaseType_t sError = pdFALSE;
     /* Keep performing a calculation and checking the result against a constant. */
     for( ;; )
     {
-        f1 = -389.38F;
-        f2 = 32498.2F;
-        f3 = -2.0001F;
+        f1 = -389.38;
+        f2 = 32498.2;
+        f3 = -2.0001;
 
         f4 = ( f1 / f2 ) * f3;
 
@@ -163,7 +163,7 @@ BaseType_t sError = pdFALSE;
 
         /* If the calculation does not match the expected constant, stop the
         increment of the check variable. */
-        if( fabs( f4 - fAnswer ) > 0.01F )
+        if( fabs( f4 - fAnswer ) > 0.01 )
         {
             sError = pdTRUE;
         }
@@ -202,14 +202,14 @@ BaseType_t sError = pdFALSE;
     do not match, stop the check variable from incrementing. */
     for( ;; )
     {
-        fTotal1 = 0.0F;
-        fTotal2 = 0.0F;
-        fPosition = 0.0F;
+        fTotal1 = 0.0;
+        fTotal2 = 0.0;
+        fPosition = 0.0;
 
         for( xPosition = 0; xPosition < xArraySize; xPosition++ )
         {
-            pfArray[ xPosition ] = fPosition + 5.5F;
-            fTotal1 += fPosition + 5.5F;
+            pfArray[ xPosition ] = fPosition + 5.5;
+            fTotal1 += fPosition + 5.5;
         }
 
         #if configUSE_PREEMPTION == 0
@@ -222,7 +222,7 @@ BaseType_t sError = pdFALSE;
         }
 
         fDifference = fTotal1 - fTotal2;
-        if( fabs( fDifference ) > 0.001F )
+        if( fabs( fDifference ) > 0.001 )
         {
             sError = pdTRUE;
         }
@@ -260,14 +260,14 @@ BaseType_t sError = pdFALSE;
     do not match, stop the check variable from incrementing. */
     for( ;; )
     {
-        fTotal1 = 0.0F;
-        fTotal2 = 0.0F;
-        fPosition = 0.0F;
+        fTotal1 = 0.0;
+        fTotal2 = 0.0;
+        fPosition = 0.0;
 
         for( xPosition = 0; xPosition < xArraySize; xPosition++ )
         {
-            pfArray[ xPosition ] = fPosition * 12.123F;
-            fTotal1 += fPosition * 12.123F;
+            pfArray[ xPosition ] = fPosition * 12.123;
+            fTotal1 += fPosition * 12.123;
         }
 
         #if configUSE_PREEMPTION == 0
@@ -280,7 +280,7 @@ BaseType_t sError = pdFALSE;
         }
 
         fDifference = fTotal1 - fTotal2;
-        if( fabs( fDifference ) > 0.001F )
+        if( fabs( fDifference ) > 0.001 )
         {
             sError = pdTRUE;
         }
