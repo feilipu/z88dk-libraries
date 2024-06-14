@@ -7,7 +7,7 @@ Read here for a full description on [how to enable ReGIS for Windows 10 and Linu
 
 There is a [Programmer Reference Manual for VT330/VT340 Terminals](https://vt100.net/docs/vt3xx-gp/) describing how to use ReGIS, as well as the [VT125 Primer](https://github.com/feilipu/z88dk-libraries/blob/master/regis/doc/EK-VT125-GI-001_VT125_ReGIS_Primer_May82.pdf) document provided here.
 
-Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 22635-40749b9e71-20240612, and using zsdcc version 4.4.0 [r14648](https://sourceforge.net/p/sdcc/code/14648/log/?path=/trunk/sdcc).
 
 ## Installation
 
@@ -83,14 +83,16 @@ zcc +cpm -clib=8085 --math-am9511 -x -O2 --opt-code-speed=all @regis.lst -o ../r
 
 The resulting `regis.lib` files should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
 
+The resulting libraries can be installed into the z88dk library folders using the `z88dk-lib` tool. 
+
 ## Preparing XTerm to support ReGIS
 
-XTerm is the only known software solution supporting ReGIS commands (to be improved I'm sure). But it doesn't support ReGIS in the default build. You'll need to enable ReGIS yourself.
+XTerm is the only known software solution supporting ReGIS commands, but it doesn't support ReGIS in the default build. You'll need to enable ReGIS and build it yourself.
 ``` sh
 $ sudo apt install -y libxaw7-dev libncurses-dev libxft-dev
 $ wget https://invisible-island.net/datafiles/release/xterm.tar.gz
 $ tar xf xterm.tar.gz
-$ cd xterm-373
+$ cd xterm-392
 $ ./configure --enable-regis-graphics
 $ make
 $ sudo make install
