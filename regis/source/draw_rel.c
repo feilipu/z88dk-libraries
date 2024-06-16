@@ -54,4 +54,3 @@ void draw_rel(window_t * win, int16_t dx, int16_t dy)
     win->y += dy;
     win->x += dx;
 }
-

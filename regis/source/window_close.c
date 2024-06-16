@@ -49,6 +49,6 @@
 /* Close a graphics window, return to text mode */
 void window_close(window_t * win)
 {
-    fprintf(win->fp, "%c%c\n", ASCII_ESC, ASCII_BSLASH); /* ESC \ */
+    fprintf(win->fp, "%c%c\n", ASCII_ESC, ASCII_BSLASH);
 }
 

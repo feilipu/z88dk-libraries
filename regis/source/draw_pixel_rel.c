@@ -51,4 +51,3 @@ void draw_pixel_rel(window_t * win)
 {
     fputs("V[]", win->fp);
 }
-

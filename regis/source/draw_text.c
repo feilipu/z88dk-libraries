@@ -53,4 +53,3 @@ void draw_text(window_t * win, char const * text, uint8_t size)
     fputs((char *)text, win->fp);
     fputs((char *)"\"", win->fp);
 }
-

@@ -51,4 +51,3 @@ void draw_arc(window_t * win, uint16_t radius, int16_t arc)
 {
     fprintf(win->fp, "C(A%+.3d)[%+.3d]", arc, radius);
 }
-

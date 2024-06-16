@@ -51,4 +51,3 @@ void draw_unpixel_rel(window_t * win)
 {
     fputs("V(W(E))[]", win->fp);
 }
-

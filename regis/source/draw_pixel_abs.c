@@ -51,4 +51,3 @@ void draw_pixel_abs(window_t * win, uint16_t x, uint16_t y)
 {
     fprintf(win->fp, "P[%.3d,%.3d]V[]", x, y);
 }
-

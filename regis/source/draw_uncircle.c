@@ -51,4 +51,3 @@ void draw_uncircle(window_t * win, uint16_t radius)
 {
     fprintf(win->fp, "C(W(E))[%+.3d]", radius);
 }
-

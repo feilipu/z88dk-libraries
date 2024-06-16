@@ -51,4 +51,3 @@ void draw_free(window_t * win, char const * text)
 {
     fputs((char *)text, win->fp);
 }
-

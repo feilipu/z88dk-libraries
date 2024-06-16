@@ -57,4 +57,3 @@ void draw_mode(window_t * win, w_mode_t mode)
         case _CPL: fputs("W(C)", win->fp); break;
     }
 }
-

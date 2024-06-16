@@ -51,4 +51,3 @@ void draw_unbox(window_t * win, int16_t width, int16_t height)
 {
     fprintf(win->fp, "V(W(E))(B)[%+.3d,][,%+.3d][%+.3d,](E)", width, height, -width);
 }
-

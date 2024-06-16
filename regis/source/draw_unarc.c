@@ -51,4 +51,3 @@ void draw_unarc(window_t * win, uint16_t radius, int16_t arc)
 {
     fprintf(win->fp, "C(W(E))(A%+.3d)[%+.3d]", arc, radius);
 }
-

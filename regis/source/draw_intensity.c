@@ -61,4 +61,3 @@ void draw_intensity(window_t * win, w_intensity_t intensity)
         case _W: fputs("W(I(W))", win->fp); break;
     }
 }
-

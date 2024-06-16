@@ -63,4 +63,3 @@ void draw_pattern(window_t * win, w_pattern_t pattern)
         case _P9: fputs("W(P9)", win->fp); break;
     }
 }
-

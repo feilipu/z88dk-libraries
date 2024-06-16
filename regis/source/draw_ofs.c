@@ -50,6 +50,7 @@
 void draw_ofs(window_t * win, uint16_t d, offset_t offset)
 {
     uint16_t hypot;
+
     fprintf(win->fp, "P(W(M%d))%d", d, (uint8_t)offset);
 
     hypot = (uint16_t)((d*70)/99);  // d/sqrt(2)
@@ -66,4 +67,3 @@ void draw_ofs(window_t * win, uint16_t d, offset_t offset)
         case _SE: win->y += hypot; win->x += hypot; break;
     }
 }
-
