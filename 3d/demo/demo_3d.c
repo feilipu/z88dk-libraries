@@ -50,7 +50,7 @@
 // zcc +cpm -clib=new -v -m --list -O2 --opt-code-speed=all -llib/cpm/regis -llib/cpm/3df16 --math16 demo_3d.c -o 3df16 -create-app
 
 // SCCZ80 compile for 8085 with Am9511 APU (32-bit floating piont)
-// zcc +cpm -clib=8085 -v -m --list -O2 --opt-code-speed=all -DAMALLOC -lregis_8085 -l3d_8085 --math-am9511_8085 demo_3d.c -o 3d-8085 -create-app
+// zcc +cpm -clib=8085 -v -m --list -O2 --opt-code-speed=all -DAMALLOC -l../../libsrc/_DEVELOPMENT/lib/sccz80/lib/cpm/regis_8085 -l../../libsrc/_DEVELOPMENT/lib/sccz80/lib/cpm/3d_8085 --math-am9511 demo_3d.c -o 3d-8085 -create-app
 
 // display using XTerm & picocom
 // xterm +u8 -geometry 132x50 -ti 340 -tn 340 -e picocom -b 115200 -p 2 -f h /dev/ttyUSB0 --send-cmd "sx -vv"
@@ -63,9 +63,9 @@
 #include <math.h>
 #include <input.h>
 
-#if defined ( __CPM ) && defined ( __8085__ )
+#if __8085
 #pragma output noprotectmsdos
-#pragma printf = "%s %c %03d"                       // for classic enables %s, %c, %03d only
+#pragma printf = "%s %c %0d"                        // for classic enables %s, %c, %0d only
 #pragma scanf  = "%s %c"                            // for classic enables %s, %c only
 #define  in_test_key()  getk()
 #include <_DEVELOPMENT/sccz80/lib/cpm/regis.h>      // REGIS library
@@ -137,7 +137,7 @@ void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, w_in
 {
     if(do_init)
     {
-        window_new(&my_window, H, W);
+        window_new(&my_window, H, W, stdout);
         window_clear(&my_window);
     }
 
@@ -178,7 +178,6 @@ void regis_plot(const point_t *model, uint16_t count, matrix_t * transform, w_in
 
     if(do_init)
     {
-        window_write(&my_window);
         window_close(&my_window);
     }
 }
@@ -193,7 +192,7 @@ void glxgears_loop()
     matrix_t view_transform;
     matrix_t transform;
 
-    window_new(&my_window, H, W);
+    window_new(&my_window, H, W, stdout);
     window_clear(&my_window);
 
     identity_m(&view_transform);
@@ -211,9 +210,6 @@ void glxgears_loop()
 
     regis_plot(glxgear1, sizeof(glxgear1) / sizeof(point_t), &transform, _R, 0);
 
-    window_write(&my_window);
-    window_reset(&my_window);
-
     identity_m(&transform);
     rotz_m(&transform, -2.0 * rotz + 9.0 / 180 * M_PI);
     translate_m(&transform, 5.2, 2.0, 0);
@@ -223,9 +219,6 @@ void glxgears_loop()
     mult_m(&transform, &projection_matrix);
 
     regis_plot(glxgear2, sizeof(glxgear2) / sizeof(point_t), &transform, _G, 0);
-
-    window_write(&my_window);
-    window_reset(&my_window);
 
     identity_m(&transform);
     rotz_m(&transform, -2.0 * rotz + 30.0 / 180 * M_PI);
@@ -237,7 +230,6 @@ void glxgears_loop()
 
     regis_plot(glxgear3, sizeof(glxgear3) / sizeof(point_t), &transform, _B, 0);
 
-    window_write(&my_window);
     window_close(&my_window);
 
     if(animate)
@@ -338,7 +330,7 @@ void cube_loop(void)
 int main(int argc, char **argv)
 {
                                 // '1' CUBE, '2' ISOC, '3' GEAR, '4' GLXGEARS
-    uint8_t demo = CUBE;        // select a default demonstration from above options
+    uint8_t demo = GLXGEARS;    // select a default demonstration from above options
 
     printf("%c[2J", ASCII_ESC); // clear screen
 
