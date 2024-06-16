@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,20 +49,16 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Set writing intensity (colour) */
 void draw_intensity(window_t * win, w_intensity_t intensity)
 {
-    char s[8];
-
     switch (intensity)
     {
-        case _D: sprintf(s,"W(I(D))"); break;
-        case _B: sprintf(s,"W(I(B))"); break;
-        case _R: sprintf(s,"W(I(R))"); break;
-        case _M: sprintf(s,"W(I(M))"); break;
-        case _G: sprintf(s,"W(I(G))"); break;
-        case _C: sprintf(s,"W(I(C))"); break;
-        case _Y: sprintf(s,"W(I(Y))"); break;
-        case _W: sprintf(s,"W(I(W))"); break;
+        case _D: fputs("W(I(D))", win->fp); break;
+        case _B: fputs("W(I(B))", win->fp); break;
+        case _R: fputs("W(I(R))", win->fp); break;
+        case _M: fputs("W(I(M))", win->fp); break;
+        case _G: fputs("W(I(G))", win->fp); break;
+        case _C: fputs("W(I(C))", win->fp); break;
+        case _Y: fputs("W(I(Y))", win->fp); break;
+        case _W: fputs("W(I(W))", win->fp); break;
     }
-
-    appendstring(win, s);
 }
 

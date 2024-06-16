@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,8 +49,6 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Close a graphics window, return to text mode */
 void window_close(window_t * win)
 {
-    fprintf(stdout, "%c%c\n", ASCII_ESC, ASCII_BSLASH); /* ESC \ */
-
-    free(win->command);
+    fprintf(win->fp, "%c%c\n", ASCII_ESC, ASCII_BSLASH); /* ESC \ */
 }
 

@@ -58,6 +58,6 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Draw custom ReGIS from current position */
 void draw_free(window_t * win, char const * text)
 {
-    appendstring(win, text);
+    fputs((char *)text, win->fp);
 }
 

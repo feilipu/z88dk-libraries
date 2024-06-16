@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,9 +49,6 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Draw a pixel to screen at current position */
 void draw_pixel_rel(window_t * win)
 {
-    char s[6];
-    sprintf(s, "V[]");
-
-    appendstring(win, s);
+    fputs("V[]", win->fp);
 }
 

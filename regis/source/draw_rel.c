@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,10 +49,7 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Relative move position */
 void draw_rel(window_t * win, int16_t dx, int16_t dy)
 {
-    char s[14];
-    sprintf(s, "P[%+.3d,%+.3d]", dx, dy);
-
-    appendstring(win, s);
+    fprintf(win->fp, "P[%+.3d,%+.3d]", dx, dy);
 
     win->y += dy;
     win->x += dx;

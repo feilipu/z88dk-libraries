@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,9 +49,6 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Draw an arc (circle) in anticlockwise degrees (0 - 360), centred on current position */
 void draw_arc(window_t * win, uint16_t radius, int16_t arc)
 {
-    char s[16];
-    sprintf(s, "C(A%+.3d)[%+.3d]", arc, radius);
-
-    appendstring(win, s);
+    fprintf(win->fp, "C(A%+.3d)[%+.3d]", arc, radius);
 }
 

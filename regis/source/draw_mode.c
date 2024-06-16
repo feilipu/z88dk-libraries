@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,16 +49,12 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Set writing mode */
 void draw_mode(window_t * win, w_mode_t mode)
 {
-    char s[6];
-
     switch (mode)
     {
-        case _REP: sprintf(s,"W(R)"); break;
-        case _ERA: sprintf(s,"W(E)"); break;
-        case _OVL: sprintf(s,"W(V)"); break;
-        case _CPL: sprintf(s,"W(C)"); break;
+        case _REP: fputs("W(R)", win->fp); break;
+        case _ERA: fputs("W(E)", win->fp); break;
+        case _OVL: fputs("W(V)", win->fp); break;
+        case _CPL: fputs("W(C)", win->fp); break;
     }
-
-    appendstring(win, s);
 }
 

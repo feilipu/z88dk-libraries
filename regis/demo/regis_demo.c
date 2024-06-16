@@ -36,7 +36,7 @@ window_t mywindow;
 int main(void)
 {
 
-    window_new( &mywindow, 768, 480 );
+    window_new( &mywindow, 768, 480, stdout);
     window_clear( &mywindow );
 
     draw_intensity( &mywindow, _M);
@@ -68,7 +68,6 @@ int main(void)
 
     draw_text( &mywindow, "hello world", 2);
 
-    window_write( &mywindow );
     window_close( &mywindow );
 
     return 0;

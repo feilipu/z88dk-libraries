@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,9 +49,6 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Erase a circle, centred on current position */
 void draw_uncircle(window_t * win, uint16_t radius)
 {
-    char s[16];
-    sprintf(s, "C(W(E))[%+.3d]", radius);
-
-    appendstring(win, s);
+    fprintf(win->fp, "C(W(E))[%+.3d]", radius);
 }
 

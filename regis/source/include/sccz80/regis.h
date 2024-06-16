@@ -1,7 +1,7 @@
 /*
  * regis.h
  *
- * Copyright (c) 2021 Phillip Stevens
+ * Copyright (c) 2021-24 Phillip Stevens
  * Create Time: July 2021
  *
  * The MIT License (MIT)
@@ -34,6 +34,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdio.h>
 
 #define ASCII_NULL      0x00        // null
 #define ASCII_BELL      0x07        // bell
@@ -121,7 +122,7 @@ typedef enum w_intensity_e
  */
 
 typedef struct window_s {
-    char * command;     // active command string terminated in null
+    FILE * fp;          // display (output) device
 
     uint16_t x;         // current cursor position
     uint16_t y;         // current cursor position
@@ -135,18 +136,7 @@ typedef struct window_s {
 /****************************************************************************/
 
 /* Open a graphics window, in graphics mode, and inititialise graphics */
-uint8_t __LIB__ window_new(window_t * win,uint16_t width,uint16_t height) __smallc;
-
-
-
-/* Reset a graphics window, clear command string */
-void __LIB__ window_reset(window_t * win) __smallc;
-
-
-
-/* Write out instructions */
-void __LIB__ window_write(window_t * win) __smallc;
-
+uint8_t __LIB__ window_new(window_t * win,uint16_t width,uint16_t height,FILE * fp) __smallc;
 
 
 /* Clear window */

@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,10 +49,8 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Draw text from current position */
 void draw_text(window_t * win, char const * text, uint8_t size)
 {
-    char s[10];
-    sprintf(s, "T(S%.2d)\"", size);
-    appendstring(win, s);
-    appendstring(win, text);
-    appendstring(win, "\"");
+    fprintf(win->fp, "T(S%.2d)\"", size);
+    fputs((char *)text, win->fp);
+    fputs((char *)"\"", win->fp);
 }
 

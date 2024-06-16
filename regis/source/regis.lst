@@ -1,9 +1,4 @@
-
-./appendstring.c
-
 ./window_new.c
-./window_reset.c
-./window_write.c
 ./window_clear.c
 ./window_close.c
 

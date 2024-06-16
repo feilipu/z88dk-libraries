@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,11 +49,8 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Relative move offset direction */
 void draw_ofs(window_t * win, uint16_t d, offset_t offset)
 {
-    char s[14];
     uint16_t hypot;
-    sprintf(s, "P(W(M%d))%d", d, (uint8_t)offset);
-
-    appendstring(win, s);
+    fprintf(win->fp, "P(W(M%d))%d", d, (uint8_t)offset);
 
     hypot = (uint16_t)((d*70)/99);  // d/sqrt(2)
 

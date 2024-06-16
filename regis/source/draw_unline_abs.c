@@ -41,15 +41,6 @@
 #include "include/sdcc/regis.h"
 #endif
 
-/****************************************************************************/
-/***       Private Functions                                              ***/
-/****************************************************************************/
-
-#if __SCCZ80
-void __LIB__ appendstring(window_t * win, char const * text) __smallc __z88dk_callee;
-#elif __SDCC
-void appendstring(window_t * win, char const * text) __z88dk_callee;
-#endif
 
 /****************************************************************************/
 /***       Functions                                                      ***/
@@ -58,10 +49,7 @@ void appendstring(window_t * win, char const * text) __z88dk_callee;
 /* Erase a line to absolute location */
 void draw_unline_abs(window_t * win, uint16_t x, uint16_t y)
 {
-    char s[22];
-    sprintf(s, "V(W(E))[][%.3d,%.3d]", x, y);
-
-    appendstring(win, s);
+    fprintf(win->fp, "V(W(E))[][%.3d,%.3d]", x, y);
 
     win->y = y;
     win->x = x;
