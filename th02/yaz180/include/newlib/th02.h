@@ -35,12 +35,12 @@ undefine(`m4_SCCZ80_NOLIB')
 #ifndef _TH02_H
 #define _TH02_H
 
+#include <inttypes.h>
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <inttypes.h>
-#include <stdlib.h>
 
 /****************************************************************************/
 /***        Definitions                                                   ***/

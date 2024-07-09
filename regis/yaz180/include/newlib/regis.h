@@ -31,12 +31,12 @@ undefine(`m4_SCCZ80_NOLIB')
 #ifndef _REGIS_H
 #define _REGIS_H
 
+#include <stdint.h>
+#include <stdio.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
-#include <stdio.h>
 
 #define ASCII_NULL      0x00        // null
 #define ASCII_BELL      0x07        // bell

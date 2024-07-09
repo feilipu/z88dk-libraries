@@ -22,10 +22,6 @@
 #ifndef FF_DEFINED
 #define FF_DEFINED    80286    /* Revision ID */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "ffconf.h"             /* FatFs configuration options */
 
 #if FF_DEFINED != FFCONF_DEF
@@ -71,6 +67,10 @@ typedef unsigned long   DWORD;  /* 32-bit unsigned integer */
 #define FF_MAX_SS       512
 
 #endif  /* !__DISKIO_H__ */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Type of file size and LBA variables */
 

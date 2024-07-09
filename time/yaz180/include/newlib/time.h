@@ -102,12 +102,12 @@ define(`m4_SCCZ80_NOLIB', 1)
 #ifndef LIB_TIME_H
 #define LIB_TIME_H
 
+#include <stdlib.h>
+#include <sys/time.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdlib.h>
-#include <sys/time.h>
 
     /**
         time_t represents seconds elapsed from Midnight, Jan 1 2000 UTC (the Y2K 'epoch').

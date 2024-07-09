@@ -99,12 +99,12 @@
 #ifndef TIME_H
 #define TIME_H
 
+#include <inttypes.h>
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <inttypes.h>
-#include <stdlib.h>
 
     /**
         time_t represents seconds elapsed from Midnight, Jan 1 2000 UTC (the Y2K 'epoch').

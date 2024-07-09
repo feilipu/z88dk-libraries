@@ -5,11 +5,11 @@
 File:   CoPro_Cmds.h
 */
 
+#include "GPU.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "GPU.h"
 
 ft_void_t GPU_CoCmd_Text(GPU_HAL_Context_t *host, ft_int16_t x, ft_int16_t y, ft_int16_t font, ft_uint16_t options, const ft_char8_t* s);
 ft_void_t GPU_CoCmd_Number(GPU_HAL_Context_t *host, ft_int16_t x, ft_int16_t y, ft_int16_t font, ft_uint16_t options, ft_int32_t n);

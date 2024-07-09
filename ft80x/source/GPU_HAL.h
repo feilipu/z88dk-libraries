@@ -16,11 +16,11 @@
 #ifndef _GPU_HAL_H_
 #define _GPU_HAL_H_
 
+#include "GPU.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "GPU.h"
 
 typedef enum {
     GPU_I2C_MODE = 0,

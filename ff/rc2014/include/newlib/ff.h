@@ -24,10 +24,6 @@ define(`m4_SCCZ80_NOLIB', 1)
 #ifndef FF_DEFINED
 #define FF_DEFINED    80286    /* Revision ID */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef __DISKIO_H__
 
 /* Integer types used for FatFs API */
@@ -63,6 +59,10 @@ typedef unsigned long   DWORD;  /* 32-bit unsigned integer */
 #define FF_MAX_SS       512
 
 #endif  /* !__DISKIO_H__ */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Type of file size and LBA variables */
 

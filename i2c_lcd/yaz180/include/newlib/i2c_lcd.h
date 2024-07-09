@@ -25,12 +25,12 @@ undefine(`m4_SCCZ80_NOLIB')
 #ifndef __I2C_LCD_H_
 #define __I2C_LCD_H_
 
+#include <stdint.h>
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
-#include <stdlib.h>
 
 /************************Readme first**************************
 For the YAZ180 the LCD can be attached to either I2C Port 1 or Port 2.
