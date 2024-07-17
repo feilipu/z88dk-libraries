@@ -50,7 +50,4 @@
 void draw_unline_abs(window_t * win, uint16_t x, uint16_t y)
 {
     fprintf(win->fp, "V(W(E))[][%.3d,%.3d]", x, y);
-
-    win->y = y;
-    win->x = x;
 }

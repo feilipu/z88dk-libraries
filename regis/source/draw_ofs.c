@@ -49,21 +49,5 @@
 /* Relative move offset direction */
 void draw_ofs(window_t * win, uint16_t d, offset_t offset)
 {
-    uint16_t hypot;
-
     fprintf(win->fp, "P(W(M%d))%d", d, (uint8_t)offset);
-
-    hypot = (uint16_t)((d*70)/99);  // d/sqrt(2)
-
-    switch (offset)
-    {
-        case _EE: win->x += d; break;
-        case _NE: win->y -= hypot; win->x += hypot; break;
-        case _NN: win->y -= d; break;
-        case _NW: win->y -= hypot; win->x -= hypot; break;
-        case _WW: win->x -= d; break;
-        case _SW: win->y += hypot; win->x -= hypot; break;
-        case _SS: win->y += d; break;
-        case _SE: win->y += hypot; win->x += hypot; break;
-    }
 }

@@ -50,7 +50,4 @@
 void draw_abs(window_t * win, uint16_t x, uint16_t y)
 {
     fprintf(win->fp, "P[%.3d,%.3d]", x, y);
-
-    win->y = y;
-    win->x = x;
 }
