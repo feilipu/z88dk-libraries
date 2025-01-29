@@ -12,6 +12,11 @@
 #ifndef __DISKIO_SD_H__
 #define __DISKIO_SD_H__
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Disk Status Bits DSTATUS (uint8_t)
  *
@@ -27,11 +32,11 @@
  */
 
 /* Generic command (Used by FatFs) */
-#define CTRL_SYNC           0       /* Complete pending write process (needed at _FS_READONLY == 0) */
-#define GET_SECTOR_COUNT    1       /* Get media size (needed at _USE_MKFS == 1) */
-#define GET_SECTOR_SIZE     2       /* Get sector size (needed at _MAX_SS != _MIN_SS) */
-#define GET_BLOCK_SIZE      3       /* Get erase block size (needed at _USE_MKFS == 1) */
-#define CTRL_TRIM           4       /* Inform device that the data on the block of sectors is no longer used (needed at _USE_TRIM == 1) */
+#define CTRL_SYNC           0       /* Complete pending write process (needed at FF_FS_READONLY == 0) */
+#define GET_SECTOR_COUNT    1       /* Get media size (needed at FF_USE_MKFS == 1) */
+#define GET_SECTOR_SIZE     2       /* Get sector size (needed at FF_MAX_SS != FF_MIN_SS) */
+#define GET_BLOCK_SIZE      3       /* Get erase block size (needed at FF_USE_MKFS == 1) */
+#define CTRL_TRIM           4       /* Inform device that the data on the block of sectors is no longer used (needed at FF_USE_TRIM == 1) */
 
 /* Generic command (not used by FatFs) */
 #define CTRL_POWER          5       /* Get/Set power status */
@@ -77,20 +82,20 @@ typedef unsigned __int64    QWORD;
 #elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__cplusplus)    /* C99 or later */
 #define FF_INTDEF 2
 #include <stdint.h>
-typedef unsigned char       BYTE;   /* char must be 8-bit */
 typedef unsigned int        UINT;   /* int must be 16-bit or 32-bit */
+typedef unsigned char       BYTE;   /* char must be 8-bit */
 typedef uint16_t            WORD;   /* 16-bit unsigned integer */
-typedef uint16_t            WCHAR;  /* 16-bit unsigned integer */
+typedef uint16_t            WCHAR;  /* UTF-16 code unit */
 typedef uint32_t            DWORD;  /* 32-bit unsigned integer */
 #ifndef __SCCZ80
 typedef uint64_t            QWORD;  /* 64-bit unsigned integer */
 #endif
 #else   /* Earlier than C99 */
 #define FF_INTDEF 1
-typedef unsigned char       BYTE;   /* char must be 8-bit */
 typedef unsigned int        UINT;   /* int must be 16-bit or 32-bit */
+typedef unsigned char       BYTE;   /* char must be 8-bit */
 typedef unsigned short      WORD;   /* 16-bit unsigned integer */
-typedef unsigned short      WCHAR;  /* 16-bit unsigned integer */
+typedef unsigned short      WCHAR;  /* UTF-16 code unit */
 typedef unsigned long       DWORD;  /* 32-bit unsigned integer */
 #endif
 
@@ -174,5 +179,8 @@ DRESULT __LIB__ disk_ioctl (
     void *buff              /* Buffer to send/receive control data */
 ) __smallc;
 #endif
+
+#ifdef __cplusplus
+}
 
 #endif /* !__DISKIO_SD_H__ */
