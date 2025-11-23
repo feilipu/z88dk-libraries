@@ -40,6 +40,8 @@ The implementation of `time.h` aspires to conform with ISO/IEC 9899 (C90). Howev
 
 ## Installation
 
+NOTE WELL #2814 #2815 have subsequently changed z88dk directory structure.
+
 The `z88dk-lib` function is used to install for the desired target and desired library. e.g. for the time library on the yaz180 machine.
 
 ```
@@ -63,6 +65,9 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 ```
 
 ## Preparation
+
+NOTE WELL #2814 #2815 have subsequently changed z88dk directory structure and have removed sdcc_ix.
+
 The libraries can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine, from the relevant library sub-directory. e.g. for any `library`.
 
 ```
