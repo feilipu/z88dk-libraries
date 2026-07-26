@@ -94,6 +94,8 @@ void main (void)
 
 ## Preparation
 
+Products go under `diskio_sd/<target>/lib/newlib/{sccz80,sdcc_ix,sdcc_iy}/diskio_sd.lib`. Install with `z88dk-lib +scz180 diskio_sd`.
+
 The diskio_sd library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```

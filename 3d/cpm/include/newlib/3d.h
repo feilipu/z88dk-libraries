@@ -170,10 +170,10 @@ __OPROTO(,,void,,roty_m,matrix_t * matrix,FLOAT angle)
 __OPROTO(,,void,,rotz_m,matrix_t * matrix,FLOAT angle)
 
 /* Set up projection OpenGL */
-__OPROTO(,,void,,projection_opengl_m,matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far)
+__OPROTO(,,void,,projection_opengl_m,matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near_plane,FLOAT far_plane)
 
 /* Set up projection W3Woody */
-__OPROTO(,,void,,projection_w3woody_m,matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far)
+__OPROTO(,,void,,projection_w3woody_m,matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near_plane,FLOAT far_plane)
 
 /* Matrix Multiplication */
 __OPROTO(,,void,,mult_m,matrix_t * multiplicand,matrix_t * multiplier)

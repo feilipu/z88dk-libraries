@@ -183,11 +183,11 @@ void rotz_m(matrix_t * matrix,FLOAT angle);
 
 
 /* Set up projection OpenGL */
-void projection_opengl_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far);
+void projection_opengl_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near_plane,FLOAT far_plane);
 
 
 /* Set up projection W3Woody */
-void projection_w3woody_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far);
+void projection_w3woody_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near_plane,FLOAT far_plane);
 
 /* Matrix Multiplication */
 void mult_m(matrix_t * multiplicand,matrix_t * multiplier);

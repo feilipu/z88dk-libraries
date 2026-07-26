@@ -58,7 +58,7 @@
 
 
 /* Set up projection OpenGL */
-void projection_opengl_m(matrix_t * matrix, FLOAT fov, FLOAT aspect_ratio, FLOAT near, FLOAT far)
+void projection_opengl_m(matrix_t * matrix, FLOAT fov, FLOAT aspect_ratio, FLOAT near_plane, FLOAT far_plane)
 {
     FLOAT f = 1.0/TAN(fov * 0.5);
 
@@ -66,8 +66,8 @@ void projection_opengl_m(matrix_t * matrix, FLOAT fov, FLOAT aspect_ratio, FLOAT
 
     matrix->e[0]  =  f * aspect_ratio;
     matrix->e[5]  =  f;
-    matrix->e[10] = -(far + near) / (far - near);
+    matrix->e[10] = -(far_plane + near_plane) / (far_plane - near_plane);
     matrix->e[11] = -1.0;
-    matrix->e[14] = -(far * near * 2.0) / (far - near);
+    matrix->e[14] = -(far_plane * near_plane * 2.0) / (far_plane - near_plane);
     matrix->e[15] =  0.0;
 }

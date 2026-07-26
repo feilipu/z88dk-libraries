@@ -182,5 +182,6 @@ DRESULT __LIB__ disk_ioctl (
 
 #ifdef __cplusplus
 }
+#endif
 
 #endif /* !__DISKIO_SD_H__ */

@@ -73,16 +73,27 @@ z88dk-lib +rc2014 -r -f ff   # remove package(s); -f skips prompts
 
 ## Preparation
 
-To **rebuild** a package from source (optional; prebuilt libs ship in each package’s `*/lib/newlib/` tree for `z88dk-lib` to install), from that package’s `source` directory, with `+target` set appropriately:
+To **rebuild** a package from source, from that package’s `source` directory:
 
 ```bash
-zcc +target -clib=new -x -O2 --opt-code-speed=add32,sub32,sub16,inlineints --math32 @library.lst -o ../library
-# place library.lib under the package layout for the target, e.g.
-#   ../<target>/lib/newlib/sccz80/library.lib
-# then: z88dk-lib +target library
+export PATH=…/z88dk/bin:$PATH ZCCCFG=…/z88dk/lib/config
+zcc +<target> -clib=new -x -O2 --opt-code-speed=all --math32 @library.lst -o ../library
+mkdir -p ../<target>/lib/newlib/sccz80
+mv ../library.lib ../<target>/lib/newlib/sccz80/library.lib
+# repeat with -clib=sdcc_ix / sdcc_iy → …/sdcc_ix/ …/sdcc_iy/
+z88dk-lib +<target> library
 ```
 
-Repeat for `-clib=sdcc_ix` / `sdcc_iy` as needed. Prefer `z88dk-lib` install over hand-copying into the z88dk tree.
+**FatFs:** also build `ff_ro` (and rc2014 `ff_85` / `ff_85_ro`) into the **same** `lib/newlib/<clib>/` dirs as `ff.lib`. `z88dk-lib +<target> ff` only installs `ff.lib`; copy `ff_ro.lib` / `ff_85*.lib` into `lib/clibs/…/lib/<target>/` by hand. See `ff/readme.md`.
+
+**Bulk rebuild + install:** `./rebuild-all.sh` in this repo root (requires `PATH`/`ZCCCFG` pointing at your z88dk). Max two concurrent `zcc` jobs.
+
+1. Build package products under `<pkg>/<target>/lib/newlib/…`
+2. **Install** with `z88dk-lib +<target> <pkg>` (remove-then-install, non-interactive)
+3. **Manual copy** of extras `z88dk-lib` does not install: `ff_ro.lib`, `ff_85.lib`, `ff_85_ro.lib` into the same dirs as `ff.lib`, resolved from `ZCCCFG` as  
+   `$ZCCCFG/../clibs/{sccz80,sdcc_ix,sdcc_iy}/lib/<target>/`
+
+The script uses a **lower** SDCC `--max-allocs-per-node` (50k) so a full tree process check finishes in reasonable time; that is **not** a release/quality setting — do **not** git-stage `.lib` products from a 50k bulk run. For publishable binaries, rebuild individual packages with **200000–400000** as in each package’s Preparation section, then re-run install (or `./rebuild-all.sh` after raising the alloc count in the script).
 
 ## Usage
 

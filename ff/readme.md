@@ -116,27 +116,47 @@ Please check that your diskio layer is working correctly, using the example prog
 
 Then configure the library to suit your requirements by adjusting the `source/ffconf.h` file to provide the functions you need. You will then use this `ffconf.h` file to provide the options you included. This is a current limitation of z88dk, whereby it can only provide one third party library header file.
 
-The ff library can be compiled from the `ff/source` directory using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
+The ff library can be compiled from the `ff/source` directory. Products land in the package tree as:
 
+```text
+ff/<target>/lib/newlib/{sccz80,sdcc_ix,sdcc_iy}/ff.lib
 ```
-zcc +rc2014 -clib=new -x -O2 --opt-code-speed=all --math32 @ff.lst -o ../ff
-zcc +rc2014 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +rc2014 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
 
+Z80 (all supported targets: `rc2014`, `yaz180`, `scz180`, `hbios`):
+
+```bash
+# sccz80 → sccz80/
+zcc +<target> -clib=new -x -O2 --opt-code-speed=all --math32 @ff.lst -o ../ff
+mv ../ff.lib ../<target>/lib/newlib/sccz80/ff.lib
+
+# sdcc
+zcc +<target> -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @ff.lst -o ../ff
+mv ../ff.lib ../<target>/lib/newlib/sdcc_ix/ff.lib
+zcc +<target> -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @ff.lst -o ../ff
+mv ../ff.lib ../<target>/lib/newlib/sdcc_iy/ff.lib
+```
+
+8085 (rc2014 only, sccz80):
+
+```bash
 zcc +rc2014 -clib=new -m8085 -x -O2 --opt-code-speed=all -D__DISABLE_BUILTIN --math32 @ff.lst -o ../ff_85
+mv ../ff_85.lib ../rc2014/lib/newlib/sccz80/ff_85.lib
 ```
+
+**Read-only variants (`ff_ro` / `ff_85_ro`):** set `FF_FS_READONLY` to `1` in `source/ffconf.h`, rebuild with the same command lines but install as `ff_ro.lib` / `ff_85_ro.lib` in the **same** directories as the standard libs, then restore `FF_FS_READONLY` to `0`.
+
+```bash
+# after RO build, e.g. for sccz80:
+mv ../ff.lib ../<target>/lib/newlib/sccz80/ff_ro.lib
 ```
-zcc +yaz180 -clib=new -x -O2 --opt-code-speed=all --math32 @ff.lst -o ../ff
-zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
+
+`z88dk-lib +<target> ff` installs **`ff.lib`** (and `ff.h`). Copy `ff_ro.lib` / `ff_85*.lib` **manually** into the same install dir (z88dk-lib has no basename for those extras):
+
+```text
+$ZCCCFG/../clibs/{sccz80,sdcc_ix,sdcc_iy}/lib/<target>/
 ```
-For any supported target.
-```
-zcc +target -clib=new -x -O2 --opt-code-speed=all --math32 @ff.lst -o ../ff
-zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
-zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 @ff.lst -o ../ff
-```
-The resulting `ff.lib` file should be moved to `~/target/lib/newlib/sccz80` or `~/target/lib/newlib/sdcc_ix` or `~/target/lib/newlib/sdcc_iy` respectively.
+
+A full dual-job rebuild **and install** script is `rebuild-all.sh` at the repo root: it runs `z88dk-lib` for each package, then copies `ff_ro` / `ff_85*` using paths derived from `ZCCCFG`.
 
 ## Documentation
 

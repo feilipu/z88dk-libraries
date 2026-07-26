@@ -194,12 +194,12 @@ void __LIB__ rotz_m(matrix_t * matrix,FLOAT angle) __smallc;
 
 
 /* Set up projection OpenGL */
-void __LIB__ projection_opengl_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far) __smallc;
+void __LIB__ projection_opengl_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near_plane,FLOAT far_plane) __smallc;
 
 
 
 /* Set up projection W3Woody */
-void __LIB__ projection_w3woody_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near,FLOAT far) __smallc;
+void __LIB__ projection_w3woody_m(matrix_t * matrix,FLOAT fov,FLOAT aspect_ratio,FLOAT near_plane,FLOAT far_plane) __smallc;
 
 
 
