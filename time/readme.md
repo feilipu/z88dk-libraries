@@ -62,7 +62,9 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Usage
 
-Once installed, the time library can be linked against on the compile line by adding `-llib/target/time` and the include file can be found with `#include <lib/target/time.h>`.
+Once installed, link with `-llib/<target>/time` and include `#include <lib/<target>/time.h>`.
+
+**FatFs:** writable FatFs builds call `get_fattime`, which needs this package’s `time` / `localtime_r` / `system_fatfs` helpers. Install **`time`** together with **`ff`** (and diskio as required), e.g. `z88dk-lib +rc2014 ff time`. Dual-stack CP/M apps: [Newlib File I/O and FatFs](https://github.com/z88dk/z88dk/wiki/Newlib_File_IO_and_FatFs).
 
 A simple usage example, for the `+yaz180` target.
 

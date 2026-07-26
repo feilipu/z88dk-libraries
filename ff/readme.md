@@ -50,9 +50,11 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Usage
 
-Once installed, the FatFs library can be linked against on the compile line by adding `-llib/target/ff` and the include file can be found with `#include <lib/target/ff.h>`.
+Once installed, the FatFs library can be linked against on the compile line by adding `-llib/<target>/ff` and the include file can be found with `#include <lib/<target>/ff.h>`.
 
-A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets.
+**API note:** ChaN **`f_*` only**. Unprefixed `open` / `read` / `write` on `+rc2014` / `+yaz180` / `+scz180` **`-subtype=cpm`** are BDOS FCB, not FatFs. For write timestamps, also install and link **`time`**. Pair with the correct diskio (in-tree for rc2014/yaz180; `diskio_sd` / `diskio_hbios` packages otherwise). Dual-stack and install matrix: [Newlib File I/O and FatFs](https://github.com/z88dk/z88dk/wiki/Newlib_File_IO_and_FatFs).
+
+A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets (bare or app subtypes; for CP/M apps use `-subtype=cpm` and add `-llib/.../time` as needed).
 
 ```c
 /*----------------------------------------------------------------------*/
@@ -75,11 +77,14 @@ A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets.
 
 #endif
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/yaz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/yaz180/ff -llib/yaz180/time --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/scz180/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/scz180/diskio_sd -llib/scz180/ff -llib/scz180/time --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
 
-// zcc +rc2014 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/rc2014/ff --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +rc2014 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/rc2014/ff -llib/rc2014/time --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+
+// CP/M app dual-stack (FCB open + FatFs f_*):
+// zcc +rc2014 -subtype=cpm -clib=new app.c -llib/rc2014/ff -llib/rc2014/time -o app -m
 
 
 static FATFS FatFs;        /* FatFs work area needed for each volume */

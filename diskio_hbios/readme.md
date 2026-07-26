@@ -48,9 +48,11 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Usage
 
-Once installed, the FatFs library can be linked against on the compile line by adding `-llib/target/diskio_hbios` and the include file can be found with `#include <lib/target/diskio_hbios.h>`.
+Once installed, link with `-llib/<target>/diskio_hbios` and include `#include <lib/<target>/diskio_hbios.h>`. Pair with **`ff`** and usually **`time`**.
 
-A simple usage example, for the `+scz180` target.
+**`+hbios` has no CP/M FCB dual-stack** — FatFs (`f_*`) is the disk API (HBIOS logical drives). On other targets that still use HBIOS disk access via this package, the same applies for the FatFs half of any dual stack. See [Newlib File I/O and FatFs](https://github.com/z88dk/z88dk/wiki/Newlib_File_IO_and_FatFs).
+
+A simple usage example (prefer `+hbios` for RomWBW; `+scz180` with HBIOS disk is also possible).
 
 ```c
 /*----------------------------------------------------------------------*/
@@ -66,7 +68,8 @@ A simple usage example, for the `+scz180` target.
 
 #endif
 
-// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 --opt-code-size --max-allocs-per-node200000 -llib/scz180/diskio_hbios -llib/scz180/ff ff_main.c -o ff_main -create-app
+// zcc +hbios -clib=new -v -m -llib/hbios/diskio_hbios -llib/hbios/ff -llib/hbios/time ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 --opt-code-size --max-allocs-per-node200000 -llib/scz180/diskio_hbios -llib/scz180/ff -llib/scz180/time ff_main.c -o ff_main -create-app
 
 static FATFS FatFs;		/* FatFs work area needed for each volume */
 static FIL Fil;			/* File object needed for each open file */
