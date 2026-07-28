@@ -2,7 +2,7 @@
 
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
-Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
 
 #### Features
 <ul>
@@ -66,7 +66,7 @@ A simple usage example, for the `+scz180` target.
 #include <lib/scz180/diskio_sd.h> 
 #endif
 
-// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 --opt-code-size --max-allocs-per-node200000 -llib/scz180/diskio_sd -llib/scz180/ff -llib/scz180/time ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 --opt-code-size --max-allocs-per-node400000 -llib/scz180/diskio_sd -llib/scz180/ff -llib/scz180/time ff_main.c -o ff_main -create-app
 // zcc +scz180 -subtype=cpm -clib=new app.c -llib/scz180/diskio_sd -llib/scz180/ff -llib/scz180/time -o app -m
 
 static FATFS FatFs;		/* FatFs work area needed for each volume */
@@ -104,7 +104,7 @@ zcc +scz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_s
 zcc +scz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 ```
 ```
-zcc +target -clib=new -x -02 --opt-code-speed=all --math32 @diskio_sd.lst -o ../diskio_sd
+zcc +target -clib=new -x -O2 --opt-code-speed=all --math32 @diskio_sd.lst -o ../diskio_sd
 zcc +target -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 zcc +target -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @diskio_sd.lst -o ../diskio_sd
 ```

@@ -3,10 +3,10 @@
    https://www.freertos.org/Real-time-embedded-RTOS-mutexes.html
 */
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos Mutex.c -o Mutex -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node400000 -llib/yaz180/freertos Mutex.c -o Mutex -create-app
 // cat > /dev/ttyUSB0 < Mutex.ihx
 
-// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/scz180/freertos Mutex.c -o Mutex -create-app
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node400000 -llib/scz180/freertos Mutex.c -o Mutex -create-app
 // cat > /dev/ttyUSB0 < Mutex.ihx
 
 #include <stdlib.h>

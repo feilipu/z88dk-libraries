@@ -3,10 +3,10 @@
  * https://www.freertos.org/a00021.html
  */
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/yaz180/freertos TaskUtilities.c -o TaskUtilities -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node400000 -llib/yaz180/freertos TaskUtilities.c -o TaskUtilities -create-app
 // cat > /dev/ttyUSB0 < TaskUtilities.ihx
 
-// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node100000 -llib/scz180/freertos TaskUtilities.c -o TaskUtilities -create-app
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node400000 -llib/scz180/freertos TaskUtilities.c -o TaskUtilities -create-app
 // cat > /dev/ttyUSB0 < TaskUtilities.ihx
 
 #include <stdlib.h>

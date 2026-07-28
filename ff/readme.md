@@ -4,7 +4,7 @@ FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The F
 
 Current source version status is: R0.16 patch 2 (ChaN), July 2025 / patch 2 July 2026.<br>
 
-Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
 
 #### Features
 

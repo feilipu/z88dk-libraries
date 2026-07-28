@@ -3,7 +3,7 @@ The library for I2C_LCD.
 
 Visit all support files and product documents [click here](https://github.com/SparkingStudio/I2C_LCD) please.
 
-Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
 
 ## Installation
 

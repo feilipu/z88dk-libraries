@@ -6,7 +6,7 @@ Current source version status is: 11.1.0, release 22 April 2024.
 
 Over the past few years freeRTOS development has become increasingly 32-bit orientated, with little change or improvement for the 8-bit world. As such I'm treating this 22 April 2024 11.1.0 release as my LTS release.
 
-Compiled with sccz80 version: 22309-5b13a4917f-20240417, and using zsdcc version 4.4.0 [r14648](https://sourceforge.net/p/sdcc/code/14648/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
 
 ## Installation
 
@@ -44,9 +44,9 @@ A simple usage example, for the `+scz180` target.
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/yaz180/freertos main.c -o blink -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 --max-allocs-per-node400000 -v -m --list -llib/yaz180/freertos main.c -o blink -create-app
 
-// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/scz180/freertos main.c -o blink -create-app
+// zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 --max-allocs-per-node400000 -v -m --list -llib/scz180/freertos main.c -o blink -create-app
 
 #include <stdlib.h>
 #include <stdbool.h>

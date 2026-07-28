@@ -7,7 +7,7 @@ Read here for a full description on [how to enable ReGIS for Windows 10 and Linu
 
 There is a [Programmer Reference Manual for VT330/VT340 Terminals](https://vt100.net/docs/vt3xx-gp/) describing how to use ReGIS, as well as the [VT125 Primer](https://github.com/feilipu/z88dk-libraries/blob/master/regis/doc/EK-VT125-GI-001_VT125_ReGIS_Primer_May82.pdf) document provided here.
 
-Compiled with sccz80 version 22635-40749b9e71-20240612, and using zsdcc version 4.4.0 [r14648](https://sourceforge.net/p/sdcc/code/14648/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
 
 ## Installation
 
@@ -44,10 +44,10 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 ### ZSDCC
 
 For CP/M<br>
-`zcc +cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
+`zcc +cpm -clib=sdcc_iy -SO3 --max-allocs-per-node400000 -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 For RC2014<br>
-`zcc +rc2014 -subtype=cpm -clib=sdcc_iy -SO3 --max-allocs-per-node100000 -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
+`zcc +rc2014 -subtype=cpm -clib=sdcc_iy -SO3 --max-allocs-per-node400000 -v -m --list -llib/rc2014/regis regis_demo.c -o regis -create-app`
 
 ### SCCZ80
 
@@ -62,21 +62,21 @@ For RC2014<br>
 The library can be compiled using the following command lines in Linux, with the `+target` (eg. `+rc2014`) modified to be relevant to your machine.
 
 ```
-zcc +rc2014  -clib=new  --math32 -x -O2--opt-code-speed=all @regis.lst -o ../regis
-zcc +rc2014 -clib=sdcc_ix --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
-zcc +rc2014 -clib=sdcc_iy --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +rc2014 -clib=new -x -O2 --opt-code-speed=all --math32 @regis.lst -o ../regis
+zcc +rc2014 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @regis.lst -o ../regis
+zcc +rc2014 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @regis.lst -o ../regis
 ```
 
 ```
-zcc +yaz180 -clib=new --math32 -x -O2 --opt-code-speed=all @regis.lst -o ../regis
-zcc +yaz180 -clib=sdcc_ix --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
-zcc +yaz180 -clib=sdcc_iy --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +yaz180 -clib=new -x -O2 --opt-code-speed=all --math32 @regis.lst -o ../regis
+zcc +yaz180 -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @regis.lst -o ../regis
+zcc +yaz180 -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @regis.lst -o ../regis
 ```
 
 ```
-zcc +cpm -clib=new --math32 -x -O2 --opt-code-speed=all @regis.lst -o ../regis
-zcc +cpm -clib=sdcc_ix --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
-zcc +cpm -clib=sdcc_iy --math32 -x -SO3 --max-allocs-per-node400000 @regis.lst -o ../regis
+zcc +cpm -clib=new -x -O2 --opt-code-speed=all --math32 @regis.lst -o ../regis
+zcc +cpm -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @regis.lst -o ../regis
+zcc +cpm -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @regis.lst -o ../regis
 
 zcc +cpm -clib=8085 --math-am9511 -x -O2 --opt-code-speed=all @regis.lst -o ../regis_8085
 ```

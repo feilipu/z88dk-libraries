@@ -35,7 +35,7 @@ In addition to C standard functions, re-entrant versions of `ctime()`, `asctime(
 
 Along with the usual smattering of utility functions, such as `is_leap_year()`, this library includes a set of functions related the sun and moon, as well as sidereal time functions.
 
-Compiled with sccz80 version 22168-da9bcc8cc0-20240130, and using zsdcc version 4.4.0 [r14648](https://sourceforge.net/p/sdcc/code/14648/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
 
 ## Installation
 
@@ -77,7 +77,7 @@ A simple usage example, for the `+yaz180` target.
 
 #include <lib/yaz180/time.h>
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 --max-allocs-per-node200000 --opt-code-size -v --list -m -llib/yaz180/time @atest.lst -o time_app -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 --max-allocs-per-node400000 --opt-code-size -v --list -m -llib/yaz180/time @atest.lst -o time_app -create-app
 
 
 uint16_t i;

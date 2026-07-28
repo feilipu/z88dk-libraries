@@ -8,7 +8,7 @@
 
 This is a multifunctional sensor that gives you temperature and relative humidity information at the same time. It utilizes a TH02 sensor that can meet measurement needs of general purposes. It provides reliable readings when environment humidity condition inbetween 0-80% RH, and temperature condition inbetween 0-70°C, covering needs in most home and daily applications that don't contain extreme conditions.
 
-Compiled with sccz80 version 21481-8e126c50b2-20230720, and using zsdcc version 4.3.0 [r14210](https://sourceforge.net/p/sdcc/code/14210/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
 
 ## Installation
 
@@ -50,7 +50,7 @@ z88dk-lib +zx -r -f libname1 libname2 ...
 
 ## Preparation
 
-The library can be compiled using the following command --opt-code-speed=inlineints lines in Linux, with the `+target` modified to be relevant to your machine.
+The library can be compiled using the following command lines in Linux, with the `+target` modified to be relevant to your machine.
 
 ```
 zcc +yaz180 -clib=new -x -O2 --opt-code-speed=all --math32 @th02.lst -o ../th02

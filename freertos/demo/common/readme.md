@@ -9,11 +9,11 @@ If all the tasks are still incrementing their unique counts, the Print task disp
 The Print task blocks on the queue into which messages that require displaying are posted.  It will therefore only block for the full 2 seconds if no messages are posted onto the queue.
 
 ```sh
-zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node200000 --math32 -llib/yaz180/freertos @common.lst -o common -create-app
+zcc +yaz180 -subtype=app -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node400000 --math32 -llib/yaz180/freertos @common.lst -o common -create-app
 cat > /dev/ttyUSB0 < common.ihx
 ```
 
 ```sh
-zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node200000 --math32 -llib/scz180/freertos @common.lst -o common -create-app
+zcc +scz180 -subtype=hbios -clib=sdcc_iy -SO3 -v -m --list --max-allocs-per-node400000 --math32 -llib/scz180/freertos @common.lst -o common -create-app
 cat > /dev/ttyUSB0 < common.ihx
 ```

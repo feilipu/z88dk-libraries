@@ -73,14 +73,24 @@ z88dk-lib +rc2014 -r -f ff   # remove package(s); -f skips prompts
 
 ## Preparation
 
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc). Libraries rebuilt 2026-07-28.
+
+
 To **rebuild** a package from source, from that package’s `source` directory:
 
 ```bash
 export PATH=…/z88dk/bin:$PATH ZCCCFG=…/z88dk/lib/config
+# sccz80
 zcc +<target> -clib=new -x -O2 --opt-code-speed=all --math32 @library.lst -o ../library
 mkdir -p ../<target>/lib/newlib/sccz80
 mv ../library.lib ../<target>/lib/newlib/sccz80/library.lib
-# repeat with -clib=sdcc_ix / sdcc_iy → …/sdcc_ix/ …/sdcc_iy/
+# sdcc_ix / sdcc_iy
+zcc +<target> -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @library.lst -o ../library
+mkdir -p ../<target>/lib/newlib/sdcc_ix
+mv ../library.lib ../<target>/lib/newlib/sdcc_ix/library.lib
+zcc +<target> -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @library.lst -o ../library
+mkdir -p ../<target>/lib/newlib/sdcc_iy
+mv ../library.lib ../<target>/lib/newlib/sdcc_iy/library.lib
 z88dk-lib +<target> library
 ```
 
