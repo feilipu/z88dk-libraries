@@ -2,9 +2,9 @@
 
 FatFs is a generic FAT/exFAT filesystem module for small embedded systems. The FatFs module is written in compliance with ANSI C (C89) and completely separated from the disk I/O layer. Therefore it is independent of the platform. It can be incorporated into small microcontrollers with limited resource, such as 8051, PIC, AVR, ARM, Z80, RX and etc.
 
-Current source version status is: 0.15a patch 1, January 9, 2025.<br>
+Current source version status is: R0.16 patch 2 (ChaN), July 2025 / patch 2 July 2026.<br>
 
-Compiled with sccz80 version 23073-08765eb48b-20250127, and using zsdcc version 4.5.0 [r15248](https://sourceforge.net/p/sdcc/code/15248/log/?path=/trunk/sdcc).
+Compiled with sccz80 version 25141-6b30e0885e-20260716, and using zsdcc version 4.5.0 [r15242](https://sourceforge.net/p/sdcc/code/15242/log/?path=/trunk/sdcc).
 
 #### Features
 
@@ -77,11 +77,11 @@ A simple usage example, for the `+yaz180`, `+scz180`, or `+rc2014` targets (bare
 
 #endif
 
-// zcc +yaz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/yaz180/ff -llib/yaz180/time --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +yaz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/yaz180/ff -llib/yaz180/time --max-allocs-per-node400000 ff_main.c -o ff_main -create-app
 
-// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/scz180/diskio_sd -llib/scz180/ff -llib/scz180/time --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +scz180 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/scz180/diskio_sd -llib/scz180/ff -llib/scz180/time --max-allocs-per-node400000 ff_main.c -o ff_main -create-app
 
-// zcc +rc2014 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/rc2014/ff -llib/rc2014/time --max-allocs-per-node200000 ff_main.c -o ff_main -create-app
+// zcc +rc2014 -subtype=app -clib=sdcc_iy -v --list -m -SO3 -llib/rc2014/ff -llib/rc2014/time --max-allocs-per-node400000 ff_main.c -o ff_main -create-app
 
 // CP/M app dual-stack (FCB open + FatFs f_*):
 // zcc +rc2014 -subtype=cpm -clib=new app.c -llib/rc2014/ff -llib/rc2014/time -o app -m
@@ -156,7 +156,7 @@ mv ../ff.lib ../<target>/lib/newlib/sccz80/ff_ro.lib
 $ZCCCFG/../clibs/{sccz80,sdcc_ix,sdcc_iy}/lib/<target>/
 ```
 
-A full dual-job rebuild **and install** script is `rebuild-all.sh` at the repo root: it runs `z88dk-lib` for each package, then copies `ff_ro` / `ff_85*` using paths derived from `ZCCCFG`.
+A full dual-job rebuild **and install** script is `rebuild-all.sh` at the repo root: SDCC builds use `--max-allocs-per-node400000`, write `.lib` products under each package’s `lib/newlib/<clib>/` tree, run `z88dk-lib` for each package, then copy `ff_ro` / `ff_85*` using paths derived from `ZCCCFG`.
 
 ## Documentation
 
@@ -165,7 +165,7 @@ Please use his [FatFs website](http://elm-chan.org/fsw/ff/00index_e.html) as the
 
 ## Licence
 
-Copyright (C) 2022, ChaN, all right reserved.
+Copyright (C) 2025, ChaN, all right reserved.
 
 FatFs has being developed as a personal project of the author, ChaN. It is free from the code anyone else wrote at current release.
 

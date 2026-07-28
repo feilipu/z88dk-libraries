@@ -93,7 +93,7 @@ z88dk-lib +<target> library
 3. **Manual copy** of extras `z88dk-lib` does not install: `ff_ro.lib`, `ff_85.lib`, `ff_85_ro.lib` into the same dirs as `ff.lib`, resolved from `ZCCCFG` as  
    `$ZCCCFG/../clibs/{sccz80,sdcc_ix,sdcc_iy}/lib/<target>/`
 
-The script uses a **lower** SDCC `--max-allocs-per-node` (50k) so a full tree process check finishes in reasonable time; that is **not** a release/quality setting — do **not** git-stage `.lib` products from a 50k bulk run. For publishable binaries, rebuild individual packages with **200000–400000** as in each package’s Preparation section, then re-run install (or `./rebuild-all.sh` after raising the alloc count in the script).
+`./rebuild-all.sh` uses SDCC `--max-allocs-per-node400000` (same as package Preparation sections) and writes each product into `<pkg>/<target>/lib/newlib/{sccz80,sdcc_ix,sdcc_iy}/` before install.
 
 ## Usage
 
