@@ -2,7 +2,7 @@
 /  Configurations of FatFs Module
 /---------------------------------------------------------------------------*/
 
-#define FFCONF_DEF	5380	/* Revision ID */
+#define FFCONF_DEF	80386	/* Revision ID */
 
 /*---------------------------------------------------------------------------/
 / Function Configurations
@@ -166,6 +166,16 @@
 */
 
 
+#define FF_PATH_DEPTH   10
+/*  This option defines maximum depth of directory in the exFAT volume. It is NOT
+/   relevant to FAT/FAT32 volume.
+/   For example, FF_PATH_DEPTH = 3 will able to follow a path "/dir1/dir2/dir3/file"
+/   but a sub-directory in the dir3 will not able to be followed and set current
+/   directory.
+/   The size of filesystem object (FATFS) increases FF_PATH_DEPTH * 24 bytes.
+/   When FF_FS_EXFAT == 0 or FF_FS_RPATH == 0, this option has no effect.
+*/
+
 /*---------------------------------------------------------------------------/
 / Drive/Volume Configurations
 /---------------------------------------------------------------------------*/
@@ -262,6 +272,11 @@
 /  to the project to read current time form real-time clock. FF_NORTC_MON,
 /  FF_NORTC_MDAY and FF_NORTC_YEAR have no effect.
 /  These options have no effect in read-only configuration (FF_FS_READONLY = 1). */
+
+
+#define FF_FS_CRTIME    0
+/* This option enables(1)/disables(0) the timestamp of the file created. When
+/  set 1, the file created time is available in FILINFO structure. */
 
 
 #define FF_FS_NOFSINFO    0

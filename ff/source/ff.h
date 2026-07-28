@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem module  R0.15a w/patch 1                    /
+/  FatFs - Generic FAT Filesystem module  R0.16 w/patch 2                    /
 /-----------------------------------------------------------------------------/
 /
-/ Copyright (C) 2024, ChaN, all right reserved.
+/ Copyright (C) 2025, ChaN, all right reserved.
 /
 / FatFs module is an open source software. Redistribution and use of FatFs in
 / source and binary forms, with or without modification, are permitted provided
@@ -20,7 +20,7 @@
 
 
 #ifndef FF_DEFINED
-#define FF_DEFINED      5380    /* Revision ID */
+#define FF_DEFINED      80386    /* Revision ID */
 
 #include "ffconf.h"             /* FatFs configuration options */
 
@@ -140,6 +140,24 @@ extern const char* VolumeStr[FF_VOLUMES];    /* User defined volume ID table */
 
 
 
+/* Current working directory structure (FFXCWDS) */
+
+#if FF_FS_EXFAT && FF_FS_RPATH
+#if FF_PATH_DEPTH < 1
+#error FF_PATH_DEPTH must not be zero
+#endif
+typedef struct {
+    DWORD    d_scl;             /* Directory start cluster (0:root dir) */
+    DWORD    d_size;            /* Size of directory (b7-b0: cluster chain status) (invalid if d_scl == 0) */
+    DWORD    nxt_ofs;           /* Offset of entry of next dir in this directory (invalid if last link) */
+} FFXCWDL;
+typedef struct {
+    UINT     depth;             /* Current directory depth (0:root dir) */
+    FFXCWDL  tbl[FF_PATH_DEPTH + 1]; /* Directory chain of current working directory path */
+} FFXCWDS;
+#endif
+
+
 /* Filesystem object structure (FATFS) */
 
 typedef struct {
@@ -158,29 +176,28 @@ typedef struct {
 #if FF_USE_LFN
     WCHAR*    lfnbuf;           /* LFN working buffer */
 #endif
-#if FF_FS_EXFAT
-    BYTE*    dirbuf;            /* Directory entry block scratchpad buffer for exFAT */
-#endif
+#if !FF_FS_READONLY
     DWORD    last_clst;         /* Last allocated cluster (Unknown if >= n_fatent) */
     DWORD    free_clst;         /* Number of free clusters  (Unknown if >= n_fatent-2) */
+#endif
 #if FF_FS_RPATH
     DWORD    cdir;              /* Current directory start cluster (0:root) */
-#if FF_FS_EXFAT
-    DWORD    cdc_scl;           /* Containing directory start cluster (invalid when cdir is 0) */
-    DWORD    cdc_size;          /* b31-b8:Size of containing directory, b7-b0: Chain status */
-    DWORD    cdc_ofs;           /* Offset in the containing directory (invalid when cdir is 0) */
-#endif
 #endif
     DWORD    n_fatent;          /* Number of FAT entries (number of clusters + 2) */
     DWORD    fsize;             /* Number of sectors per FAT */
+    LBA_t    winsect;           /* Current sector appearing in the win[] */
     LBA_t    volbase;           /* Volume base sector */
     LBA_t    fatbase;           /* FAT base sector */
     LBA_t    dirbase;           /* Root directory base sector (FAT12/16) or cluster (FAT32/exFAT) */
     LBA_t    database;          /* Data base sector */
 #if FF_FS_EXFAT
     LBA_t    bitbase;           /* Allocation bitmap base sector */
+    BYTE*    dirbuf;            /* Directory entry block scratchpad buffer for exFAT */
+#if FF_FS_RPATH
+    FFXCWDS  xcwds;             /* Current working directory structure */
+    FFXCWDS  xcwds2;            /* Working buffer to follow the path */
 #endif
-    LBA_t    winsect;           /* Current sector appearing in the win[] */
+#endif
     BYTE    win[FF_MAX_SS];     /* Disk access window for Directory, FAT (and file data at tiny cfg) */
 } FATFS;
 
@@ -257,6 +274,10 @@ typedef struct {
     FSIZE_t fsize;              /* File size */
     WORD    fdate;              /* Modified date */
     WORD    ftime;              /* Modified time */
+#if FF_FS_CRTIME
+    WORD    crdate;             /* Created date */
+    WORD    crtime;             /* Created time */
+#endif
     BYTE    fattrib;            /* File attribute */
 #if FF_USE_LFN
     TCHAR    altname[FF_SFN_BUF + 1];  /* Alternative file name */
@@ -300,7 +321,7 @@ typedef enum {
     FR_MKFS_ABORTED,            /* (14) The f_mkfs function aborted due to some problem */
     FR_TIMEOUT,                 /* (15) Could not take control of the volume within defined period */
     FR_LOCKED,                  /* (16) The operation is rejected according to the file sharing policy */
-    FR_NOT_ENOUGH_CORE,         /* (17) LFN working buffer could not be allocated or given buffer is insufficient in size */
+    FR_NOT_ENOUGH_CORE,         /* (17) LFN working buffer could not be allocated, given buffer size is insufficient or too deep path */
     FR_TOO_MANY_OPEN_FILES,     /* (18) Number of open files > FF_FS_LOCK */
     FR_INVALID_PARAMETER        /* (19) Given parameter is invalid */
 } FRESULT;
