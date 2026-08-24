@@ -13,8 +13,10 @@
 #   (ffsystem.c / ff.c need <lib/.../time.h> and diskio headers).
 # Phase 3: z88dk-lib installs each package (basename == package name, e.g. ff.lib).
 # Extra products that z88dk-lib does not install (ff_ro, ff_85, ff_85_ro) are
-# copied manually into the same install dirs, derived from ZCCCFG:
-#   $ZCCCFG/../clibs/{sccz80,sdcc_ix,sdcc_iy}/lib/<target>/
+# copied manually into the same install dirs, derived from ZCCCFG.
+# SDCC ff_ro is built once with -clib=sdcc_iy (--reserve-regs-iy) and installed
+# into lib/clibs/sdcc_ix/lib/<target>/ — that is the -L path used by both
+# sdcc_ix and sdcc_iy clibs on +rc2014. A separate sdcc_iy ff_ro is not installed.
 #
 # Resume after crash / kill:
 #   Default is to resume: skip jobs already recorded in rebuild-logs/DONE or
@@ -26,8 +28,15 @@
 #   Checkpoint: rebuild-logs/CHECKPOINT  (last completed phase marker)
 set -euo pipefail
 
-export PATH="/home/phillip/Z80/z88dk/bin:${PATH:-}"
-export ZCCCFG="${ZCCCFG:-/home/phillip/Z80/z88dk/lib/config}"
+if command -v zcc >/dev/null 2>&1 && [[ -n "${ZCCCFG:-}" && -d "${ZCCCFG}" ]]; then
+  :
+elif [[ -d /data/z88dk/lib/config ]]; then
+  export PATH="/data/z88dk/bin:${PATH:-}"
+  export ZCCCFG="/data/z88dk/lib/config"
+else
+  export PATH="/home/phillip/Z80/z88dk/bin:${PATH:-}"
+  export ZCCCFG="${ZCCCFG:-/home/phillip/Z80/z88dk/lib/config}"
+fi
 if [[ ! -d "$ZCCCFG" ]]; then
   echo "ZCCCFG is not a directory: $ZCCCFG" >&2
   exit 1
@@ -388,7 +397,10 @@ else
   phase_begin "1/3 build RW"
   for clib in sccz80 sdcc_ix sdcc_iy; do
     for t in rc2014 yaz180 scz180 hbios; do
-      spawn "ff/$t/$clib" build_one ff "$t" "$clib" ff/source ff.lst ff
+      # SDCC ff: one IY-preserving object (same -L sdcc_ix issue as ff_ro).
+      if [[ "$clib" != sdcc_ix ]]; then
+        spawn "ff/$t/$clib" build_one ff "$t" "$clib" ff/source ff.lst ff
+      fi
       spawn "time/$t/$clib" build_one time "$t" "$clib" time/source time.lst time
     done
     spawn "diskio_sd/scz180/$clib" build_one diskio_sd scz180 "$clib" diskio_sd/source diskio_sd.lst diskio_sd
@@ -415,6 +427,17 @@ else
   '
 
   wait_all
+
+  for t in rc2014 yaz180 scz180 hbios; do
+    iy="$ROOT/ff/$t/lib/newlib/sdcc_iy/ff.lib"
+    ixdir="$ROOT/ff/$t/lib/newlib/sdcc_ix"
+    if [[ -f "$iy" ]]; then
+      mkdir -p "$ixdir"
+      cp -f "$iy" "$ixdir/ff.lib"
+      say "COPY  package $t sdcc_iy/ff.lib → sdcc_ix/ff.lib"
+    fi
+  done
+
   phase_done 1
 fi
 
@@ -438,7 +461,10 @@ else
     say "ffconf  FF_FS_READONLY → 1"
   fi
 
-  for clib in sccz80 sdcc_ix sdcc_iy; do
+  # sccz80 + one SDCC object (sdcc_iy / --reserve-regs-iy). Do not compile a
+  # second SDCC ff_ro with sdcc_ix: +rc2014 -clib=sdcc_iy still -L's sdcc_ix,
+  # so that incomplete ix copy would be what zcc actually linked.
+  for clib in sccz80 sdcc_iy; do
     for t in rc2014 yaz180 scz180 hbios; do
       spawn "ff_ro/$t/$clib" build_one ff "$t" "$clib" ff/source ff.lst ff_ro
     done
@@ -453,6 +479,18 @@ else
   '
 
   wait_all
+
+  # Same IY-preserving bytes in the package sdcc_ix slot (not a second compile).
+  for t in rc2014 yaz180 scz180 hbios; do
+    iy="$ROOT/ff/$t/lib/newlib/sdcc_iy/ff_ro.lib"
+    ixdir="$ROOT/ff/$t/lib/newlib/sdcc_ix"
+    if [[ -f "$iy" ]]; then
+      mkdir -p "$ixdir"
+      cp -f "$iy" "$ixdir/ff_ro.lib"
+      say "COPY  package $t sdcc_iy/ff_ro.lib → sdcc_ix/ff_ro.lib"
+    fi
+  done
+
   restore_ffconf
   say "ffconf  restored (RW)"
   phase_done 2
@@ -476,20 +514,28 @@ else
   install_pkg hbios   ff time diskio_hbios
   install_pkg cpm     3d regis
 
-  # Manual copy: extras that live beside ff.lib but are not z88dk-lib basenames
+  # Manual copy: extras that live beside ff.lib but are not z88dk-lib basenames.
+  # SDCC ff_ro goes only to sdcc_ix (the -L path for both SDCC clibs). Drop any
+  # leftover sdcc_iy/ff_ro.lib so a stale extra copy cannot be picked by hand.
   say "COPY  ff_ro / ff_85* extras → clibs"
   for t in rc2014 yaz180 scz180 hbios; do
-    for clib in sccz80 sdcc_ix sdcc_iy; do
-      src="$ROOT/ff/$t/lib/newlib/$clib"
-      dst="$Z88DK_CLIBS/$clib/lib/$t"
-      mkdir -p "$dst"
-      for f in ff_ro.lib ff_85.lib ff_85_ro.lib; do
-        if [[ -f "$src/$f" ]]; then
-          cp -f "$src/$f" "$dst/$f"
-          say "COPY  $t/$clib/$f"
-        fi
-      done
+    src_sc="$ROOT/ff/$t/lib/newlib/sccz80"
+    dst_sc="$Z88DK_CLIBS/sccz80/lib/$t"
+    mkdir -p "$dst_sc"
+    for f in ff_ro.lib ff_85.lib ff_85_ro.lib; do
+      if [[ -f "$src_sc/$f" ]]; then
+        cp -f "$src_sc/$f" "$dst_sc/$f"
+        say "COPY  $t/sccz80/$f"
+      fi
     done
+    src_iy="$ROOT/ff/$t/lib/newlib/sdcc_iy/ff_ro.lib"
+    dst_ix="$Z88DK_CLIBS/sdcc_ix/lib/$t"
+    if [[ -f "$src_iy" ]]; then
+      mkdir -p "$dst_ix"
+      cp -f "$src_iy" "$dst_ix/ff_ro.lib"
+      rm -f "$Z88DK_CLIBS/sdcc_iy/lib/$t/ff_ro.lib"
+      say "COPY  $t/sdcc_iy/ff_ro.lib → sdcc_ix (removed sdcc_iy install)"
+    fi
   done
 
   phase_done 3

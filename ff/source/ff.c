@@ -4965,7 +4965,7 @@ FRESULT f_stat (
 
 
 
-#if !FF_FS_READONLY
+/* f_getfree only reads the FAT. Keep it in ff_ro (CP/M-IDE `ds`). */
 /*-----------------------------------------------------------------------*/
 /* API: Get Number of Free Clusters                                      */
 /*-----------------------------------------------------------------------*/
@@ -4989,10 +4989,13 @@ FRESULT f_getfree (
 
     if (res == FR_OK) {
         *fatfs = fs;                /* Return ptr to the fs object */
+#if !FF_FS_READONLY
         /* If free_clst is valid, return it without full FAT scan */
         if (fs->free_clst <= fs->n_fatent - 2) {
             *nclst = fs->free_clst;
-        } else {
+        } else
+#endif
+        {
             /* Scan FAT to obtain the correct free cluster count */
             nfree = 0;
             if (fs->fs_type == FS_FAT12) {      /* FAT12: Scan bit field FAT entries */
@@ -5051,8 +5054,10 @@ FRESULT f_getfree (
             }
             if (res == FR_OK) {         /* Update parameters if succeeded */
                 *nclst = nfree;         /* Return the free clusters */
+#if !FF_FS_READONLY
                 fs->free_clst = nfree;  /* Now free cluster count is valid */
                 fs->fsi_flag |= 1;      /* FAT32/exfAT : Allocation information is to be updated */
+#endif
             }
         }
     }
@@ -5061,8 +5066,7 @@ FRESULT f_getfree (
 }
 
 
-
-
+#if !FF_FS_READONLY
 /*-----------------------------------------------------------------------*/
 /* API: Truncate File                                                    */
 /*-----------------------------------------------------------------------*/

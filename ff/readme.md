@@ -129,11 +129,11 @@ Z80 (all supported targets: `rc2014`, `yaz180`, `scz180`, `hbios`):
 zcc +<target> -clib=new -x -O2 --opt-code-speed=all --math32 @ff.lst -o ../ff
 mv ../ff.lib ../<target>/lib/newlib/sccz80/ff.lib
 
-# sdcc
-zcc +<target> -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @ff.lst -o ../ff
-mv ../ff.lib ../<target>/lib/newlib/sdcc_ix/ff.lib
+# sdcc — one IY-preserving object (`--reserve-regs-iy`). Copy into both
+# package slots; zcc +rc2014 -clib=sdcc_iy still -L's sdcc_ix.
 zcc +<target> -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @ff.lst -o ../ff
-mv ../ff.lib ../<target>/lib/newlib/sdcc_iy/ff.lib
+cp ../ff.lib ../<target>/lib/newlib/sdcc_iy/ff.lib
+cp ../ff.lib ../<target>/lib/newlib/sdcc_ix/ff.lib
 ```
 
 8085 (rc2014 only, sccz80):
@@ -143,17 +143,32 @@ zcc +rc2014 -clib=new -m8085 -x -O2 --opt-code-speed=all -D__DISABLE_BUILTIN --m
 mv ../ff_85.lib ../rc2014/lib/newlib/sccz80/ff_85.lib
 ```
 
-**Read-only variants (`ff_ro` / `ff_85_ro`):** set `FF_FS_READONLY` to `1` in `source/ffconf.h`, rebuild with the same command lines but install as `ff_ro.lib` / `ff_85_ro.lib` in the **same** directories as the standard libs, then restore `FF_FS_READONLY` to `0`.
+**Read-only variants (`ff_ro` / `ff_85_ro`):** set `FF_FS_READONLY` to `1` in `source/ffconf.h`, rebuild, then restore `FF_FS_READONLY` to `0`. ChaN gates `f_getfree` on `!FF_FS_READONLY`; `ff.c` is patched so that scan stays in `ff_ro` (CP/M-IDE `ds`).
 
-```bash
-# after RO build, e.g. for sccz80:
-mv ../ff.lib ../<target>/lib/newlib/sccz80/ff_ro.lib
-```
-
-`z88dk-lib +<target> ff` installs **`ff.lib`** (and `ff.h`). Copy `ff_ro.lib` / `ff_85*.lib` **manually** into the same install dir (z88dk-lib has no basename for those extras):
+SDCC **`ff_ro` is one object**, compiled with **`-clib=sdcc_iy`** (`--reserve-regs-iy`). `+rc2014 -clib=sdcc_iy` still uses `-L…/sdcc_ix` for third-party libs, so that IY-preserving `.lib` is installed as:
 
 ```text
-$ZCCCFG/../clibs/{sccz80,sdcc_ix,sdcc_iy}/lib/<target>/
+$ZCCCFG/../clibs/sdcc_ix/lib/<target>/ff_ro.lib
+```
+
+Do **not** keep a second SDCC `ff_ro` under `sdcc_iy/`; the old ix-compiled copy was incomplete (`_f_getfree` missing) and is what default `zcc` actually linked. Copy the iy-built file into the package `sdcc_ix` slot as well (same bytes, not a second compile).
+
+```bash
+# sccz80 RO
+zcc +<target> -clib=new -x -O2 --opt-code-speed=all --math32 @ff.lst -o ../ff
+mv ../ff.lib ../<target>/lib/newlib/sccz80/ff_ro.lib
+
+# SDCC RO (once)
+zcc +<target> -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @ff.lst -o ../ff
+cp ../ff.lib ../<target>/lib/newlib/sdcc_iy/ff_ro.lib
+cp ../ff.lib ../<target>/lib/newlib/sdcc_ix/ff_ro.lib
+```
+
+`z88dk-lib +<target> ff` installs **`ff.lib`** (and `ff.h`). Copy extras **manually** (z88dk-lib has no basename for them):
+
+```text
+sccz80:  $ZCCCFG/../clibs/sccz80/lib/<target>/ff_ro.lib  (and ff_85*.lib on rc2014)
+SDCC:    $ZCCCFG/../clibs/sdcc_ix/lib/<target>/ff_ro.lib
 ```
 
 A full dual-job rebuild **and install** script is `rebuild-all.sh` at the repo root: SDCC builds use `--max-allocs-per-node400000`, write `.lib` products under each package’s `lib/newlib/<clib>/` tree, run `z88dk-lib` for each package, then copy `ff_ro` / `ff_85*` using paths derived from `ZCCCFG`.

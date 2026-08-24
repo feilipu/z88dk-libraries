@@ -84,24 +84,23 @@ export PATH=…/z88dk/bin:$PATH ZCCCFG=…/z88dk/lib/config
 zcc +<target> -clib=new -x -O2 --opt-code-speed=all --math32 @library.lst -o ../library
 mkdir -p ../<target>/lib/newlib/sccz80
 mv ../library.lib ../<target>/lib/newlib/sccz80/library.lib
-# sdcc_ix / sdcc_iy
-zcc +<target> -clib=sdcc_ix -x -SO3 --max-allocs-per-node400000 --math32 @library.lst -o ../library
-mkdir -p ../<target>/lib/newlib/sdcc_ix
-mv ../library.lib ../<target>/lib/newlib/sdcc_ix/library.lib
+# sdcc — FatFs is one IY-preserving object copied into both sdcc_ix and sdcc_iy
+# package slots (zcc +rc2014 -clib=sdcc_iy still -L's sdcc_ix).
 zcc +<target> -clib=sdcc_iy -x -SO3 --max-allocs-per-node400000 --math32 @library.lst -o ../library
-mkdir -p ../<target>/lib/newlib/sdcc_iy
-mv ../library.lib ../<target>/lib/newlib/sdcc_iy/library.lib
+mkdir -p ../<target>/lib/newlib/sdcc_iy ../<target>/lib/newlib/sdcc_ix
+cp ../library.lib ../<target>/lib/newlib/sdcc_iy/library.lib
+cp ../library.lib ../<target>/lib/newlib/sdcc_ix/library.lib
 z88dk-lib +<target> library
 ```
 
-**FatFs:** also build `ff_ro` (and rc2014 `ff_85` / `ff_85_ro`) into the **same** `lib/newlib/<clib>/` dirs as `ff.lib`. `z88dk-lib +<target> ff` only installs `ff.lib`; copy `ff_ro.lib` / `ff_85*.lib` into `lib/clibs/…/lib/<target>/` by hand. See `ff/readme.md`.
+**FatFs:** also build `ff_ro` (and rc2014 `ff_85` / `ff_85_ro`). SDCC `ff_ro` is a **single** `-clib=sdcc_iy` object, installed into `lib/clibs/sdcc_ix/lib/<target>/` (the `-L` path used by both SDCC clibs). `z88dk-lib +<target> ff` only installs `ff.lib`; copy `ff_ro.lib` / `ff_85*.lib` by hand. See `ff/readme.md`.
 
 **Bulk rebuild + install:** `./rebuild-all.sh` in this repo root (requires `PATH`/`ZCCCFG` pointing at your z88dk). Max two concurrent `zcc` jobs.
 
 1. Build package products under `<pkg>/<target>/lib/newlib/…`
 2. **Install** with `z88dk-lib +<target> <pkg>` (remove-then-install, non-interactive)
-3. **Manual copy** of extras `z88dk-lib` does not install: `ff_ro.lib`, `ff_85.lib`, `ff_85_ro.lib` into the same dirs as `ff.lib`, resolved from `ZCCCFG` as  
-   `$ZCCCFG/../clibs/{sccz80,sdcc_ix,sdcc_iy}/lib/<target>/`
+3. **Manual copy** of extras `z88dk-lib` does not install: `ff_ro.lib`, `ff_85.lib`, `ff_85_ro.lib`. sccz80 extras go next to `ff.lib`; SDCC `ff_ro` goes only to  
+   `$ZCCCFG/../clibs/sdcc_ix/lib/<target>/`
 
 `./rebuild-all.sh` uses SDCC `--max-allocs-per-node400000` (same as package Preparation sections) and writes each product into `<pkg>/<target>/lib/newlib/{sccz80,sdcc_ix,sdcc_iy}/` before install.
 
