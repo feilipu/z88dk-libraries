@@ -176,10 +176,8 @@ typedef struct {
 #if FF_USE_LFN
     WCHAR*    lfnbuf;           /* LFN working buffer */
 #endif
-#if !FF_FS_READONLY
     DWORD    last_clst;         /* Last allocated cluster (Unknown if >= n_fatent) */
     DWORD    free_clst;         /* Number of free clusters  (Unknown if >= n_fatent-2) */
-#endif
 #if FF_FS_RPATH
     DWORD    cdir;              /* Current directory start cluster (0:root) */
 #endif

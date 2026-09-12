@@ -3671,8 +3671,7 @@ static FRESULT mount_volume (   /* FR_OK(0): successful, !=0: an error occurred 
         }
         if (fs->fsize < (szbfat + (SS(fs) - 1)) / SS(fs)) return FR_NO_FILESYSTEM;    /* (BPB_FATSz must not be less than the size needed) */
 
-#if !FF_FS_READONLY
-        /* Get FSInfo if available */
+        /* FSInfo is a read. Keep it in ff_ro so f_getfree can skip a full FAT walk. */
         fs->last_clst = fs->free_clst = 0xFFFFFFFF;        /* Invalidate cluster allocation information */
         fs->fsi_flag = 0x80;                /* Disable FSInfo by default */
         if (fmt == FS_FAT32
@@ -3692,7 +3691,6 @@ static FRESULT mount_volume (   /* FR_OK(0): successful, !=0: an error occurred 
 #endif
             }
         }
-#endif  /* !FF_FS_READONLY */
     }
 
     fs->fs_type = (BYTE)fmt;/* FAT sub-type (the filesystem object gets valid) */
@@ -4989,12 +4987,10 @@ FRESULT f_getfree (
 
     if (res == FR_OK) {
         *fatfs = fs;                /* Return ptr to the fs object */
-#if !FF_FS_READONLY
         /* If free_clst is valid, return it without full FAT scan */
         if (fs->free_clst <= fs->n_fatent - 2) {
             *nclst = fs->free_clst;
         } else
-#endif
         {
             /* Scan FAT to obtain the correct free cluster count */
             nfree = 0;
@@ -5054,9 +5050,9 @@ FRESULT f_getfree (
             }
             if (res == FR_OK) {         /* Update parameters if succeeded */
                 *nclst = nfree;         /* Return the free clusters */
-#if !FF_FS_READONLY
                 fs->free_clst = nfree;  /* Now free cluster count is valid */
-                fs->fsi_flag |= 1;      /* FAT32/exfAT : Allocation information is to be updated */
+#if !FF_FS_READONLY
+                fs->fsi_flag |= 1;      /* FAT32/exFAT : Allocation information is to be updated */
 #endif
             }
         }
