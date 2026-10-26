@@ -2,6 +2,8 @@
  * vjet_load.c
  *
  * Read one CP/M file with the FCB. Classic and newlib share this path.
+ * A full buffer reads one more record. More data returns -1.
+ * End of file returns the count already stored.
  *
  * Copyright (c) 2026 Phillip Stevens. MIT. See License.txt.
  */
@@ -103,6 +105,12 @@ int vjet_load(char *name, unsigned char *buf, unsigned int max)
         for (i = 0; i < 128; i++)
             buf[n + i] = vjet_dma[i];
         n += 128;
+    }
+    if ((unsigned int)(max - n) < 128) {
+        vjet_bdos(VJET_BDOS_DMA, (unsigned int)vjet_dma);
+        rc = vjet_bdos(VJET_BDOS_READ, (unsigned int)vjet_fcb);
+        if ((rc & 0xFF) == 0 || (rc & 0xFF) == 0xFF)
+            return -1;
     }
     return (int)n;
 }

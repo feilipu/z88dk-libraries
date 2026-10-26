@@ -26,11 +26,13 @@ extern "C" {
 extern void vjet_font(unsigned int hub);
 
 /* Fix reloc words, then write $1C, the length, and the payload.
+   A bad link returns before the first byte.
    dest is the Hub address of the fill list. */
 extern int vjet_send_list(unsigned char *blob, unsigned int dest);
 
 /* Read one CP/M file into buf. Returns the byte count, or -1.
-   The count is a multiple of 128. */
+   The count is a multiple of 128.
+   A file that does not fit in max returns -1. */
 extern int vjet_load(char *name, unsigned char *buf, unsigned int max);
 
 /* Write one $07. */
