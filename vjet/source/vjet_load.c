@@ -4,6 +4,8 @@
  * Read one CP/M file with the FCB. Classic and newlib share this path.
  * A full buffer reads one more record. More data returns -1.
  * End of file returns the count already stored.
+ * A read code other than 0 or 1 returns -1.
+ * Close the file. Then set the DMA address to 0080h.
  *
  * Copyright (c) 2026 Phillip Stevens. MIT. See License.txt.
  */
@@ -58,6 +60,8 @@ static int set_fcb(char *name)
         if (n >= 8)
             return -1;
         c = up((unsigned char)p[n]);
+        if (c == '*' || c == '?')
+            return -1;
         vjet_fcb[1 + n] = (unsigned char)c;
         n++;
     }
@@ -71,11 +75,19 @@ static int set_fcb(char *name)
             if (n >= 3)
                 return -1;
             c = up((unsigned char)dot[n]);
+            if (c == '*' || c == '?')
+                return -1;
             vjet_fcb[9 + n] = (unsigned char)c;
             n++;
         }
     }
     return 0;
+}
+
+static void load_finish(void)
+{
+    vjet_bdos(VJET_BDOS_CLOSE, (unsigned int)vjet_fcb);
+    vjet_bdos(VJET_BDOS_DMA, 0x0080);
 }
 
 int vjet_load(char *name, unsigned char *buf, unsigned int max)
@@ -84,7 +96,7 @@ int vjet_load(char *name, unsigned char *buf, unsigned int max)
     unsigned int i;
     int rc;
 
-    if (name == 0 || buf == 0 || max < 128)
+    if (name == 0 || buf == 0 || max < 128 || max > 32767)
         return -1;
     if (set_fcb(name) != 0)
         return -1;
@@ -98,10 +110,12 @@ int vjet_load(char *name, unsigned char *buf, unsigned int max)
     while (n < max && (unsigned int)(max - n) >= 128) {
         vjet_bdos(VJET_BDOS_DMA, (unsigned int)vjet_dma);
         rc = vjet_bdos(VJET_BDOS_READ, (unsigned int)vjet_fcb);
-        if ((rc & 0xFF) == 0xFF)
-            return -1;
-        if ((rc & 0xFF) != 0)
+        if ((rc & 0xFF) == 1)
             break;
+        if ((rc & 0xFF) != 0) {
+            load_finish();
+            return -1;
+        }
         for (i = 0; i < 128; i++)
             buf[n + i] = vjet_dma[i];
         n += 128;
@@ -109,8 +123,11 @@ int vjet_load(char *name, unsigned char *buf, unsigned int max)
     if ((unsigned int)(max - n) < 128) {
         vjet_bdos(VJET_BDOS_DMA, (unsigned int)vjet_dma);
         rc = vjet_bdos(VJET_BDOS_READ, (unsigned int)vjet_fcb);
-        if ((rc & 0xFF) == 0 || (rc & 0xFF) == 0xFF)
+        if ((rc & 0xFF) != 1) {
+            load_finish();
             return -1;
+        }
     }
+    load_finish();
     return (int)n;
 }

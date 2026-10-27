@@ -21,6 +21,7 @@
 #define VJET_BDOS_DIRECT 6
 #define VJET_BDOS_CONST  11
 #define VJET_BDOS_OPEN   15
+#define VJET_BDOS_CLOSE  16
 #define VJET_BDOS_READ   20
 #define VJET_BDOS_DMA    26
 

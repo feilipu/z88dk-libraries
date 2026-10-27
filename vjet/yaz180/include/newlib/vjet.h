@@ -26,13 +26,18 @@ extern "C" {
 extern void vjet_font(unsigned int hub);
 
 /* Fix reloc words, then write $1C, the length, and the payload.
+   size is the blob length in bytes.
+   A short blob returns before the first byte.
    A bad link returns before the first byte.
    dest is the Hub address of the fill list. */
-extern int vjet_send_list(unsigned char *blob, unsigned int dest);
+extern int vjet_send_list(unsigned char *blob, unsigned int dest, unsigned int size);
 
 /* Read one CP/M file into buf. Returns the byte count, or -1.
-   The count is a multiple of 128.
-   A file that does not fit in max returns -1. */
+   The count is a multiple of 128 and fits in a signed int.
+   max above 32767 returns -1.
+   A file that does not fit in max returns -1.
+   A read error returns -1.
+   After an open, the DMA address is 0080h. */
 extern int vjet_load(char *name, unsigned char *buf, unsigned int max);
 
 /* Write one $07. */

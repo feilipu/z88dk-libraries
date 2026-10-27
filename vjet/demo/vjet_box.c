@@ -25,7 +25,7 @@ int main(void)
     int key;
 
     vjet_font(17236);
-    if (vjet_send_list(blob, DLIST1) != VJET_OK)
+    if (vjet_send_list(blob, DLIST1, sizeof blob) != VJET_OK)
         return 1;
     vjet_graphics();
     do {

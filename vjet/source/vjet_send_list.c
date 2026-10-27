@@ -2,8 +2,11 @@
  * vjet_send_list.c
  *
  * Copy the payload, add dest to each reloc word, then write the frame.
- * A bad link returns before the first byte. The caller blob stays as it is.
+ * size includes the header and the reloc words.
+ * A short blob or a bad link returns before the first byte.
+ * The caller blob stays as it is.
  * $FF uses BDOS function 2. Every other byte uses function 6.
+ * Function 2 waits when the console sends Control-S.
  *
  * Copyright (c) 2026 Phillip Stevens. MIT. See License.txt.
  */
@@ -35,7 +38,7 @@ static void outb(unsigned int c)
         vjet_bdos(VJET_BDOS_DIRECT, c);
 }
 
-int vjet_send_list(unsigned char *blob, unsigned int dest)
+int vjet_send_list(unsigned char *blob, unsigned int dest, unsigned int size)
 {
     unsigned int len;
     unsigned int nrel;
@@ -46,7 +49,7 @@ int vjet_send_list(unsigned char *blob, unsigned int dest)
     unsigned int prev;
     int have;
 
-    if (blob == 0)
+    if (blob == 0 || size < 6)
         return VJET_ERR;
     len = rd16(blob);
     nrel = rd16(blob + 2);
@@ -55,6 +58,8 @@ int vjet_send_list(unsigned char *blob, unsigned int dest)
         return VJET_ERR;
     if (nrel > (len >> 1))
         return VJET_RELOC;
+    if ((size - 6) < len || (size - 6 - len) < (nrel << 1))
+        return VJET_ERR;
     if (nrel != 0 && (dest & 1) != 0)
         return VJET_RELOC;
     if (font != 0 && vjet_font_hub != 0 && font != vjet_font_hub)

@@ -2,9 +2,9 @@
 
 The library sends a list blob to the UX Module. The console pair stays a 6850. One C89 source builds the Z80 library and the 8085 library.
 
-The blob is a 6-byte header, the payload, then reloc words. `vjet_send_list` adds the destination Hub address to each reloc word. A bad link returns before the first byte. A good list is written as `$1C`, the length, and the payload.
+The blob is a 6-byte header, the payload, then reloc words. `vjet_send_list` adds the destination Hub address to each reloc word. Pass the blob length. A short blob returns before the first byte. A bad link returns before the first byte. A good list is written as `$1C`, the length, and the payload.
 
-`$FF` uses BDOS function 2. Every other byte uses function 6. Function 2 expands TAB `$09`. Lists contain `$09`. Function 6 treats `$FF` as a read.
+`$FF` uses BDOS function 2. Every other byte uses function 6. Function 2 expands TAB `$09`. Lists contain `$09`. Function 6 treats `$FF` as a read. Function 2 waits when the console sends Control-S.
 
 `vjet_key` uses function 11, then function 1. The program exits on `q`. `vjet_graphics` writes one `$07`.
 
@@ -26,8 +26,8 @@ The 8085 library is `vjet_8085.lib` beside `vjet.lib`. Copy it into `lib/clibs/s
 | Call | Action |
 |------|--------|
 | `vjet_font(hub)` | Expected font address. 0 skips the check. |
-| `vjet_send_list(blob, dest)` | Fix reloc words. A bad link returns before the first byte. |
-| `vjet_load(name, buf, max)` | Read one CP/M file. The count is a multiple of 128. A file that does not fit returns -1. |
+| `vjet_send_list(blob, dest, size)` | Fix reloc words. `size` is the blob length. A short blob or a bad link returns before the first byte. |
+| `vjet_load(name, buf, max)` | Read one CP/M file. The count is a multiple of 128. `max` above 32767 returns -1. A file that does not fit returns -1. After an open, the DMA address is 0080h. |
 | `vjet_graphics()` | Write one `$07`. |
 | `vjet_key()` | Return a stored key, or 0. |
 
@@ -35,7 +35,7 @@ The 8085 library is `vjet_8085.lib` beside `vjet.lib`. Copy it into `lib/clibs/s
 
 ## Preparation
 
-Build from `source/`. These lines do not link a math library.
+Build from `source/`. These lines do not link a math library. Build again after a source change. The library file in this tree stays old until then.
 
 ```bash
 zcc +cpm -clib=new -x -O2 --opt-code-speed=all @vjet.lst -o ../cpm/lib/newlib/sccz80/vjet
